@@ -48,12 +48,18 @@ frappe.ui.form.on("Simulacao De Credito", {
 						}
 					);
 				} else {
-					frappe.msgprint(
-						__(
-							"Este Proponente ainda não é Cliente. Complete e grave os dados do cliente; depois volte a esta simulação e clique novamente neste botão para criar o Pedido de Crédito."
-						)
-					);
-					entre_mc.abrir_cliente_a_partir_do_proponente(proponente);
+					frappe.msgprint({
+						title: __("Cliente ainda não existe"),
+						message: __(
+							"Este Proponente ainda não é Cliente. Crie o registo de Cliente, complete os dados e grave; depois volte a esta simulação e clique novamente neste botão para criar o Pedido de Crédito."
+						),
+						primary_action: {
+							label: __("Criar Cliente"),
+							action: () => {
+								entre_mc.abrir_cliente_a_partir_do_proponente(proponente);
+							},
+						},
+					});
 				}
 			});
 		}).addClass("btn-primary");

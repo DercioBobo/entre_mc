@@ -25,12 +25,6 @@ class EntreMcSimulador {
 
 		this.page.main.html(`
 			<div class="emc-simulador">
-				<header class="emc-header">
-					<span class="emc-eyebrow">Sem proponente · sem cliente · sem produto</span>
-					<h1 class="emc-title">Simulador de Crédito</h1>
-					<p class="emc-subtitle">Escreva os números e leia a resposta na hora — para quando alguém pergunta "quanto é que eu pago?".</p>
-				</header>
-
 				<section class="emc-inputs" aria-label="Dados do crédito">
 					<div class="emc-field">
 						<label for="emc-capital">Capital</label>
@@ -215,38 +209,6 @@ class EntreMcSimulador {
 				padding: 8px 4px 48px;
 				color: var(--emc-ink);
 				font-family: var(--emc-font-display);
-			}
-
-			.emc-header {
-				padding: 8px 4px 20px;
-				border-bottom: 1px solid var(--emc-line);
-				margin-bottom: 24px;
-			}
-			.emc-eyebrow {
-				display: inline-block;
-				font-family: var(--emc-font-mono);
-				font-size: 11px;
-				letter-spacing: 0.08em;
-				text-transform: uppercase;
-				color: var(--emc-accent-deep);
-				background: var(--emc-band);
-				padding: 3px 8px;
-				border-radius: 3px;
-				margin-bottom: 10px;
-			}
-			.emc-title {
-				font-family: var(--emc-font-display);
-				font-weight: 700;
-				font-size: 30px;
-				line-height: 1.15;
-				margin: 0 0 6px;
-				color: var(--emc-ink);
-			}
-			.emc-subtitle {
-				margin: 0;
-				color: var(--emc-ink-soft);
-				font-size: 14px;
-				max-width: 56ch;
 			}
 
 			.emc-inputs {
