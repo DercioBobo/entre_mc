@@ -6,15 +6,12 @@ authors = [
 description = "Entre MicroCréditos - Gestão de Microcrédito para Frappe/ERPNext"
 requires-python = ">=3.10"
 readme = "README.md"
-dynamic = ["version"]
+version = "0.0.1"
 dependencies = []
 
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.dynamic]
-version = { attr = "entre_mc.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["."]
