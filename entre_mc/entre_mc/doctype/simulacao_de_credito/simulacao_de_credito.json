@@ -11,6 +11,8 @@
   "cb_1",
   "capital_solicitado",
   "taxa_de_juros",
+  "taxa_diaria_de_multa",
+  "juros_de_mora",
   "sb_2",
   "prazo",
   "finalidade",
@@ -63,6 +65,20 @@
    "fieldtype": "Percent",
    "label": "Taxa de Juros",
    "reqd": 1
+  },
+  {
+   "fetch_from": "produto.taxa_diaria_de_multa",
+   "fieldname": "taxa_diaria_de_multa",
+   "fieldtype": "Percent",
+   "label": "Taxa Diária de Multa",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "produto.juros_de_mora",
+   "fieldname": "juros_de_mora",
+   "fieldtype": "Percent",
+   "label": "Juros de Mora",
+   "read_only": 1
   },
   {
    "fieldname": "sb_2",
