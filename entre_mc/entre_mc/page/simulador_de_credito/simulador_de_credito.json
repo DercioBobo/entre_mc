@@ -1,0 +1,17 @@
+{
+ "content": null,
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "Page",
+ "icon": "calculator",
+ "idx": 0,
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "simulador-de-credito",
+ "owner": "Administrator",
+ "page_name": "simulador-de-credito",
+ "restrict_to_domain": null,
+ "standard": "Yes",
+ "system_page": 0,
+ "title": "Simulador de Crédito"
+}

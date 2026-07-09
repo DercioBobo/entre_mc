@@ -13,6 +13,10 @@ frappe.ui.form.on("Simulacao De Credito", {
 	refresh(frm) {
 		render_preview(frm);
 
+		frm.add_custom_button(__("Simulador Rápido"), () => {
+			frappe.set_route("simulador-de-credito");
+		});
+
 		if (frm.is_new()) return;
 
 		if (frm.doc.pedido_de_credito) {
