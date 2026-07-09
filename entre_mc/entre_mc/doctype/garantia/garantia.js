@@ -4,6 +4,22 @@
 frappe.ui.form.on("Garantia", {
 	refresh(frm) {
 		render_gallery(frm);
+
+		if (frm.is_new() || frm.doc.status !== "Disponível") return;
+
+		frm.add_custom_button(__("Executar Garantia"), () => {
+			frappe.new_doc("Execucao De Garantia", null, (doc) => {
+				doc.garantia = frm.doc.name;
+				doc.cliente = frm.doc.cliente;
+			});
+		});
+
+		frm.add_custom_button(__("Devolver Garantia"), () => {
+			frappe.new_doc("Devolucao Da Garantia", null, (doc) => {
+				doc.garantia = frm.doc.name;
+				doc.cliente = frm.doc.cliente;
+			});
+		});
 	},
 });
 

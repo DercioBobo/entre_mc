@@ -12,6 +12,38 @@ frappe.ui.form.on("Pedido De Credito", {
 
 	refresh(frm) {
 		render_plano(frm);
+
+		if (frm.is_new()) return;
+
+		frm.add_custom_button(__("Criar Garantia"), () => {
+			frappe.new_doc("Garantia", null, (doc) => {
+				doc.cliente = frm.doc.cliente;
+			});
+			frappe.msgprint(
+				__(
+					"Depois de gravar a Garantia, volte a este Pedido e adicione-a ao campo Garantias."
+				)
+			);
+		}, __("Criar"));
+
+		if (frm.doc.workflow_state === "Aprovado" && !frm.doc.status) {
+			frm.add_custom_button(__("Criar Desembolso"), () => {
+				frappe.new_doc("Desembolso", null, (doc) => {
+					doc.pedido_de_credito = frm.doc.name;
+					doc.valor_desembolsado = frm.doc.capital_solicitado;
+				});
+			}, __("Criar"));
+		}
+
+		if (["Desembolsado", "Em Pagamento"].includes(frm.doc.status)) {
+			frm.add_custom_button(__("Criar Reembolso"), () => {
+				frappe.new_doc("Reembolso", null, (doc) => {
+					doc.pedido_de_credito = frm.doc.name;
+				});
+			}, __("Criar"));
+		}
+
+		frm.page.set_inner_btn_group_as_primary(__("Criar"));
 	},
 
 	simulacao_de_credito(frm) {

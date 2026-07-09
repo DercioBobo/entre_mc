@@ -1,3 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Roboto+Mono:wght@400;500;700&display=swap");
+
+:root {
+	/* Shared "ledger" design tokens - used by the Simulador de Crédito page and
+	   any other custom entre_mc HTML surface, so they read as one product. */
+	--emc-paper: #fdfdf9;
+	--emc-band: #dfefe4;
+	--emc-ink: #16261e;
+	--emc-ink-soft: #4b5d53;
+	--emc-accent: #1f7a4d;
+	--emc-accent-deep: #14532f;
+	--emc-stamp: #b4472a;
+	--emc-line: #c7d9cc;
+	--emc-font-display: "Space Grotesk", -apple-system, "Segoe UI", sans-serif;
+	--emc-font-mono: "Roboto Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
+}
+
 .entre-mc-plano-wrapper {
 	overflow-x: auto;
 }
@@ -61,4 +78,128 @@
 	padding: 1px 8px;
 	border-radius: 10px;
 	font-size: 11px;
+}
+
+/* Resumo do Cliente - mini dashboard on the Cliente form */
+
+.emc-resumo-cliente {
+	font-family: var(--emc-font-display);
+	color: var(--emc-ink);
+}
+
+.emc-resumo-empty {
+	padding: 18px;
+	text-align: center;
+	color: var(--emc-ink-soft);
+	background: var(--emc-paper);
+	border: 1px dashed var(--emc-line);
+	border-radius: 6px;
+}
+
+.emc-resumo-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.emc-resumo-card {
+	background: var(--emc-paper);
+	border: 1px solid var(--emc-line);
+	border-top: 3px solid var(--emc-accent);
+	border-radius: 6px;
+	padding: 10px 12px;
+}
+
+.emc-resumo-card--warn {
+	border-top-color: var(--emc-stamp);
+}
+
+.emc-resumo-card-label {
+	display: block;
+	font-family: var(--emc-font-mono);
+	font-size: 10px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--emc-ink-soft);
+	margin-bottom: 4px;
+}
+
+.emc-resumo-card-value {
+	display: block;
+	font-family: var(--emc-font-mono);
+	font-weight: 700;
+	font-size: 20px;
+	font-variant-numeric: tabular-nums;
+	color: var(--emc-accent-deep);
+}
+
+.emc-resumo-card--warn .emc-resumo-card-value {
+	color: var(--emc-stamp);
+}
+
+.emc-resumo-table-wrap {
+	overflow-x: auto;
+	border: 1px solid var(--emc-line);
+	border-radius: 6px;
+}
+
+table.emc-resumo-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: var(--emc-font-mono);
+	font-size: 12.5px;
+}
+
+.emc-resumo-table thead th {
+	background: var(--emc-accent);
+	color: #f2fbf5;
+	font-weight: 500;
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 8px 10px;
+	white-space: nowrap;
+}
+
+.emc-resumo-table tbody td {
+	padding: 7px 10px;
+	border-bottom: 1px solid var(--emc-line);
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.emc-resumo-table tbody tr:nth-child(even) {
+	background: var(--emc-band);
+}
+
+.emc-resumo-table tbody tr:hover {
+	filter: brightness(0.97);
+}
+
+.emc-resumo-table .emc-num {
+	text-align: right;
+}
+
+.emc-resumo-badge {
+	display: inline-block;
+	font-family: var(--emc-font-mono);
+	font-size: 10.5px;
+	letter-spacing: 0.02em;
+	padding: 2px 8px;
+	border-radius: 10px;
+	background: var(--emc-band);
+	color: var(--emc-accent-deep);
+	white-space: nowrap;
+}
+
+.emc-resumo-badge--stamp {
+	background: #f6e2da;
+	color: var(--emc-stamp);
+}
+
+.emc-resumo-badge--ink {
+	background: #e6e9e7;
+	color: var(--emc-ink-soft);
 }

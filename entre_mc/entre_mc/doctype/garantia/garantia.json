@@ -74,7 +74,18 @@
    "label": "Galeria"
   }
  ],
- "links": [],
+ "links": [
+  {
+   "group": "Ciclo de Vida",
+   "link_doctype": "Execucao De Garantia",
+   "link_fieldname": "garantia"
+  },
+  {
+   "group": "Ciclo de Vida",
+   "link_doctype": "Devolucao Da Garantia",
+   "link_fieldname": "garantia"
+  }
+ ],
  "modified": "2026-07-09 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",

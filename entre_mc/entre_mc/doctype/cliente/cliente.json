@@ -5,6 +5,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "sb_resumo",
+  "resumo_html",
   "sb_pessoais",
   "nome_completo",
   "data_de_nascimento",
@@ -34,11 +36,21 @@
  ],
  "fields": [
   {
+   "fieldname": "sb_resumo",
+   "fieldtype": "Section Break",
+   "label": "Resumo do Cliente"
+  },
+  {
+   "fieldname": "resumo_html",
+   "fieldtype": "HTML"
+  },
+  {
    "fieldname": "sb_pessoais",
    "fieldtype": "Section Break",
    "label": "Dados Pessoais"
   },
   {
+   "fetch_from": "proponente_de_origem.nome_completo",
    "fieldname": "nome_completo",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -46,6 +58,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "proponente_de_origem.data_de_nascimento",
    "fieldname": "data_de_nascimento",
    "fieldtype": "Date",
    "label": "Data de Nascimento",
@@ -69,11 +82,11 @@
    "options": "Solteiro(a)\nCasado(a)\nUnião de Facto\nDivorciado(a)\nViúvo(a)"
   },
   {
+   "description": "Ao selecionar um Proponente, os dados partilhados são preenchidos automaticamente.",
    "fieldname": "proponente_de_origem",
    "fieldtype": "Link",
    "label": "Proponente de Origem",
-   "options": "Proponente",
-   "read_only": 1
+   "options": "Proponente"
   },
   {
    "fieldname": "sb_localizacao",
@@ -117,11 +130,13 @@
    "label": "Dados Profissionais/Negócio"
   },
   {
+   "fetch_from": "proponente_de_origem.ocupacao",
    "fieldname": "ocupacao",
    "fieldtype": "Data",
    "label": "Ocupação"
   },
   {
+   "fetch_from": "proponente_de_origem.local_de_trabalho",
    "fieldname": "local_de_trabalho",
    "fieldtype": "Data",
    "label": "Local de Trabalho"
@@ -131,6 +146,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "proponente_de_origem.rendimento_mensal",
    "fieldname": "rendimento_mensal",
    "fieldtype": "Currency",
    "label": "Rendimento Mensal"

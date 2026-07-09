@@ -26,7 +26,7 @@ frappe.ui.form.on("Simulacao De Credito", {
 			return;
 		}
 
-		frm.add_custom_button(__("Converter em Cliente e Criar Pedido de Crédito"), () => {
+		frm.add_custom_button(__("Criar Pedido de Crédito"), () => {
 			frappe.db.get_doc("Proponente", frm.doc.proponente).then((proponente) => {
 				if (proponente.convertido_em_cliente) {
 					frappe.confirm(
