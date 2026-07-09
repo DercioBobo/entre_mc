@@ -28,6 +28,7 @@
   "garantias",
   "sb_plano",
   "pre_visualizacao_html",
+  "sb_plano_dados",
   "plano_de_amortizacao"
  ],
  "fields": [
@@ -179,9 +180,13 @@
   },
   {
    "collapsible": 1,
+   "fieldname": "sb_plano_dados",
+   "fieldtype": "Section Break",
+   "label": "Plano De Amortizacao (dados)"
+  },
+  {
    "fieldname": "plano_de_amortizacao",
    "fieldtype": "Table",
-   "label": "Plano De Amortizacao (dados)",
    "options": "Plano De Amortizacao",
    "read_only": 1
   }
