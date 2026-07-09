@@ -71,13 +71,12 @@ def preview_plano(produto, capital_solicitado, taxa_de_juros, prazo, frequencia)
 
 @frappe.whitelist()
 def criar_pedido_de_credito(simulacao):
-	"""Converte o Proponente em Cliente (se ainda não o for) e cria um Pedido de
-	Crédito pré-preenchido a partir desta simulação. Ponto de entrada único para
-	"o cliente quer avançar com este pedido", chamado a partir da Simulação em
-	vez de exigir que o utilizador vá converter o Proponente manualmente e depois
-	preencher um Pedido de Crédito do zero."""
-	from entre_mc.entre_mc.doctype.proponente.proponente import converter_em_cliente
-
+	"""Cria um Pedido de Crédito pré-preenchido a partir desta simulação, para um
+	Proponente já convertido em Cliente. Não converte por si só - se o Proponente
+	ainda não for Cliente, o cliente é quem deve abrir e gravar o formulário de
+	Cliente primeiro (ver entre_mc.abrir_cliente_a_partir_do_proponente em
+	proponente.js), garantindo que os campos obrigatórios do Cliente são sempre
+	validados pelo próprio formulário, e nunca contornados aqui."""
 	sim = frappe.get_doc("Simulacao De Credito", simulacao)
 	if sim.pedido_de_credito:
 		frappe.throw(
@@ -87,10 +86,13 @@ def criar_pedido_de_credito(simulacao):
 		)
 
 	proponente = frappe.get_doc("Proponente", sim.proponente)
-	cliente = proponente.cliente if proponente.convertido_em_cliente else converter_em_cliente(proponente.name)
+	if not proponente.convertido_em_cliente:
+		frappe.throw(
+			_("O Proponente {0} ainda não foi convertido em Cliente.").format(proponente.name)
+		)
 
 	pedido = frappe.new_doc("Pedido De Credito")
-	pedido.cliente = cliente
+	pedido.cliente = proponente.cliente
 	pedido.produto = sim.produto
 	pedido.capital_solicitado = sim.capital_solicitado
 	pedido.taxa_de_juros = sim.taxa_de_juros

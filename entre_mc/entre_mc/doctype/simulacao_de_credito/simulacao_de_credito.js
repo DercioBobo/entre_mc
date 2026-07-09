@@ -27,24 +27,35 @@ frappe.ui.form.on("Simulacao De Credito", {
 		}
 
 		frm.add_custom_button(__("Converter em Cliente e Criar Pedido de Crédito"), () => {
-			frappe.confirm(
-				__(
-					"Isto converte o Proponente em Cliente (se ainda não o for) e cria um Pedido de Crédito pré-preenchido a partir desta simulação. Continuar?"
-				),
-				() => {
-					frappe.call({
-						method:
-							"entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito.criar_pedido_de_credito",
-						args: { simulacao: frm.doc.name },
-						freeze: true,
-						callback: (r) => {
-							if (r.message) {
-								frappe.set_route("Form", "Pedido De Credito", r.message);
-							}
-						},
-					});
+			frappe.db.get_doc("Proponente", frm.doc.proponente).then((proponente) => {
+				if (proponente.convertido_em_cliente) {
+					frappe.confirm(
+						__(
+							"Isto cria um Pedido de Crédito pré-preenchido a partir desta simulação. Continuar?"
+						),
+						() => {
+							frappe.call({
+								method:
+									"entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito.criar_pedido_de_credito",
+								args: { simulacao: frm.doc.name },
+								freeze: true,
+								callback: (r) => {
+									if (r.message) {
+										frappe.set_route("Form", "Pedido De Credito", r.message);
+									}
+								},
+							});
+						}
+					);
+				} else {
+					frappe.msgprint(
+						__(
+							"Este Proponente ainda não é Cliente. Complete e grave os dados do cliente; depois volte a esta simulação e clique novamente neste botão para criar o Pedido de Crédito."
+						)
+					);
+					entre_mc.abrir_cliente_a_partir_do_proponente(proponente);
 				}
-			);
+			});
 		}).addClass("btn-primary");
 	},
 
