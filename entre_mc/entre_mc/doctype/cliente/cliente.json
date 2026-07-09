@@ -160,7 +160,7 @@
   {
    "fieldname": "referencias_pessoais",
    "fieldtype": "Table",
-   "options": "Referência Pessoal"
+   "options": "Referencia Pessoal"
   },
   {
    "fieldname": "sb_documentacao",

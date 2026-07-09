@@ -17,7 +17,7 @@ class ExecucaoDeGarantia(Document):
 			)
 
 	def on_submit(self):
-		pedido = frappe.get_doc("Pedido de Crédito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
 		pedido.marcar_como_liquidado()
 
 		frappe.db.set_value("Garantia", self.garantia, "status", "Não Disponível")

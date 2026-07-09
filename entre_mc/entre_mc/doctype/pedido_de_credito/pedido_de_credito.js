@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Dércio Bobo and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Pedido de Crédito", {
+frappe.ui.form.on("Pedido de Credito", {
 	onload(frm) {
 		if (frm.is_new() && !frm.doc.frequencia) {
 			frappe.db.get_single_value("MC Settings", "frequencia_padrao").then((value) => {
@@ -16,7 +16,7 @@ frappe.ui.form.on("Pedido de Crédito", {
 
 	simulacao_de_credito(frm) {
 		if (!frm.doc.simulacao_de_credito) return;
-		frappe.db.get_doc("Simulação de Crédito", frm.doc.simulacao_de_credito).then((sim) => {
+		frappe.db.get_doc("Simulacao de Credito", frm.doc.simulacao_de_credito).then((sim) => {
 			frm.set_value({
 				produto: sim.produto,
 				capital_solicitado: sim.capital_solicitado,

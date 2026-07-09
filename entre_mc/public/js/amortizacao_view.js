@@ -3,8 +3,8 @@
 
 frappe.provide("entre_mc");
 
-// Shared HTML renderer for a Plano de Amortização, used by both
-// Simulação de Crédito (live pre-save preview) and Pedido de Crédito
+// Shared HTML renderer for a Plano de Amortizacao, used by both
+// Simulacao de Credito (live pre-save preview) and Pedido de Credito
 // (post-approval schedule view).
 entre_mc.render_plano_html = function (rows, currency) {
 	if (!rows || !rows.length) {

@@ -96,7 +96,7 @@
   {
    "fieldname": "sb_plano",
    "fieldtype": "Section Break",
-   "label": "Plano de Amortização"
+   "label": "Plano de Amortizacao"
   },
   {
    "fieldname": "pre_visualizacao_html",
@@ -107,8 +107,8 @@
    "collapsible": 1,
    "fieldname": "plano_de_amortizacao",
    "fieldtype": "Table",
-   "label": "Plano de Amortização (dados)",
-   "options": "Plano de Amortização",
+   "label": "Plano de Amortizacao (dados)",
+   "options": "Plano de Amortizacao",
    "read_only": 1
   }
  ],
@@ -117,7 +117,7 @@
  "modified": "2026-07-09 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
- "name": "Simulação de Crédito",
+ "name": "Simulacao de Credito",
  "owner": "Administrator",
  "permissions": [
   {

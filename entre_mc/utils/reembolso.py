@@ -3,7 +3,7 @@
 
 """Motor de alocação de reembolsos.
 
-Aplica um pagamento às prestações em aberto do Plano de Amortização, seguindo
+Aplica um pagamento às prestações em aberto do Plano de Amortizacao, seguindo
 obrigatoriamente a ordem de liquidação definida na especificação:
 
 - Sem multa nem juros de mora: Juros -> Capital
@@ -31,7 +31,7 @@ COMPONENTE_LABEL = {
 
 
 def aplicar_alocacao(rows, produto_doc, settings, montante_pago, data_pagamento):
-	"""Muta `rows` (linhas do Plano de Amortização, ordenadas por número) in place.
+	"""Muta `rows` (linhas do Plano de Amortizacao, ordenadas por número) in place.
 
 	Devolve a lista de alocações efetuadas: [{"prestacao": n, "componente": x, "valor": v}, ...]
 	Lança frappe.ValidationError se o montante pago exceder o total em dívida.
