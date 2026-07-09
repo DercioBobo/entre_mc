@@ -56,8 +56,8 @@
    "description": "Preenchido quando o pedido resulta de uma simulação previamente feita pelo proponente que se tornou cliente.",
    "fieldname": "simulacao_de_credito",
    "fieldtype": "Link",
-   "label": "Simulacao de Credito",
-   "options": "Simulacao de Credito"
+   "label": "Simulacao De Credito",
+   "options": "Simulacao De Credito"
   },
   {
    "fieldname": "cb_1",
@@ -154,7 +154,7 @@
   {
    "fieldname": "sb_plano",
    "fieldtype": "Section Break",
-   "label": "Plano de Amortizacao"
+   "label": "Plano De Amortizacao"
   },
   {
    "fieldname": "pre_visualizacao_html",
@@ -165,8 +165,8 @@
    "collapsible": 1,
    "fieldname": "plano_de_amortizacao",
    "fieldtype": "Table",
-   "label": "Plano de Amortizacao (dados)",
-   "options": "Plano de Amortizacao",
+   "label": "Plano De Amortizacao (dados)",
+   "options": "Plano De Amortizacao",
    "read_only": 1
   }
  ],
@@ -175,7 +175,7 @@
  "modified": "2026-07-09 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
- "name": "Pedido de Credito",
+ "name": "Pedido De Credito",
  "owner": "Administrator",
  "permissions": [
   {

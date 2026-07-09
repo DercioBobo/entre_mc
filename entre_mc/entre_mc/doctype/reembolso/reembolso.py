@@ -19,8 +19,8 @@ LABEL_TO_CAMPO_PAGO = {
 class Reembolso(Document):
 	def validate(self):
 		"""Pré-visualização: simula a alocação sobre uma cópia em memória do plano,
-		sem persistir alterações no Pedido de Credito."""
-		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
+		sem persistir alterações no Pedido De Credito."""
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
 		produto = frappe.get_doc("Produto", pedido.produto)
 		settings = get_settings()
 
@@ -33,14 +33,14 @@ class Reembolso(Document):
 			self.append("alocacoes", alocacao)
 
 	def on_submit(self):
-		"""Aplica a alocação a sério, persistindo o Pedido de Credito.
+		"""Aplica a alocação a sério, persistindo o Pedido De Credito.
 
 		`validate()` já correu como parte deste submit e gravou `self.alocacoes` com
 		uma simulação sobre uma cópia em memória do plano; aqui recalculamos (de
 		forma determinística, com os mesmos dados) diretamente sobre as linhas reais
 		do Pedido para as persistir - sem voltar a tocar em `self.alocacoes`.
 		"""
-		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
 		produto = frappe.get_doc("Produto", pedido.produto)
 		settings = get_settings()
 
@@ -57,7 +57,7 @@ class Reembolso(Document):
 
 	def on_cancel(self):
 		"""Reverte exatamente os valores registados por este Reembolso."""
-		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
 		linhas_por_numero = {row.numero: row for row in pedido.plano_de_amortizacao}
 
 		for alocacao in self.alocacoes:

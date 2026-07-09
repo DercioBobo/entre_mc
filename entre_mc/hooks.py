@@ -17,7 +17,7 @@ app_color = "#2c7a4b"
 # Fixtures
 # ------------------
 # Exported so `bench get-app` + `bench migrate` reproduces roles and the
-# Pedido de Credito approval workflow out of the box. All are safely
+# Pedido De Credito approval workflow out of the box. All are safely
 # editable afterwards from the UI (Role / Workflow / Workflow State lists).
 
 fixtures = [
@@ -60,7 +60,7 @@ fixtures = [
 	},
 	{
 		"dt": "Workflow",
-		"filters": [["name", "in", ["Pedido de Credito Workflow"]]],
+		"filters": [["name", "in", ["Pedido De Credito Workflow"]]],
 	},
 	{
 		"dt": "Print Format",
@@ -70,10 +70,10 @@ fixtures = [
 				"in",
 				[
 					"Ficha de Cadastro e Avaliação de Risco",
-					"Pedido de Credito - Declaração",
-					"Simulacao de Credito",
+					"Pedido De Credito - Declaração",
+					"Simulacao De Credito",
 					"Auto de Entrega e Termo de Fiel Depositário",
-					"Recibo de Quitação e Devolucao da Garantia",
+					"Recibo de Quitação e Devolucao Da Garantia",
 				],
 			]
 		],

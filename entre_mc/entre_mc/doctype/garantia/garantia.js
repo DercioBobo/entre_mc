@@ -7,7 +7,7 @@ frappe.ui.form.on("Garantia", {
 	},
 });
 
-frappe.ui.form.on("Item de Garantia", {
+frappe.ui.form.on("Item De Garantia", {
 	itens_add(frm) {
 		render_gallery(frm);
 	},

@@ -61,7 +61,7 @@
    "fieldname": "itens",
    "fieldtype": "Table",
    "label": "Itens",
-   "options": "Item de Garantia"
+   "options": "Item De Garantia"
   },
   {
    "fieldname": "sb_galeria",

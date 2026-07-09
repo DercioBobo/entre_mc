@@ -8,16 +8,16 @@ from frappe.model.document import Document
 
 class Desembolso(Document):
 	def validate(self):
-		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
 		if pedido.workflow_state != "Aprovado":
-			frappe.throw(_("O Pedido de Credito {0} ainda não foi aprovado.").format(pedido.name))
+			frappe.throw(_("O Pedido De Credito {0} ainda não foi aprovado.").format(pedido.name))
 		if pedido.status:
 			frappe.throw(
-				_("O Pedido de Credito {0} já tem um desembolso registado ({1}).").format(
+				_("O Pedido De Credito {0} já tem um desembolso registado ({1}).").format(
 					pedido.name, pedido.status
 				)
 			)
 
 	def on_submit(self):
-		pedido = frappe.get_doc("Pedido de Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
 		pedido.marcar_como_desembolsado()

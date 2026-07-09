@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Dércio Bobo and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Simulacao de Credito", {
+frappe.ui.form.on("Simulacao De Credito", {
 	onload(frm) {
 		if (frm.is_new() && !frm.doc.frequencia) {
 			frappe.db.get_single_value("MC Settings", "frequencia_padrao").then((value) => {

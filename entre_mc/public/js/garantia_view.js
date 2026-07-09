@@ -8,7 +8,7 @@ const GARANTIA_ESTADO_COLOR = {
 	Usado: "orange",
 };
 
-// Card gallery for the Item de Garantia child table, used instead of the
+// Card gallery for the Item De Garantia child table, used instead of the
 // default grid on the Garantia form.
 entre_mc.render_garantia_gallery_html = function (itens, currency) {
 	if (!itens || !itens.length) {

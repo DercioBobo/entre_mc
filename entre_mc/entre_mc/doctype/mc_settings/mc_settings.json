@@ -43,7 +43,7 @@
   },
   {
    "default": "90",
-   "description": "Nº de dias de atraso (da prestação mais antiga em dívida) a partir do qual a tarefa diária marca automaticamente o Pedido de Credito como Incumprimento.",
+   "description": "Nº de dias de atraso (da prestação mais antiga em dívida) a partir do qual a tarefa diária marca automaticamente o Pedido De Credito como Incumprimento.",
    "fieldname": "dias_para_incumprimento",
    "fieldtype": "Int",
    "label": "Dias para Incumprimento",

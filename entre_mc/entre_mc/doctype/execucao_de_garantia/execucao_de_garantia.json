@@ -44,8 +44,8 @@
    "fieldname": "pedido_de_credito",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Pedido de Credito",
-   "options": "Pedido de Credito",
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
    "reqd": 1
   },
   {
@@ -61,7 +61,7 @@
  "modified": "2026-07-09 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
- "name": "Execucao de Garantia",
+ "name": "Execucao De Garantia",
  "owner": "Administrator",
  "permissions": [
   {

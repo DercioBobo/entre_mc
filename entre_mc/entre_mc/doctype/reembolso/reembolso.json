@@ -26,8 +26,8 @@
    "fieldname": "pedido_de_credito",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Pedido de Credito",
-   "options": "Pedido de Credito",
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
    "reqd": 1
   },
   {
@@ -66,7 +66,7 @@
    "description": "Ordem de liquidação aplicada automaticamente: Juros de Mora → Multa → Juros → Capital (conforme aplicável).",
    "fieldname": "alocacoes",
    "fieldtype": "Table",
-   "options": "Alocacao de Reembolso",
+   "options": "Alocacao De Reembolso",
    "read_only": 1
   }
  ],

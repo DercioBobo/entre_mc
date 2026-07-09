@@ -13,7 +13,7 @@ ESTADOS_EM_ABERTO = ("Desembolsado", "Em Pagamento")
 
 
 def atualizar_atrasos():
-	"""Corre diariamente. Para cada Pedido de Credito em aberto:
+	"""Corre diariamente. Para cada Pedido De Credito em aberto:
 
 	- recalcula Multa/Juros de Mora acumulados e o estado ("Atrasado", etc.) de
 	  cada prestação ainda não paga, sem tocar em valores já pagos;
@@ -29,13 +29,13 @@ def atualizar_atrasos():
 	hoje = getdate(nowdate())
 
 	for nome_pedido in frappe.get_all(
-		"Pedido de Credito", filters={"status": ["in", ESTADOS_EM_ABERTO]}, pluck="name"
+		"Pedido De Credito", filters={"status": ["in", ESTADOS_EM_ABERTO]}, pluck="name"
 	):
 		_atualizar_pedido(nome_pedido, settings, hoje)
 
 
 def _atualizar_pedido(nome_pedido, settings, hoje):
-	pedido = frappe.get_doc("Pedido de Credito", nome_pedido)
+	pedido = frappe.get_doc("Pedido De Credito", nome_pedido)
 	produto = frappe.get_doc("Produto", pedido.produto)
 
 	maior_atraso = 0
