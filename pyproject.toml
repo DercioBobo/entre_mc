@@ -16,6 +16,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["entre_mc*"]
+namespaces = false
 
 [tool.bench.dev-dependencies]
 
