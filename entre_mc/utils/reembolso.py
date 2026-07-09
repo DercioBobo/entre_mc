@@ -30,8 +30,12 @@ COMPONENTE_LABEL = {
 }
 
 
-def aplicar_alocacao(rows, produto_doc, settings, montante_pago, data_pagamento):
+def aplicar_alocacao(rows, taxa_diaria_de_multa, juros_de_mora, settings, montante_pago, data_pagamento):
 	"""Muta `rows` (linhas do Plano De Amortizacao, ordenadas por número) in place.
+
+	`taxa_diaria_de_multa` e `juros_de_mora` devem vir do Pedido de Crédito (herdadas do
+	Produto no momento da criação do pedido), não do Produto ao vivo - assim, alterar as
+	taxas de um Produto não reescreve retroativamente os encargos de pedidos já criados.
 
 	Devolve a lista de alocações efetuadas: [{"prestacao": n, "componente": x, "valor": v}, ...]
 	Lança frappe.ValidationError se o montante pago exceder o total em dívida.
@@ -47,7 +51,7 @@ def aplicar_alocacao(rows, produto_doc, settings, montante_pago, data_pagamento)
 		if row.status == "Pago":
 			continue
 
-		atualizar_encargos_da_linha(row, produto_doc, settings, data_pagamento, precision)
+		atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision)
 
 		devido = {
 			"juros_mora": flt(row.juros_mora_aplicado - row.juros_mora_pago, precision),
@@ -90,7 +94,7 @@ def aplicar_alocacao(rows, produto_doc, settings, montante_pago, data_pagamento)
 	return alocacoes
 
 
-def atualizar_encargos_da_linha(row, produto_doc, settings, data_pagamento, precision):
+def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision):
 	dias_atraso = date_diff(data_pagamento, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 	if dias_atraso <= 0:
 		return
@@ -100,13 +104,13 @@ def atualizar_encargos_da_linha(row, produto_doc, settings, data_pagamento, prec
 		(row.capital_mensal - row.capital_pago) + (row.juros_mensais - row.juros_pago), precision
 	)
 
-	if produto_doc.taxa_diaria_de_multa:
+	if taxa_diaria_de_multa:
 		row.multa_aplicada = flt(
-			flt(produto_doc.taxa_diaria_de_multa) / 100 * dias_atraso * prestacao_em_atraso, precision
+			flt(taxa_diaria_de_multa) / 100 * dias_atraso * prestacao_em_atraso, precision
 		)
-	if produto_doc.juros_de_mora:
+	if juros_de_mora:
 		row.juros_mora_aplicado = flt(
-			flt(produto_doc.juros_de_mora) / 100 * capital_em_atraso * dias_atraso / 30, precision
+			flt(juros_de_mora) / 100 * capital_em_atraso * dias_atraso / 30, precision
 		)
 
 

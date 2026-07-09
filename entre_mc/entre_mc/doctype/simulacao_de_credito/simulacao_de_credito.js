@@ -12,6 +12,36 @@ frappe.ui.form.on("Simulacao De Credito", {
 
 	refresh(frm) {
 		render_preview(frm);
+
+		if (frm.is_new()) return;
+
+		if (frm.doc.pedido_de_credito) {
+			frm.add_custom_button(__("Ver Pedido de Crédito"), () => {
+				frappe.set_route("Form", "Pedido De Credito", frm.doc.pedido_de_credito);
+			});
+			return;
+		}
+
+		frm.add_custom_button(__("Converter em Cliente e Criar Pedido de Crédito"), () => {
+			frappe.confirm(
+				__(
+					"Isto converte o Proponente em Cliente (se ainda não o for) e cria um Pedido de Crédito pré-preenchido a partir desta simulação. Continuar?"
+				),
+				() => {
+					frappe.call({
+						method:
+							"entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito.criar_pedido_de_credito",
+						args: { simulacao: frm.doc.name },
+						freeze: true,
+						callback: (r) => {
+							if (r.message) {
+								frappe.set_route("Form", "Pedido De Credito", r.message);
+							}
+						},
+					});
+				}
+			);
+		}).addClass("btn-primary");
 	},
 
 	produto(frm) {

@@ -36,13 +36,14 @@ def atualizar_atrasos():
 
 def _atualizar_pedido(nome_pedido, settings, hoje):
 	pedido = frappe.get_doc("Pedido De Credito", nome_pedido)
-	produto = frappe.get_doc("Produto", pedido.produto)
 
 	maior_atraso = 0
 	for row in pedido.plano_de_amortizacao:
 		if row.status == "Pago":
 			continue
-		atualizar_encargos_da_linha(row, produto, settings, hoje, 2)
+		atualizar_encargos_da_linha(
+			row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
+		)
 		atualizar_estado_da_linha(row, hoje, settings)
 
 		dias_atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)

@@ -21,13 +21,22 @@ class PedidoDeCredito(Document):
 		check_limites(self.produto, self.capital_solicitado, self.prazo)
 
 		if self.workflow_state == APROVADO and not self.plano_de_amortizacao:
+			# Estimativa: gerada logo após aprovação, anteriormente ao desembolso real.
+			# As datas ficam ancoradas em hoje só para efeitos de pré-visualização/impressão -
+			# confirmar_desembolso() volta a gerar o plano com a data real de desembolso,
+			# que é a que efetivamente conta para vencimentos e mora.
 			self.gerar_plano_de_amortizacao()
 
 		self.atualizar_saldo_em_divida()
 
-	def gerar_plano_de_amortizacao(self):
+	def gerar_plano_de_amortizacao(self, data_inicio=None):
 		linhas = calcular_plano(
-			self.produto, self.capital_solicitado, self.taxa_de_juros, self.prazo, self.frequencia
+			self.produto,
+			self.capital_solicitado,
+			self.taxa_de_juros,
+			self.prazo,
+			self.frequencia,
+			data_inicio=data_inicio,
 		)
 		self.set("plano_de_amortizacao", [])
 		for linha in linhas:
@@ -51,7 +60,16 @@ class PedidoDeCredito(Document):
 		self.status = "Liquidado"
 		self.save(ignore_permissions=True)
 
-	def marcar_como_desembolsado(self):
+	def confirmar_desembolso(self, data_de_desembolso):
+		"""Ancora o plano de amortização à data real de desembolso.
+
+		O plano gerado em Aprovado era só uma estimativa (baseada na data de
+		aprovação); o cliente só passa a dever a partir de quando recebe o
+		dinheiro, por isso as datas de vencimento têm de partir daqui, não da
+		aprovação. Seguro de regenerar por completo porque, antes do desembolso,
+		não pode ainda existir nenhum Reembolso contra este pedido.
+		"""
+		self.gerar_plano_de_amortizacao(data_inicio=data_de_desembolso)
 		self.status = "Desembolsado"
 		self.save(ignore_permissions=True)
 

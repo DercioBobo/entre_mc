@@ -21,11 +21,15 @@ class Reembolso(Document):
 		"""Pré-visualização: simula a alocação sobre uma cópia em memória do plano,
 		sem persistir alterações no Pedido De Credito."""
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
-		produto = frappe.get_doc("Produto", pedido.produto)
 		settings = get_settings()
 
 		alocacoes = aplicar_alocacao(
-			pedido.plano_de_amortizacao, produto, settings, self.montante_pago, self.data_de_pagamento
+			pedido.plano_de_amortizacao,
+			pedido.taxa_diaria_de_multa,
+			pedido.juros_de_mora,
+			settings,
+			self.montante_pago,
+			self.data_de_pagamento,
 		)
 
 		self.set("alocacoes", [])
@@ -41,11 +45,15 @@ class Reembolso(Document):
 		do Pedido para as persistir - sem voltar a tocar em `self.alocacoes`.
 		"""
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
-		produto = frappe.get_doc("Produto", pedido.produto)
 		settings = get_settings()
 
 		aplicar_alocacao(
-			pedido.plano_de_amortizacao, produto, settings, self.montante_pago, self.data_de_pagamento
+			pedido.plano_de_amortizacao,
+			pedido.taxa_diaria_de_multa,
+			pedido.juros_de_mora,
+			settings,
+			self.montante_pago,
+			self.data_de_pagamento,
 		)
 
 		pedido.atualizar_saldo_em_divida()

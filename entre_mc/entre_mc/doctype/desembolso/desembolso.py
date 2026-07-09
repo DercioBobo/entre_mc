@@ -20,4 +20,4 @@ class Desembolso(Document):
 
 	def on_submit(self):
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
-		pedido.marcar_como_desembolsado()
+		pedido.confirmar_desembolso(self.data_de_desembolso)

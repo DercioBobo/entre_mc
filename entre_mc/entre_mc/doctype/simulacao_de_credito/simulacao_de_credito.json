@@ -16,6 +16,8 @@
   "finalidade",
   "cb_2",
   "frequencia",
+  "sb_conversao",
+  "pedido_de_credito",
   "sb_plano",
   "pre_visualizacao_html",
   "plano_de_amortizacao"
@@ -92,6 +94,19 @@
    "label": "Frequência",
    "options": "Diário\nSemanal\nQuinzenal\nMensal",
    "reqd": 1
+  },
+  {
+   "fieldname": "sb_conversao",
+   "fieldtype": "Section Break",
+   "label": "Conversão em Pedido de Crédito"
+  },
+  {
+   "depends_on": "eval:doc.pedido_de_credito",
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "label": "Pedido de Crédito",
+   "options": "Pedido De Credito",
+   "read_only": 1
   },
   {
    "fieldname": "sb_plano",
