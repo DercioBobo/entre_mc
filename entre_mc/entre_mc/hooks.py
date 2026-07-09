@@ -84,10 +84,13 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/entre_mc/css/entre_mc.css"
+# Note: esbuild bundle entry points - referenced by filename only (relative to
+# public/js or public/css), NOT by their built /assets/... output path. Frappe
+# rewrites these to the hashed /assets/ URL automatically at `bench build` time.
+app_include_css = "entre_mc.bundle.css"
 app_include_js = [
-	"/assets/entre_mc/js/amortizacao_view.js",
-	"/assets/entre_mc/js/garantia_view.js",
+	"amortizacao_view.bundle.js",
+	"garantia_view.bundle.js",
 ]
 
 # Document Events
