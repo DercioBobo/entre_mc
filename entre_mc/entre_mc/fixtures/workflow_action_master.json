@@ -1,0 +1,17 @@
+[
+ {
+  "doctype": "Workflow Action Master",
+  "name": "Enviar para Aprovação",
+  "workflow_action_name": "Enviar para Aprovação"
+ },
+ {
+  "doctype": "Workflow Action Master",
+  "name": "Aprovar",
+  "workflow_action_name": "Aprovar"
+ },
+ {
+  "doctype": "Workflow Action Master",
+  "name": "Rejeitar",
+  "workflow_action_name": "Rejeitar"
+ }
+]

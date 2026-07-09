@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "cb_1",
+  "frequencia_padrao",
+  "dias_de_tolerancia",
+  "dias_para_incumprimento",
+  "ativar_capitalizacao"
+ ],
+ "fields": [
+  {
+   "description": "Empresa ERPNext usada como contexto por defeito (dados da instituição, moeda, etc. vêm daqui).",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Empresa",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Mensal",
+   "description": "Frequência pré-selecionada em novas Simulações e Pedidos de Crédito.",
+   "fieldname": "frequencia_padrao",
+   "fieldtype": "Select",
+   "label": "Frequência Padrão",
+   "options": "Diário\nSemanal\nQuinzenal\nMensal",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "description": "Número de dias após a data limite de pagamento antes de começar a aplicar Multa e Juros de Mora.",
+   "fieldname": "dias_de_tolerancia",
+   "fieldtype": "Int",
+   "label": "Dias de Tolerância",
+   "non_negative": 1
+  },
+  {
+   "default": "90",
+   "description": "Nº de dias de atraso (da prestação mais antiga em dívida) a partir do qual a tarefa diária marca automaticamente o Pedido de Crédito como Incumprimento.",
+   "fieldname": "dias_para_incumprimento",
+   "fieldtype": "Int",
+   "label": "Dias para Incumprimento",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "description": "Reservado: comportamento de capitalização de juros ainda por definir. Não tem efeito enquanto desligado.",
+   "fieldname": "ativar_capitalizacao",
+   "fieldtype": "Check",
+   "label": "Ativar Capitalização (em definição)"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "MC Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Gestor de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

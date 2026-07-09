@@ -1,0 +1,164 @@
+{
+ "actions": [],
+ "autoname": "field:nome",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "nome",
+  "modelo_de_calculo_de_juros",
+  "cb_1",
+  "taxa_de_juros",
+  "descricao_objetivo",
+  "sb_limites",
+  "capital_minimo",
+  "capital_maximo",
+  "cb_limites",
+  "prazo_minimo",
+  "prazo_maximo",
+  "sb_penalizacoes",
+  "taxa_diaria_de_multa",
+  "juros_de_mora",
+  "cb_penalizacoes",
+  "percentagem_de_capitalizacao"
+ ],
+ "fields": [
+  {
+   "fieldname": "nome",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nome",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "modelo_de_calculo_de_juros",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Modelo de Cálculo de Juros",
+   "options": "Constante\nDecrescente\nMisto",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Taxa de juros mensal (Tj) aplicada nas fórmulas de amortização.",
+   "fieldname": "taxa_de_juros",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Taxa de Juros",
+   "reqd": 1
+  },
+  {
+   "fieldname": "descricao_objetivo",
+   "fieldtype": "Small Text",
+   "label": "Descrição/Objetivo"
+  },
+  {
+   "fieldname": "sb_limites",
+   "fieldtype": "Section Break",
+   "label": "Limites"
+  },
+  {
+   "fieldname": "capital_minimo",
+   "fieldtype": "Currency",
+   "label": "Capital Mínimo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "capital_maximo",
+   "fieldtype": "Currency",
+   "label": "Capital Máximo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_limites",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Em meses.",
+   "fieldname": "prazo_minimo",
+   "fieldtype": "Int",
+   "label": "Prazo Mínimo",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "description": "Em meses.",
+   "fieldname": "prazo_maximo",
+   "fieldtype": "Int",
+   "label": "Prazo Máximo",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "sb_penalizacoes",
+   "fieldtype": "Section Break",
+   "label": "Penalizações por Atraso"
+  },
+  {
+   "description": "Multa = Taxa Diária de Multa × dias de atraso × prestação em atraso.",
+   "fieldname": "taxa_diaria_de_multa",
+   "fieldtype": "Percent",
+   "label": "Taxa Diária de Multa"
+  },
+  {
+   "description": "Juros de Mora = Juros de Mora (%) × capital em atraso × dias de atraso / 30.",
+   "fieldname": "juros_de_mora",
+   "fieldtype": "Percent",
+   "label": "Juros de Mora"
+  },
+  {
+   "fieldname": "cb_penalizacoes",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Reservado: comportamento ainda por definir (ver MC Settings).",
+   "fieldname": "percentagem_de_capitalizacao",
+   "fieldtype": "Percent",
+   "label": "Percentagem (%) de Capitalização"
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Produto",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Analista de Crédito"
+  },
+  {
+   "read": 1,
+   "role": "Oficial de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,80 @@
+[
+ {
+  "doctype": "Workflow",
+  "name": "Pedido de Crédito Workflow",
+  "workflow_name": "Pedido de Crédito Workflow",
+  "document_type": "Pedido de Crédito",
+  "is_active": 1,
+  "send_email_alert": 0,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rascunho",
+    "doc_status": "0",
+    "allow_edit": "Oficial de Crédito"
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pendente Aprovação 1",
+    "doc_status": "0",
+    "allow_edit": "Analista de Crédito"
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Pendente Aprovação 2",
+    "doc_status": "0",
+    "allow_edit": "Gestor de Crédito"
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Aprovado",
+    "doc_status": "0",
+    "allow_edit": "System Manager"
+   },
+   {
+    "doctype": "Workflow Document State",
+    "state": "Rejeitado",
+    "doc_status": "0",
+    "allow_edit": "System Manager"
+   }
+  ],
+  "transitions": [
+   {
+    "doctype": "Workflow Transition",
+    "state": "Rascunho",
+    "action": "Enviar para Aprovação",
+    "next_state": "Pendente Aprovação 1",
+    "allowed": "Oficial de Crédito"
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pendente Aprovação 1",
+    "action": "Aprovar",
+    "next_state": "Pendente Aprovação 2",
+    "allowed": "Analista de Crédito"
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pendente Aprovação 1",
+    "action": "Rejeitar",
+    "next_state": "Rejeitado",
+    "allowed": "Analista de Crédito"
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pendente Aprovação 2",
+    "action": "Aprovar",
+    "next_state": "Aprovado",
+    "allowed": "Gestor de Crédito"
+   },
+   {
+    "doctype": "Workflow Transition",
+    "state": "Pendente Aprovação 2",
+    "action": "Rejeitar",
+    "next_state": "Rejeitado",
+    "allowed": "Gestor de Crédito"
+   }
+  ]
+ }
+]

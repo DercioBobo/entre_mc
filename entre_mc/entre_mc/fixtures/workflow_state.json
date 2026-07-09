@@ -1,0 +1,32 @@
+[
+ {
+  "doctype": "Workflow State",
+  "name": "Rascunho",
+  "workflow_state_name": "Rascunho",
+  "style": ""
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pendente Aprovação 1",
+  "workflow_state_name": "Pendente Aprovação 1",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Pendente Aprovação 2",
+  "workflow_state_name": "Pendente Aprovação 2",
+  "style": "Warning"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Aprovado",
+  "workflow_state_name": "Aprovado",
+  "style": "Success"
+ },
+ {
+  "doctype": "Workflow State",
+  "name": "Rejeitado",
+  "workflow_state_name": "Rejeitado",
+  "style": "Danger"
+ }
+]

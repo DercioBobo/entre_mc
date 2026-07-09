@@ -1,0 +1,26 @@
+[
+ {
+  "doctype": "Role",
+  "name": "Oficial de Crédito",
+  "role_name": "Oficial de Crédito",
+  "desk_access": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "Analista de Crédito",
+  "role_name": "Analista de Crédito",
+  "desk_access": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "Gestor de Crédito",
+  "role_name": "Gestor de Crédito",
+  "desk_access": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "Tesoureiro",
+  "role_name": "Tesoureiro",
+  "desk_access": 1
+ }
+]

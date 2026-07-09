@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "autoname": "field:nome_completo",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "nome_completo",
+  "data_de_nascimento",
+  "bi",
+  "cb_1",
+  "ocupacao",
+  "local_de_trabalho",
+  "rendimento_mensal",
+  "sb_conversao",
+  "convertido_em_cliente",
+  "cliente"
+ ],
+ "fields": [
+  {
+   "fieldname": "nome_completo",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nome Completo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "data_de_nascimento",
+   "fieldtype": "Date",
+   "label": "Data de Nascimento",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bi",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "BI",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ocupacao",
+   "fieldtype": "Data",
+   "label": "Ocupação"
+  },
+  {
+   "fieldname": "local_de_trabalho",
+   "fieldtype": "Data",
+   "label": "Local de Trabalho"
+  },
+  {
+   "fieldname": "rendimento_mensal",
+   "fieldtype": "Currency",
+   "label": "Rendimento Mensal"
+  },
+  {
+   "fieldname": "sb_conversao",
+   "fieldtype": "Section Break",
+   "label": "Conversão em Cliente"
+  },
+  {
+   "default": "0",
+   "fieldname": "convertido_em_cliente",
+   "fieldtype": "Check",
+   "label": "Convertido em Cliente",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.convertido_em_cliente",
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "label": "Cliente",
+   "options": "Cliente",
+   "read_only": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Proponente",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Gestor de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

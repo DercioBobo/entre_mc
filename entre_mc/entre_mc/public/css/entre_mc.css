@@ -1,0 +1,64 @@
+.entre-mc-plano-wrapper {
+	overflow-x: auto;
+}
+
+.entre-mc-plano-table th,
+.entre-mc-plano-table td {
+	white-space: nowrap;
+}
+
+.entre-mc-plano-table tr.entre-mc-atrasado {
+	background-color: var(--bg-red, #fdecea);
+}
+
+.entre-mc-plano-table tr.entre-mc-pago {
+	background-color: var(--bg-green, #e9f7ef);
+}
+
+.entre-mc-plano-empty {
+	padding: var(--padding-md, 12px) 0;
+}
+
+.entre-mc-garantia-gallery {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+.entre-mc-garantia-card {
+	width: 200px;
+	border: 1px solid var(--border-color, #d1d8dd);
+	border-radius: var(--border-radius-md, 8px);
+	overflow: hidden;
+	background: var(--card-bg, #fff);
+}
+
+.entre-mc-garantia-card img {
+	width: 100%;
+	height: 130px;
+	object-fit: cover;
+	background: var(--control-bg, #f4f5f6);
+}
+
+.entre-mc-garantia-card .entre-mc-garantia-body {
+	padding: 8px 10px;
+}
+
+.entre-mc-garantia-card .entre-mc-garantia-title {
+	font-weight: 600;
+	margin-bottom: 2px;
+}
+
+.entre-mc-garantia-card .entre-mc-garantia-meta {
+	font-size: 12px;
+	color: var(--text-muted, #8d99a6);
+}
+
+.entre-mc-garantia-card .entre-mc-garantia-status {
+	display: inline-block;
+	margin-top: 6px;
+	padding: 1px 8px;
+	border-radius: 10px;
+	font-size: 11px;
+}

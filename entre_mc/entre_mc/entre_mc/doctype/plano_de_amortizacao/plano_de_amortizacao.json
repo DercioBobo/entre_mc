@@ -1,0 +1,148 @@
+{
+ "actions": [],
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "numero",
+  "data_limite_pagamento",
+  "status",
+  "cb_1",
+  "capital_mensal",
+  "juros_mensais",
+  "prestacao_total",
+  "saldo",
+  "sb_pagamentos",
+  "capital_pago",
+  "juros_pago",
+  "cb_pagamentos",
+  "multa_aplicada",
+  "multa_paga",
+  "cb_pagamentos_2",
+  "juros_mora_aplicado",
+  "juros_mora_pago"
+ ],
+ "fields": [
+  {
+   "fieldname": "numero",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Nº",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_limite_pagamento",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Data Limite de Pagamento",
+   "read_only": 1
+  },
+  {
+   "default": "Pendente",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Estado",
+   "options": "Pendente\nPago Parcial\nPago\nAtrasado",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "capital_mensal",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Capital Mensal",
+   "read_only": 1
+  },
+  {
+   "fieldname": "juros_mensais",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Juros Mensais",
+   "read_only": 1
+  },
+  {
+   "fieldname": "prestacao_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Prestação Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "saldo",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Saldo",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_pagamentos",
+   "fieldtype": "Section Break",
+   "label": "Pagamentos Registados"
+  },
+  {
+   "default": "0",
+   "fieldname": "capital_pago",
+   "fieldtype": "Currency",
+   "label": "Capital Pago",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "juros_pago",
+   "fieldtype": "Currency",
+   "label": "Juros Pago",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_pagamentos",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "multa_aplicada",
+   "fieldtype": "Currency",
+   "label": "Multa Aplicada",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "multa_paga",
+   "fieldtype": "Currency",
+   "label": "Multa Paga",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_pagamentos_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "juros_mora_aplicado",
+   "fieldtype": "Currency",
+   "label": "Juros de Mora Aplicado",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "juros_mora_pago",
+   "fieldtype": "Currency",
+   "label": "Juros de Mora Pago",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Plano de Amortização",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

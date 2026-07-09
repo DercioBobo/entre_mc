@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "nome",
+  "categoria",
+  "estado",
+  "numero_de_serie",
+  "valor_de_mercado",
+  "imagem",
+  "descricao"
+ ],
+ "fields": [
+  {
+   "fieldname": "nome",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nome",
+   "reqd": 1
+  },
+  {
+   "fieldname": "categoria",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Categoria"
+  },
+  {
+   "default": "Novo",
+   "fieldname": "estado",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Estado",
+   "options": "Novo\nUsado"
+  },
+  {
+   "fieldname": "numero_de_serie",
+   "fieldtype": "Data",
+   "label": "Número de Série"
+  },
+  {
+   "fieldname": "valor_de_mercado",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Valor de Mercado"
+  },
+  {
+   "fieldname": "imagem",
+   "fieldtype": "Attach Image",
+   "label": "Imagem"
+  },
+  {
+   "fieldname": "descricao",
+   "fieldtype": "Small Text",
+   "label": "Descrição"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Item de Garantia",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

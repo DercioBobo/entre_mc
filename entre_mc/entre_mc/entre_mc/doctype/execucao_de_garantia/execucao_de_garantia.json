@@ -1,0 +1,100 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "garantia",
+  "cliente",
+  "cb_1",
+  "pedido_de_credito",
+  "data"
+ ],
+ "fields": [
+  {
+   "default": "EXEG-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "EXEG-.YY.-.##"
+  },
+  {
+   "fieldname": "garantia",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Garantia",
+   "options": "Garantia",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "garantia.cliente",
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "label": "Cliente",
+   "options": "Cliente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pedido de Crédito",
+   "options": "Pedido de Crédito",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "data",
+   "fieldtype": "Date",
+   "label": "Data",
+   "reqd": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Execução de Garantia",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

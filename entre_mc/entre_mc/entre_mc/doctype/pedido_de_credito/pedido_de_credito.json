@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "cliente",
+  "produto",
+  "simulacao_de_credito",
+  "cb_1",
+  "capital_solicitado",
+  "taxa_de_juros",
+  "sb_2",
+  "prazo",
+  "finalidade",
+  "cb_2",
+  "frequencia",
+  "sb_estado",
+  "workflow_state",
+  "cb_estado",
+  "status",
+  "saldo_em_divida",
+  "sb_garantias",
+  "garantias",
+  "sb_plano",
+  "pre_visualizacao_html",
+  "plano_de_amortizacao"
+ ],
+ "fields": [
+  {
+   "default": "PC-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "PC-.YY.-.##"
+  },
+  {
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cliente",
+   "options": "Cliente",
+   "reqd": 1
+  },
+  {
+   "fieldname": "produto",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Produto",
+   "options": "Produto",
+   "reqd": 1
+  },
+  {
+   "description": "Preenchido quando o pedido resulta de uma simulação previamente feita pelo proponente que se tornou cliente.",
+   "fieldname": "simulacao_de_credito",
+   "fieldtype": "Link",
+   "label": "Simulação de Crédito",
+   "options": "Simulação de Crédito"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "capital_solicitado",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Capital Solicitado",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "produto.taxa_de_juros",
+   "fieldname": "taxa_de_juros",
+   "fieldtype": "Percent",
+   "label": "Taxa de Juros",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sb_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Em meses.",
+   "fieldname": "prazo",
+   "fieldtype": "Int",
+   "label": "Prazo",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "finalidade",
+   "fieldtype": "Select",
+   "label": "Finalidade",
+   "options": "Negócio\nConsumo\nHabitação\nAgricultura\nEducação\nOutro",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "frequencia",
+   "fieldtype": "Select",
+   "label": "Frequência",
+   "options": "Diário\nSemanal\nQuinzenal\nMensal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sb_estado",
+   "fieldtype": "Section Break",
+   "label": "Estado"
+  },
+  {
+   "fieldname": "workflow_state",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Estado de Aprovação",
+   "options": "Workflow State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_estado",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Estado do Crédito",
+   "options": "\nDesembolsado\nEm Pagamento\nLiquidado\nIncumprimento",
+   "read_only": 1
+  },
+  {
+   "fieldname": "saldo_em_divida",
+   "fieldtype": "Currency",
+   "label": "Saldo em Dívida",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_garantias",
+   "fieldtype": "Section Break",
+   "label": "Garantias"
+  },
+  {
+   "description": "Garantias pertencentes ao cliente.",
+   "fieldname": "garantias",
+   "fieldtype": "Table MultiSelect",
+   "options": "Pedido Garantia"
+  },
+  {
+   "fieldname": "sb_plano",
+   "fieldtype": "Section Break",
+   "label": "Plano de Amortização"
+  },
+  {
+   "fieldname": "pre_visualizacao_html",
+   "fieldtype": "HTML",
+   "label": "Tabela de Amortização"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "plano_de_amortizacao",
+   "fieldtype": "Table",
+   "label": "Plano de Amortização (dados)",
+   "options": "Plano de Amortização",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Pedido de Crédito",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Tesoureiro"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

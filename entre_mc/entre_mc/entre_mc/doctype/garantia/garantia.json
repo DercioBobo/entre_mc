@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "cliente",
+  "data",
+  "cb_1",
+  "status",
+  "sb_itens",
+  "itens",
+  "sb_galeria",
+  "galeria_html"
+ ],
+ "fields": [
+  {
+   "default": "GAR-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "GAR-.YY.-.##"
+  },
+  {
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cliente",
+   "options": "Cliente",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "data",
+   "fieldtype": "Date",
+   "label": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Disponível",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Estado",
+   "options": "Disponível\nNão Disponível\nDevolvida",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_itens",
+   "fieldtype": "Section Break",
+   "label": "Tabela de Garantias"
+  },
+  {
+   "fieldname": "itens",
+   "fieldtype": "Table",
+   "label": "Itens",
+   "options": "Item de Garantia"
+  },
+  {
+   "fieldname": "sb_galeria",
+   "fieldtype": "Section Break",
+   "label": "Galeria"
+  },
+  {
+   "fieldname": "galeria_html",
+   "fieldtype": "HTML",
+   "label": "Galeria"
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Garantia",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

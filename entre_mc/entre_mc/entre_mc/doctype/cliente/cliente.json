@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "autoname": "field:nome_completo",
+ "creation": "2026-07-09 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_pessoais",
+  "nome_completo",
+  "data_de_nascimento",
+  "cb_pessoais",
+  "nuit",
+  "estado_civil",
+  "proponente_de_origem",
+  "sb_localizacao",
+  "endereco",
+  "bairro",
+  "numero_da_casa",
+  "cb_localizacao",
+  "contacto_principal",
+  "contacto_alternativo",
+  "sb_profissionais",
+  "ocupacao",
+  "local_de_trabalho",
+  "cb_profissionais",
+  "rendimento_mensal",
+  "rendimento_mensal_medio",
+  "despesas_mensais_fixas",
+  "valor_disponivel_mensal",
+  "sb_referencias",
+  "referencias_pessoais",
+  "sb_documentacao",
+  "documentos"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_pessoais",
+   "fieldtype": "Section Break",
+   "label": "Dados Pessoais"
+  },
+  {
+   "fieldname": "nome_completo",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nome Completo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "data_de_nascimento",
+   "fieldtype": "Date",
+   "label": "Data de Nascimento",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_pessoais",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nuit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "NUIT",
+   "unique": 1
+  },
+  {
+   "fieldname": "estado_civil",
+   "fieldtype": "Select",
+   "label": "Estado Civil",
+   "options": "Solteiro(a)\nCasado(a)\nUnião de Facto\nDivorciado(a)\nViúvo(a)"
+  },
+  {
+   "fieldname": "proponente_de_origem",
+   "fieldtype": "Link",
+   "label": "Proponente de Origem",
+   "options": "Proponente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_localizacao",
+   "fieldtype": "Section Break",
+   "label": "Localização e Contactos"
+  },
+  {
+   "fieldname": "endereco",
+   "fieldtype": "Small Text",
+   "label": "Endereço"
+  },
+  {
+   "fieldname": "bairro",
+   "fieldtype": "Data",
+   "label": "Bairro"
+  },
+  {
+   "fieldname": "numero_da_casa",
+   "fieldtype": "Data",
+   "label": "Número da Casa"
+  },
+  {
+   "fieldname": "cb_localizacao",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contacto_principal",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contacto Principal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contacto_alternativo",
+   "fieldtype": "Data",
+   "label": "Contacto Alternativo"
+  },
+  {
+   "fieldname": "sb_profissionais",
+   "fieldtype": "Section Break",
+   "label": "Dados Profissionais/Negócio"
+  },
+  {
+   "fieldname": "ocupacao",
+   "fieldtype": "Data",
+   "label": "Ocupação"
+  },
+  {
+   "fieldname": "local_de_trabalho",
+   "fieldtype": "Data",
+   "label": "Local de Trabalho"
+  },
+  {
+   "fieldname": "cb_profissionais",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rendimento_mensal",
+   "fieldtype": "Currency",
+   "label": "Rendimento Mensal"
+  },
+  {
+   "fieldname": "rendimento_mensal_medio",
+   "fieldtype": "Currency",
+   "label": "Rendimento Mensal Médio"
+  },
+  {
+   "fieldname": "despesas_mensais_fixas",
+   "fieldtype": "Currency",
+   "label": "Despesas Mensais Fixas"
+  },
+  {
+   "description": "Rendimento Mensal Médio − Despesas Mensais Fixas.",
+   "fieldname": "valor_disponivel_mensal",
+   "fieldtype": "Currency",
+   "label": "Valor Disponível Mensal",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_referencias",
+   "fieldtype": "Section Break",
+   "label": "Referências Pessoais"
+  },
+  {
+   "fieldname": "referencias_pessoais",
+   "fieldtype": "Table",
+   "options": "Referência Pessoal"
+  },
+  {
+   "fieldname": "sb_documentacao",
+   "fieldtype": "Section Break",
+   "label": "Documentação"
+  },
+  {
+   "description": "Todos os documentos obrigatórios necessários (declaração de residência, entre outros).",
+   "fieldname": "documentos",
+   "fieldtype": "Table",
+   "options": "Documento do Cliente"
+  }
+ ],
+ "links": [],
+ "modified": "2026-07-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Cliente",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
