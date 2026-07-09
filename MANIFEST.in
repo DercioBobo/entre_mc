@@ -1,0 +1,2 @@
+recursive-include entre_mc *.css *.csv *.html *.ico *.js *.json *.md *.png *.svg *.txt *.py
+recursive-exclude entre_mc *.pyc

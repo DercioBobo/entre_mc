@@ -10,8 +10,15 @@ dynamic = ["version"]
 dependencies = []
 
 [build-system]
-requires = ["flit_core >=3.4,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = { attr = "entre_mc.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["entre_mc*"]
 
 [tool.bench.dev-dependencies]
 
