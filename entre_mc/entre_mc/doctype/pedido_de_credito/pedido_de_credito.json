@@ -125,6 +125,7 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "sb_estado",
    "fieldtype": "Section Break",
    "label": "Estado"
@@ -158,6 +159,7 @@
    "read_only": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "sb_garantias",
    "fieldtype": "Section Break",
    "label": "Garantias"
