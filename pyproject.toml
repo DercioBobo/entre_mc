@@ -6,17 +6,11 @@ authors = [
 description = "Entre MicroCréditos - Gestão de Microcrédito para Frappe/ERPNext"
 requires-python = ">=3.10"
 readme = "README.md"
-version = "0.0.1"
-dependencies = []
+dynamic = ["version"]
 
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["entre_mc*"]
-namespaces = false
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
 
 [tool.bench.dev-dependencies]
 
