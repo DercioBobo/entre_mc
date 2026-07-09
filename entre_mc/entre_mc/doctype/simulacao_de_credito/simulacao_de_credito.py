@@ -6,7 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, nowdate
 
-from entre_mc.entre_mc.utils.amortizacao import build_plano
+from entre_mc.utils.amortizacao import build_plano
 
 
 class SimulacaoDeCredito(Document):

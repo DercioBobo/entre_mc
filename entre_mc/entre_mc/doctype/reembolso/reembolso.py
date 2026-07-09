@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe.utils import flt
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.entre_mc.utils.reembolso import aplicar_alocacao
+from entre_mc.utils.reembolso import aplicar_alocacao
 
 LABEL_TO_CAMPO_PAGO = {
 	"Juros de Mora": "juros_mora_pago",

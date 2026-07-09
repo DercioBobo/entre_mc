@@ -13,7 +13,7 @@ obrigatoriamente a ordem de liquidação definida na especificação:
 
 Multa e Juros de Mora são recalculados com base nos dias de atraso até à data em
 questão - tanto aqui (no momento de um pagamento) como na tarefa diária
-`entre_mc.entre_mc.tasks.atualizar_atrasos`, que mantém o estado "Atrasado" e os
+`entre_mc.tasks.atualizar_atrasos`, que mantém o estado "Atrasado" e os
 encargos acumulados visíveis mesmo sem nenhum pagamento ser registado.
 """
 

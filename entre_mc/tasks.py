@@ -7,7 +7,7 @@ import frappe
 from frappe.utils import date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
 
 ESTADOS_EM_ABERTO = ("Desembolsado", "Em Pagamento")
 

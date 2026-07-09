@@ -102,7 +102,7 @@ app_include_js = [
 
 scheduler_events = {
 	"daily": [
-		"entre_mc.entre_mc.tasks.atualizar_atrasos",
+		"entre_mc.tasks.atualizar_atrasos",
 	],
 }
 
