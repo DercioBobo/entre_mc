@@ -41,6 +41,8 @@ frappe.query_reports["Extrato de Cliente"] = {
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
 
+		if (!data) return value;
+
 		if (column.fieldname === "debito" && data.debito) {
 			value = `<span style="color: var(--red-600, #c0392b);">${value}</span>`;
 		}
