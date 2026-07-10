@@ -190,20 +190,11 @@ class EntreMcSimulador {
 		const style = document.createElement("style");
 		style.id = "emc-simulador-style";
 		style.textContent = `
-			@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Roboto+Mono:wght@400;500;700&display=swap');
+			/* Design tokens (colors, fonts) come from the app-wide :root block in
+			   entre_mc.css, already loaded on every desk page - no need to redeclare
+			   or re-import fonts here. */
 
 			.emc-simulador {
-				--emc-paper: #fdfdf9;
-				--emc-band: #dfefe4;
-				--emc-ink: #16261e;
-				--emc-ink-soft: #4b5d53;
-				--emc-accent: #1f7a4d;
-				--emc-accent-deep: #14532f;
-				--emc-stamp: #b4472a;
-				--emc-line: #c7d9cc;
-				--emc-font-display: "Space Grotesk", -apple-system, "Segoe UI", sans-serif;
-				--emc-font-mono: "Roboto Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
-
 				max-width: 900px;
 				margin: 0 auto;
 				padding: 8px 4px 48px;
@@ -224,7 +215,7 @@ class EntreMcSimulador {
 			}
 			.emc-field label {
 				display: block;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 11px;
 				letter-spacing: 0.04em;
 				text-transform: uppercase;
@@ -241,7 +232,7 @@ class EntreMcSimulador {
 			.emc-field select {
 				width: 100%;
 				box-sizing: border-box;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 17px;
 				font-variant-numeric: tabular-nums;
 				color: var(--emc-ink);
@@ -273,7 +264,7 @@ class EntreMcSimulador {
 			}
 			.emc-display-label {
 				display: block;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 12px;
 				letter-spacing: 0.1em;
 				text-transform: uppercase;
@@ -282,9 +273,9 @@ class EntreMcSimulador {
 			}
 			.emc-display-value {
 				display: block;
-				font-family: var(--emc-font-mono);
-				font-weight: 700;
-				font-size: clamp(32px, 6vw, 52px);
+				font-family: var(--emc-font-display);
+				font-weight: 600;
+				font-size: clamp(34px, 6vw, 54px);
 				font-variant-numeric: tabular-nums;
 				letter-spacing: -0.01em;
 				color: #f2fbf5;
@@ -300,7 +291,7 @@ class EntreMcSimulador {
 			}
 			.emc-display-meta-label {
 				display: block;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 10px;
 				letter-spacing: 0.06em;
 				text-transform: uppercase;
@@ -309,7 +300,7 @@ class EntreMcSimulador {
 			}
 			.emc-display-meta-value {
 				display: block;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 15px;
 				font-variant-numeric: tabular-nums;
 				color: #f2fbf5;
@@ -328,7 +319,7 @@ class EntreMcSimulador {
 			table.emc-tape {
 				width: 100%;
 				border-collapse: collapse;
-				font-family: var(--emc-font-mono);
+				font-family: var(--emc-font-numeric);
 				font-size: 13px;
 			}
 			.emc-tape thead th {

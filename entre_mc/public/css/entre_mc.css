@@ -1,8 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Roboto+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-	/* Shared "ledger" design tokens - used by the Simulador de Crédito page and
-	   any other custom entre_mc HTML surface, so they read as one product. */
+	/* Shared design tokens - used by the Simulador de Crédito page, the
+	   Resumo do Cliente panel, and any other custom entre_mc HTML surface, so
+	   they read as one product. Fraunces carries the "headline" numbers and
+	   titles; Manrope handles labels, body text and dense tabular data. */
 	--emc-paper: #fdfdf9;
 	--emc-band: #dfefe4;
 	--emc-ink: #16261e;
@@ -11,8 +13,8 @@
 	--emc-accent-deep: #14532f;
 	--emc-stamp: #b4472a;
 	--emc-line: #c7d9cc;
-	--emc-font-display: "Space Grotesk", -apple-system, "Segoe UI", sans-serif;
-	--emc-font-mono: "Roboto Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
+	--emc-font-display: "Fraunces", Georgia, "Times New Roman", serif;
+	--emc-font-numeric: "Manrope", -apple-system, "Segoe UI", sans-serif;
 }
 
 .entre-mc-plano-wrapper {
@@ -83,7 +85,7 @@
 /* Resumo do Cliente - mini dashboard on the Cliente form */
 
 .emc-resumo-cliente {
-	font-family: var(--emc-font-display);
+	font-family: var(--emc-font-numeric);
 	color: var(--emc-ink);
 }
 
@@ -117,8 +119,9 @@
 
 .emc-resumo-card-label {
 	display: block;
-	font-family: var(--emc-font-mono);
+	font-family: var(--emc-font-numeric);
 	font-size: 10px;
+	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--emc-ink-soft);
@@ -127,9 +130,9 @@
 
 .emc-resumo-card-value {
 	display: block;
-	font-family: var(--emc-font-mono);
-	font-weight: 700;
-	font-size: 20px;
+	font-family: var(--emc-font-display);
+	font-weight: 600;
+	font-size: 23px;
 	font-variant-numeric: tabular-nums;
 	color: var(--emc-accent-deep);
 }
@@ -147,7 +150,7 @@
 table.emc-resumo-table {
 	width: 100%;
 	border-collapse: collapse;
-	font-family: var(--emc-font-mono);
+	font-family: var(--emc-font-numeric);
 	font-size: 12.5px;
 }
 
@@ -184,7 +187,8 @@ table.emc-resumo-table {
 
 .emc-resumo-badge {
 	display: inline-block;
-	font-family: var(--emc-font-mono);
+	font-family: var(--emc-font-numeric);
+	font-weight: 600;
 	font-size: 10.5px;
 	letter-spacing: 0.02em;
 	padding: 2px 8px;

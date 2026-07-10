@@ -83,3 +83,41 @@ class Reembolso(Document):
 		if pedido.status == "Liquidado" and not pedido.todas_as_prestacoes_pagas():
 			pedido.status = "Em Pagamento"
 		pedido.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def obter_contexto(pedido_de_credito):
+	"""Dados para o painel "Situação do Pedido" no Reembolso: saldo em dívida,
+	a próxima prestação em falta e o total em atraso (se houver), mais o plano
+	de amortização completo para a tabela abaixo - para quem regista o
+	pagamento saber quanto falta pagar sem ter de abrir o Pedido em separado."""
+	pedido = frappe.get_doc("Pedido De Credito", pedido_de_credito)
+	linhas = pedido.plano_de_amortizacao
+
+	nao_pagas = [linha for linha in linhas if linha.status != "Pago"]
+	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None
+
+	total_em_atraso = sum(_valor_em_falta(linha) for linha in linhas if linha.status == "Atrasado")
+
+	return {
+		"saldo_em_divida": pedido.saldo_em_divida,
+		"proxima_prestacao": {
+			"numero": proxima.numero,
+			"data_limite_pagamento": proxima.data_limite_pagamento,
+			"valor_em_falta": _valor_em_falta(proxima),
+			"status": proxima.status,
+		}
+		if proxima
+		else None,
+		"total_em_atraso": total_em_atraso,
+		"plano": [linha.as_dict() for linha in linhas],
+	}
+
+
+def _valor_em_falta(linha):
+	return flt(
+		(linha.capital_mensal - linha.capital_pago)
+		+ (linha.juros_mensais - linha.juros_pago)
+		+ (linha.multa_aplicada - linha.multa_paga)
+		+ (linha.juros_mora_aplicado - linha.juros_mora_pago)
+	)

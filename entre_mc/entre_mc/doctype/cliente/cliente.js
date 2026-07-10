@@ -89,7 +89,7 @@ function build_resumo_html(data, currency) {
 		.join("");
 
 	const garantiasLine = garantias.length
-		? `<p style="margin-top:10px; font-family: var(--emc-font-mono); font-size: 12px; color: var(--emc-ink-soft);">
+		? `<p style="margin-top:10px; font-family: var(--emc-font-numeric); font-size: 12px; color: var(--emc-ink-soft);">
 			${__("Garantias")}: ${garantias
 				.map((g) => `${g.name} (${__(g.status)})`)
 				.join(" · ")}

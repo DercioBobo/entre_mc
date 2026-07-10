@@ -9,6 +9,9 @@
   "pedido_de_credito",
   "cliente",
   "cb_1",
+  "sb_contexto",
+  "contexto_html",
+  "sb_pagamento",
   "montante_pago",
   "data_de_pagamento",
   "sb_alocacao",
@@ -42,6 +45,20 @@
   {
    "fieldname": "cb_1",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sb_contexto",
+   "fieldtype": "Section Break",
+   "label": "Situação do Pedido"
+  },
+  {
+   "fieldname": "contexto_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "sb_pagamento",
+   "fieldtype": "Section Break",
+   "label": "Pagamento"
   },
   {
    "fieldname": "montante_pago",

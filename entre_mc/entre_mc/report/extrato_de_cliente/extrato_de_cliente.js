@@ -56,7 +56,7 @@ frappe.query_reports["Extrato de Cliente"] = {
 			value = `<span style="color: var(--red-600, #c0392b);">${value}</span>`;
 		}
 		if (column.fieldname === "tipo") {
-			value = `<span style="font-family: var(--emc-font-mono, monospace); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em;">${value}</span>`;
+			value = `<span style="font-family: var(--emc-font-numeric, sans-serif); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em;">${value}</span>`;
 		}
 		return value;
 	},
