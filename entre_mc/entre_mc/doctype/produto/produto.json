@@ -36,7 +36,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Modelo de Cálculo de Juros",
-   "options": "Constante\nDecrescente\nMisto",
+   "options": "Francês\nDecrescente\nMisto\nConstante",
    "reqd": 1
   },
   {
@@ -122,7 +122,7 @@
   }
  ],
  "links": [],
- "modified": "2026-07-09 00:00:00.000000",
+ "modified": "2026-07-22 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Produto",

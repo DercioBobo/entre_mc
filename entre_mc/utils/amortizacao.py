@@ -25,7 +25,7 @@ PERIOD_DAYS = {
 	"Mensal": 30,
 }
 
-MODELOS = ("Constante", "Decrescente", "Misto")
+MODELOS = ("Francês", "Decrescente", "Misto", "Constante")
 
 
 def get_period_days(frequencia):
@@ -61,6 +61,8 @@ def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, da
 
 	if modelo == "Constante":
 		prestacoes = _build_constante(capital, tj, n)
+	elif modelo == "Francês":
+		prestacoes = _build_frances(capital, tj, n)
 	else:
 		prestacoes = _build_decrescente_ou_misto(capital, tj, n, suavizar=(modelo == "Misto"))
 
@@ -88,6 +90,26 @@ def _build_constante(capital, tj, n):
 	jm = capital * tj
 	pt = cm + jm
 	return [{"capital_mensal": cm, "juros_mensais": jm, "prestacao_total": pt} for _ in range(n)]
+
+
+def _build_frances(capital, tj, n):
+	"""Modelo Francês (Tabela Price): prestação total fixa (FCM), calculada
+	pela fórmula da anuidade. Juros = saldo devedor x Tj; capital = FCM - juros.
+	"""
+	if tj == 0:
+		fcm = capital / n
+	else:
+		fator = (1 + tj) ** n
+		fcm = capital * (tj * fator) / (fator - 1)
+
+	saldo_devedor = capital
+	prestacoes = []
+	for _ in range(n):
+		jm = saldo_devedor * tj
+		cm = fcm - jm
+		prestacoes.append({"capital_mensal": cm, "juros_mensais": jm, "prestacao_total": fcm})
+		saldo_devedor -= cm
+	return prestacoes
 
 
 def _build_decrescente_ou_misto(capital, tj, n, suavizar):

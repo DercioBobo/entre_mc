@@ -41,9 +41,10 @@ class EntreMcSimulador {
 					<div class="emc-field">
 						<label for="emc-modelo">Modelo</label>
 						<select id="emc-modelo">
-							<option value="Constante">Constante</option>
+							<option value="Francês">Francês</option>
 							<option value="Decrescente">Decrescente</option>
 							<option value="Misto">Misto</option>
+							<option value="Constante">Constante</option>
 						</select>
 					</div>
 					<div class="emc-field">
