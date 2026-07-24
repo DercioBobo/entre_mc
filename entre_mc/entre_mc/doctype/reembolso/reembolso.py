@@ -22,6 +22,12 @@ class Reembolso(Document):
 		"""Pré-visualização: simula a alocação sobre uma cópia em memória do plano,
 		sem persistir alterações no Pedido De Credito."""
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
+		if not pedido.status:
+			frappe.throw(
+				_("O Pedido De Credito {0} ainda não foi desembolsado; não é possível registar reembolsos.").format(
+					pedido.name
+				)
+			)
 		if pedido.status == "Liquidado":
 			frappe.throw(
 				_("O Pedido De Credito {0} já está liquidado; não é possível registar mais reembolsos.").format(

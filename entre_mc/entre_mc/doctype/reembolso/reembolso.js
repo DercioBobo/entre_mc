@@ -4,7 +4,7 @@
 frappe.ui.form.on("Reembolso", {
 	onload(frm) {
 		frm.set_query("pedido_de_credito", () => ({
-			filters: { status: ["!=", "Liquidado"] },
+			filters: { status: ["not in", ["", "Liquidado"]] },
 		}));
 	},
 
