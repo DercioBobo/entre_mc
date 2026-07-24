@@ -2,6 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Reembolso", {
+	onload(frm) {
+		frm.set_query("pedido_de_credito", () => ({
+			filters: { status: ["!=", "Liquidado"] },
+		}));
+	},
+
 	refresh(frm) {
 		render_contexto(frm);
 	},

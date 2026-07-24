@@ -25,6 +25,7 @@
   "cb_estado",
   "status",
   "saldo_em_divida",
+  "observacoes_liquidacao",
   "sb_garantias",
   "garantias",
   "sb_plano",
@@ -165,6 +166,14 @@
    "fieldname": "saldo_em_divida",
    "fieldtype": "Currency",
    "label": "Saldo em Dívida",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.observacoes_liquidacao",
+   "description": "Preenchido automaticamente quando o pedido é liquidado por execução de uma Garantia (dação em pagamento), distinguindo esse caso de uma liquidação normal por reembolso integral.",
+   "fieldname": "observacoes_liquidacao",
+   "fieldtype": "Small Text",
+   "label": "Observações de Liquidação",
    "read_only": 1
   },
   {

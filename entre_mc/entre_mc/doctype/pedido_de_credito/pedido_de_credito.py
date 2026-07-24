@@ -56,7 +56,7 @@ class PedidoDeCredito(Document):
 			total += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
 		self.saldo_em_divida = total
 
-	def marcar_como_liquidado(self):
+	def marcar_como_liquidado(self, motivo=None):
 		"""Chamado quando a Garantia associada é executada (dação em pagamento): a
 		dívida é dada como extinta independentemente do valor da garantia face ao
 		saldo em dívida, pelo que todas as prestações pendentes são marcadas como
@@ -70,6 +70,8 @@ class PedidoDeCredito(Document):
 			row.status = "Pago"
 		self.atualizar_saldo_em_divida()
 		self.status = "Liquidado"
+		if motivo:
+			self.observacoes_liquidacao = motivo
 		self.save(ignore_permissions=True)
 
 	def confirmar_desembolso(self, data_de_desembolso):
