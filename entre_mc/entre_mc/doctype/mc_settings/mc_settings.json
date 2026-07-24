@@ -78,6 +78,10 @@
   {
    "read": 1,
    "role": "Gestor de Crédito"
+  },
+  {
+   "read": 1,
+   "role": "Oficial de Crédito"
   }
  ],
  "sort_field": "modified",

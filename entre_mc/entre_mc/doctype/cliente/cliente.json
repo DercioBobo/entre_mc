@@ -232,6 +232,11 @@
    "read": 1,
    "report": 1,
    "role": "Gestor de Crédito"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Tesoureiro"
   }
  ],
  "sort_field": "modified",

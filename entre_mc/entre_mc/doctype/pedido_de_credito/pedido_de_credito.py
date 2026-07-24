@@ -128,6 +128,8 @@ def simulacoes_do_cliente(doctype, txt, searchfield, start, page_len, filters):
 	"""Query do Link "Simulacao De Credito": só simulações cujo Proponente já foi
 	convertido no Cliente escolhido - a simulação de origem tem de pertencer
 	sempre ao mesmo cliente do pedido."""
+	frappe.has_permission("Simulacao De Credito", "read", throw=True)
+
 	cliente = (filters or {}).get("cliente")
 	if not cliente:
 		return []
@@ -150,6 +152,8 @@ def simulacoes_do_cliente(doctype, txt, searchfield, start, page_len, filters):
 def garantias_do_cliente(doctype, txt, searchfield, start, page_len, filters):
 	"""Query do campo "Garantias": só garantias disponíveis pertencentes ao
 	Cliente escolhido - nunca garantias de outro cliente."""
+	frappe.has_permission("Garantia", "read", throw=True)
+
 	cliente = (filters or {}).get("cliente")
 	if not cliente:
 		return []

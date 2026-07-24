@@ -64,6 +64,8 @@ def calcular_plano(produto, capital, taxa_de_juros, prazo, frequencia, data_inic
 @frappe.whitelist()
 def preview_plano(produto, capital_solicitado, taxa_de_juros, prazo, frequencia):
 	"""Called by the client script to render the live amortization preview before save."""
+	frappe.has_permission("Simulacao De Credito", "create", throw=True)
+
 	check_limites(produto, capital_solicitado, prazo)
 	linhas = calcular_plano(produto, capital_solicitado, taxa_de_juros, prazo, frequencia)
 	return linhas
@@ -77,6 +79,9 @@ def criar_pedido_de_credito(simulacao):
 	Cliente primeiro (ver entre_mc.abrir_cliente_a_partir_do_proponente em
 	proponente.js), garantindo que os campos obrigatórios do Cliente são sempre
 	validados pelo próprio formulário, e nunca contornados aqui."""
+	frappe.has_permission("Simulacao De Credito", "read", doc=simulacao, throw=True)
+	frappe.has_permission("Pedido De Credito", "create", throw=True)
+
 	sim = frappe.get_doc("Simulacao De Credito", simulacao)
 	if sim.pedido_de_credito:
 		frappe.throw(

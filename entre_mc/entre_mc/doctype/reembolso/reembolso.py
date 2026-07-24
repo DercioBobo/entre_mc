@@ -20,8 +20,13 @@ LABEL_TO_CAMPO_PAGO = {
 class Reembolso(Document):
 	def validate(self):
 		"""Pré-visualização: simula a alocação sobre uma cópia em memória do plano,
-		sem persistir alterações no Pedido De Credito."""
-		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
+		sem persistir alterações no Pedido De Credito.
+
+		`for_update=True` bloqueia a linha do Pedido até este documento gravar -
+		sem isto, dois Reembolsos para o mesmo Pedido submetidos em simultâneo
+		podiam ambos ler o mesmo saldo desatualizado e alocar sobre ele antes de
+		qualquer um gravar."""
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito, for_update=True)
 		if not pedido.status:
 			frappe.throw(
 				_("O Pedido De Credito {0} ainda não foi desembolsado; não é possível registar reembolsos.").format(
@@ -57,7 +62,7 @@ class Reembolso(Document):
 		forma determinística, com os mesmos dados) diretamente sobre as linhas reais
 		do Pedido para as persistir - sem voltar a tocar em `self.alocacoes`.
 		"""
-		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito, for_update=True)
 		settings = get_settings()
 
 		aplicar_alocacao(
@@ -78,7 +83,7 @@ class Reembolso(Document):
 
 	def on_cancel(self):
 		"""Reverte exatamente os valores registados por este Reembolso."""
-		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
+		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito, for_update=True)
 		linhas_por_numero = {row.numero: row for row in pedido.plano_de_amortizacao}
 
 		for alocacao in self.alocacoes:
@@ -104,6 +109,8 @@ def obter_contexto(pedido_de_credito):
 	a próxima prestação em falta e o total em atraso (se houver), mais o plano
 	de amortização completo para a tabela abaixo - para quem regista o
 	pagamento saber quanto falta pagar sem ter de abrir o Pedido em separado."""
+	frappe.has_permission("Pedido De Credito", "read", doc=pedido_de_credito, throw=True)
+
 	pedido = frappe.get_doc("Pedido De Credito", pedido_de_credito)
 	linhas = pedido.plano_de_amortizacao
 

@@ -49,6 +49,8 @@ def garantias_do_pedido(doctype, txt, searchfield, start, page_len, filters):
 	"""Query do Link "Garantia": só as garantias associadas ao Pedido De Credito
 	já escolhido (e ainda disponíveis) - a garantia e o pedido têm de andar
 	sempre a par, nunca uma execução com uma garantia de outro pedido."""
+	frappe.has_permission("Garantia", "read", throw=True)
+
 	pedido_de_credito = (filters or {}).get("pedido_de_credito")
 	if not pedido_de_credito:
 		return []
@@ -72,6 +74,8 @@ def garantias_do_pedido(doctype, txt, searchfield, start, page_len, filters):
 def pedidos_da_garantia(doctype, txt, searchfield, start, page_len, filters):
 	"""Query do Link "Pedido De Credito": só os pedidos a que a Garantia já
 	escolhida está associada - mesma regra, no sentido inverso."""
+	frappe.has_permission("Pedido De Credito", "read", throw=True)
+
 	garantia = (filters or {}).get("garantia")
 	if not garantia:
 		return []

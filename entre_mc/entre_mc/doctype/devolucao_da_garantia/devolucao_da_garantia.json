@@ -7,6 +7,7 @@
  "field_order": [
   "naming_series",
   "garantia",
+  "pedido_de_credito",
   "cliente",
   "cb_1",
   "data_de_devolucao",
@@ -27,6 +28,15 @@
    "in_list_view": 1,
    "label": "Garantia",
    "options": "Garantia",
+   "reqd": 1
+  },
+  {
+   "description": "O Pedido De Credito tem de estar Liquidado para a garantia poder ser devolvida.",
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
    "reqd": 1
   },
   {

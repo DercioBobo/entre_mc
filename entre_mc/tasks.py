@@ -31,7 +31,18 @@ def atualizar_atrasos():
 	for nome_pedido in frappe.get_all(
 		"Pedido De Credito", filters={"status": ["in", ESTADOS_EM_ABERTO]}, pluck="name"
 	):
-		_atualizar_pedido(nome_pedido, settings, hoje)
+		try:
+			_atualizar_pedido(nome_pedido, settings, hoje)
+			frappe.db.commit()
+		except Exception:
+			# Um Pedido com dados inconsistentes não pode travar a atualização de
+			# atrasos de todos os outros clientes processados a seguir nesta
+			# mesma corrida diária.
+			frappe.db.rollback()
+			frappe.log_error(
+				title=f"atualizar_atrasos falhou para {nome_pedido}",
+				message=frappe.get_traceback(),
+			)
 
 
 def _atualizar_pedido(nome_pedido, settings, hoje):

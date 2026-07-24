@@ -26,6 +26,8 @@ ATIVOS = ("Desembolsado", "Em Pagamento")
 def obter_resumo(cliente):
 	"""Dados para o painel "Resumo do Cliente": histórico de Pedidos de Crédito
 	e Garantias, mais os totais agregados mostrados nos cartões do topo."""
+	frappe.has_permission("Cliente", "read", doc=cliente, throw=True)
+
 	pedidos = frappe.get_all(
 		"Pedido De Credito",
 		filters={"cliente": cliente},
