@@ -57,6 +57,18 @@ class PedidoDeCredito(Document):
 		self.saldo_em_divida = total
 
 	def marcar_como_liquidado(self):
+		"""Chamado quando a Garantia associada é executada (dação em pagamento): a
+		dívida é dada como extinta independentemente do valor da garantia face ao
+		saldo em dívida, pelo que todas as prestações pendentes são marcadas como
+		pagas e o saldo em dívida zera. Não há lugar a reembolsos depois disto -
+		ver o bloqueio em Reembolso.validate()."""
+		for row in self.plano_de_amortizacao:
+			row.capital_pago = row.capital_mensal
+			row.juros_pago = row.juros_mensais
+			row.multa_paga = row.multa_aplicada
+			row.juros_mora_pago = row.juros_mora_aplicado
+			row.status = "Pago"
+		self.atualizar_saldo_em_divida()
 		self.status = "Liquidado"
 		self.save(ignore_permissions=True)
 

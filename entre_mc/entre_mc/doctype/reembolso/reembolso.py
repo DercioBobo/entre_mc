@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
@@ -21,6 +22,12 @@ class Reembolso(Document):
 		"""Pré-visualização: simula a alocação sobre uma cópia em memória do plano,
 		sem persistir alterações no Pedido De Credito."""
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito)
+		if pedido.status == "Liquidado":
+			frappe.throw(
+				_("O Pedido De Credito {0} já está liquidado; não é possível registar mais reembolsos.").format(
+					pedido.name
+				)
+			)
 		settings = get_settings()
 
 		alocacoes = aplicar_alocacao(
