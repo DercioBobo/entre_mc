@@ -31,6 +31,9 @@ frappe.ui.form.on("Pedido De Credito", {
 				frappe.new_doc("Desembolso", null, (doc) => {
 					doc.pedido_de_credito = frm.doc.name;
 					doc.valor_desembolsado = frm.doc.capital_solicitado;
+					if (frm.doc.data_de_inicio_prevista) {
+						doc.data_de_desembolso = frm.doc.data_de_inicio_prevista;
+					}
 				});
 			}, __("Criar"));
 		}

@@ -36,7 +36,7 @@ class PedidoDeCredito(Document):
 			self.taxa_de_juros,
 			self.prazo,
 			self.frequencia,
-			data_inicio=data_inicio,
+			data_inicio=data_inicio or self.data_de_inicio_prevista,
 		)
 		self.set("plano_de_amortizacao", [])
 		for linha in linhas:

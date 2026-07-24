@@ -19,6 +19,7 @@
   "finalidade",
   "cb_2",
   "frequencia",
+  "data_de_inicio_prevista",
   "sb_estado",
   "workflow_state",
   "cb_estado",
@@ -122,6 +123,14 @@
    "fieldtype": "Select",
    "label": "Frequência",
    "options": "Diário\nSemanal\nQuinzenal\nMensal",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "description": "Data a partir da qual o plano de amortização estimado começa a contar. Útil quando o desembolso é esperado para uma data diferente de hoje. O desembolso real volta sempre a ancorar o plano na data efetiva de desembolso.",
+   "fieldname": "data_de_inicio_prevista",
+   "fieldtype": "Date",
+   "label": "Data de Início Prevista",
    "reqd": 1
   },
   {
