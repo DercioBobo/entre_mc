@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
@@ -18,6 +19,9 @@ class PedidoDeCredito(Document):
 		if not self.workflow_state:
 			self.workflow_state = "Rascunho"
 
+		self.validar_simulacao_do_mesmo_cliente()
+		self.validar_garantias_do_mesmo_cliente()
+
 		check_limites(self.produto, self.capital_solicitado, self.prazo)
 
 		if self.workflow_state == APROVADO and not self.plano_de_amortizacao:
@@ -28,6 +32,32 @@ class PedidoDeCredito(Document):
 			self.gerar_plano_de_amortizacao()
 
 		self.atualizar_saldo_em_divida()
+
+	def validar_simulacao_do_mesmo_cliente(self):
+		"""A simulação de origem tem de pertencer ao mesmo cliente deste pedido -
+		um Proponente só é ligado a um Cliente depois de convertido, por isso a
+		comparação passa sempre por essa cadeia (simulação -> proponente -> cliente)."""
+		if not self.simulacao_de_credito:
+			return
+		proponente = frappe.db.get_value("Simulacao De Credito", self.simulacao_de_credito, "proponente")
+		cliente_da_simulacao = frappe.db.get_value("Proponente", proponente, "cliente") if proponente else None
+		if cliente_da_simulacao and cliente_da_simulacao != self.cliente:
+			frappe.throw(
+				_("A Simulacao De Credito {0} pertence a outro cliente, não a {1}.").format(
+					self.simulacao_de_credito, self.cliente
+				)
+			)
+
+	def validar_garantias_do_mesmo_cliente(self):
+		"""As garantias associadas têm de pertencer ao mesmo cliente deste pedido."""
+		for row in self.garantias:
+			garantia_cliente = frappe.db.get_value("Garantia", row.garantia, "cliente")
+			if garantia_cliente and garantia_cliente != self.cliente:
+				frappe.throw(
+					_("A Garantia {0} pertence a outro cliente, não a {1}.").format(
+						row.garantia, self.cliente
+					)
+				)
 
 	def gerar_plano_de_amortizacao(self, data_inicio=None):
 		linhas = calcular_plano(
@@ -91,3 +121,46 @@ class PedidoDeCredito(Document):
 		return bool(self.plano_de_amortizacao) and all(
 			row.status == "Pago" for row in self.plano_de_amortizacao
 		)
+
+
+@frappe.whitelist()
+def simulacoes_do_cliente(doctype, txt, searchfield, start, page_len, filters):
+	"""Query do Link "Simulacao De Credito": só simulações cujo Proponente já foi
+	convertido no Cliente escolhido - a simulação de origem tem de pertencer
+	sempre ao mesmo cliente do pedido."""
+	cliente = (filters or {}).get("cliente")
+	if not cliente:
+		return []
+	proponentes = frappe.get_all("Proponente", filters={"cliente": cliente}, pluck="name")
+	if not proponentes:
+		return []
+	return frappe.get_all(
+		"Simulacao De Credito",
+		filters=[
+			["proponente", "in", proponentes],
+			["name", "like", f"%{txt}%"],
+		],
+		limit_start=start,
+		limit_page_length=page_len,
+		as_list=True,
+	)
+
+
+@frappe.whitelist()
+def garantias_do_cliente(doctype, txt, searchfield, start, page_len, filters):
+	"""Query do campo "Garantias": só garantias disponíveis pertencentes ao
+	Cliente escolhido - nunca garantias de outro cliente."""
+	cliente = (filters or {}).get("cliente")
+	if not cliente:
+		return []
+	return frappe.get_all(
+		"Garantia",
+		filters=[
+			["cliente", "=", cliente],
+			["status", "=", "Disponível"],
+			["name", "like", f"%{txt}%"],
+		],
+		limit_start=start,
+		limit_page_length=page_len,
+		as_list=True,
+	)

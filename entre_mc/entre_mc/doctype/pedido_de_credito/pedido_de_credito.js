@@ -2,12 +2,22 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Pedido De Credito", {
-	onload(frm) {
-		if (frm.is_new() && !frm.doc.frequencia) {
-			frappe.db.get_single_value("MC Settings", "frequencia_padrao").then((value) => {
-				if (value) frm.set_value("frequencia", value);
-			});
-		}
+	setup(frm) {
+		frm.set_query("simulacao_de_credito", () => {
+			if (!frm.doc.cliente) return {};
+			return {
+				query: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.simulacoes_do_cliente",
+				filters: { cliente: frm.doc.cliente },
+			};
+		});
+
+		frm.set_query("garantias", () => {
+			if (!frm.doc.cliente) return {};
+			return {
+				query: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.garantias_do_cliente",
+				filters: { cliente: frm.doc.cliente },
+			};
+		});
 	},
 
 	refresh(frm) {

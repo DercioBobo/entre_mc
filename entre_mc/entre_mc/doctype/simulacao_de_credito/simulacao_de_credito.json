@@ -193,7 +193,10 @@
    "role": "Gestor de Crédito"
   }
  ],
+ "search_fields": "proponente",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "proponente",
  "track_changes": 1
 }

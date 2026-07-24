@@ -40,7 +40,7 @@ function render_contexto(frm) {
 }
 
 function build_contexto_html(data, currency) {
-	const { saldo_em_divida, proxima_prestacao, total_em_atraso, plano } = data;
+	const { saldo_em_divida, proxima_prestacao, total_em_atraso, total_multa, total_juros_mora, plano } = data;
 
 	const cards = [
 		{ label: __("Saldo em Dívida"), value: format_currency(saldo_em_divida, currency) },
@@ -57,6 +57,20 @@ function build_contexto_html(data, currency) {
 		cards.push({
 			label: __("Total em Atraso"),
 			value: format_currency(total_em_atraso, currency),
+			warn: true,
+		});
+	}
+	if (flt(total_multa) > 0) {
+		cards.push({
+			label: __("Total de Multa"),
+			value: format_currency(total_multa, currency),
+			warn: true,
+		});
+	}
+	if (flt(total_juros_mora) > 0) {
+		cards.push({
+			label: __("Total de Juros de Mora"),
+			value: format_currency(total_juros_mora, currency),
 			warn: true,
 		});
 	}

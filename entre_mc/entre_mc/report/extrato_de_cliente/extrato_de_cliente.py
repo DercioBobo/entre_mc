@@ -2,15 +2,19 @@
 # For license information, please see license.txt
 
 """Extrato de Cliente: ledger cronológico de tudo o que aconteceu com um
-cliente - desembolsos (débito), prestações agendadas (referência) e
-reembolsos recebidos (crédito) - com um Saldo Devedor corrido que só se move
-nos eventos reais de caixa (Desembolso/Reembolso), tal como um extrato real.
+cliente - desembolsos (débito), prestações agendadas (referência), reembolsos
+recebidos (crédito) e execuções de garantia (crédito não monetário) - com um
+Saldo Devedor corrido que só se move nos eventos reais de liquidação
+(Desembolso/Reembolso/Execução de Garantia), tal como um extrato real.
 
 Cada linha também mostra a composição Capital / Juros / Multa / Juros de Mora:
 para uma Prestação são os valores agendados nessa prestação; para um
 Reembolso são os valores efetivamente alocados a cada componente nesse
 pagamento (via Alocação de Reembolso, a mesma fonte usada no Relatório de
-Cobranças); para um Desembolso, o valor todo é capital."""
+Cobranças); para um Desembolso, o valor todo é capital; para uma Execução de
+Garantia (dação em pagamento), o valor todo aparece como crédito sem
+composição por componente - o Pedido De Credito.marcar_como_liquidado() não
+preserva essa quebra ao dar as prestações por pagas."""
 
 import frappe
 from frappe import _
@@ -19,6 +23,7 @@ from frappe.utils import cint, flt, getdate
 TIPO_DESEMBOLSO = 0
 TIPO_PRESTACAO = 1
 TIPO_REEMBOLSO = 2
+TIPO_EXECUCAO_GARANTIA = 3
 
 
 def execute(filters=None):
@@ -65,6 +70,7 @@ def get_data(filters):
 	if cint(filters.get("incluir_prestacoes", 1)):
 		eventos += get_eventos_prestacao(pedido_names)
 	eventos += get_eventos_reembolso(pedido_names)
+	eventos += get_eventos_execucao_garantia(pedido_names)
 
 	eventos.sort(key=lambda e: (e["data"], e["_ordem"]))
 
@@ -182,3 +188,28 @@ def get_eventos_reembolso(pedido_names):
 			}
 		)
 	return eventos
+
+
+def get_eventos_execucao_garantia(pedido_names):
+	execucoes = frappe.get_all(
+		"Execucao De Garantia",
+		filters={"pedido_de_credito": ["in", pedido_names], "docstatus": 1},
+		fields=["name", "pedido_de_credito", "garantia", "data", "valor_liquidado"],
+	)
+	return [
+		{
+			"data": getdate(e.data),
+			"tipo": _("Garantia Executada"),
+			"pedido": e.pedido_de_credito,
+			"descricao": _("Garantia executada ({0}) - dação em pagamento ({1})").format(e.garantia, e.name),
+			"debito": 0,
+			"credito": flt(e.valor_liquidado),
+			"capital": 0,
+			"juros": 0,
+			"multa": 0,
+			"juros_mora": 0,
+			"estado": _("Dação em Pagamento"),
+			"_ordem": TIPO_EXECUCAO_GARANTIA,
+		}
+		for e in execucoes
+	]

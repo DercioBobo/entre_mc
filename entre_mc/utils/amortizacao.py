@@ -69,20 +69,52 @@ def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, da
 	valor_total = sum(p["prestacao_total"] for p in prestacoes)
 
 	linhas = []
-	saldo_restante = valor_total
 	for idx, p in enumerate(prestacoes, start=1):
-		saldo_restante = flt(saldo_restante - p["prestacao_total"], precision)
 		linhas.append(
 			{
 				"numero": idx,
 				"capital_mensal": flt(p["capital_mensal"], precision),
 				"juros_mensais": flt(p["juros_mensais"], precision),
 				"prestacao_total": flt(p["prestacao_total"], precision),
-				"saldo": saldo_restante,
 				"data_limite_pagamento": add_days(data_inicio, period_days * idx),
 			}
 		)
+
+	_absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision)
+	_preencher_saldo(linhas, precision)
 	return linhas
+
+
+def _absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision):
+	"""Cada prestação é arredondada individualmente a 2 casas decimais; ao somar
+	todas, o total efetivamente cobrado ao cliente pode ficar a um ou dois
+	cêntimos do total real do plano (`valor_total`, calculado sem arredondamentos
+	intermédios). Em vez de esse resíduo ficar por conta da instituição, é
+	absorvido na última prestação - o cliente paga (ou recebe de volta, se
+	negativo) essa diferença no último pagamento."""
+	if not linhas:
+		return
+	soma_prestacoes = flt(sum(linha["prestacao_total"] for linha in linhas), precision)
+	residual = flt(valor_total - soma_prestacoes, precision)
+	if residual:
+		ultima = linhas[-1]
+		ultima["capital_mensal"] = flt(ultima["capital_mensal"] + residual, precision)
+		ultima["prestacao_total"] = flt(ultima["prestacao_total"] + residual, precision)
+
+
+def _preencher_saldo(linhas, precision):
+	"""Saldo remanescente do plano após cada prestação, calculado sobre os
+	valores já arredondados (e já com o resíduo absorvido) - os mesmos valores
+	que são efetivamente cobrados. A última linha fecha sempre em 0.00, nunca
+	em resíduos como 0.01 ou -0.02."""
+	if not linhas:
+		return
+	total = sum(linha["prestacao_total"] for linha in linhas)
+	pago_ate_agora = 0.0
+	for linha in linhas:
+		pago_ate_agora += linha["prestacao_total"]
+		linha["saldo"] = flt(total - pago_ate_agora, precision)
+	linhas[-1]["saldo"] = 0.0
 
 
 def _build_constante(capital, tj, n):

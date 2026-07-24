@@ -111,9 +111,13 @@ def obter_contexto(pedido_de_credito):
 	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None
 
 	total_em_atraso = sum(_valor_em_falta(linha) for linha in linhas if linha.status == "Atrasado")
+	total_multa = sum(flt(linha.multa_aplicada) - flt(linha.multa_paga) for linha in nao_pagas)
+	total_juros_mora = sum(flt(linha.juros_mora_aplicado) - flt(linha.juros_mora_pago) for linha in nao_pagas)
 
 	return {
 		"saldo_em_divida": pedido.saldo_em_divida,
+		"total_multa": total_multa,
+		"total_juros_mora": total_juros_mora,
 		"proxima_prestacao": {
 			"numero": proxima.numero,
 			"data_limite_pagamento": proxima.data_limite_pagamento,

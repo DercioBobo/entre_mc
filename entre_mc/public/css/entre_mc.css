@@ -100,8 +100,8 @@
 
 .emc-resumo-cards {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-	gap: 10px;
+	grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+	gap: 8px;
 	margin-bottom: 16px;
 }
 
@@ -110,7 +110,7 @@
 	border: 1px solid var(--emc-line);
 	border-top: 3px solid var(--emc-accent);
 	border-radius: 6px;
-	padding: 10px 12px;
+	padding: 8px 10px;
 }
 
 .emc-resumo-card--warn {
@@ -120,19 +120,20 @@
 .emc-resumo-card-label {
 	display: block;
 	font-family: var(--emc-font-numeric);
-	font-size: 10px;
+	font-size: 9px;
 	font-weight: 600;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--emc-ink-soft);
 	margin-bottom: 4px;
+	white-space: nowrap;
 }
 
 .emc-resumo-card-value {
 	display: block;
 	font-family: var(--emc-font-display);
 	font-weight: 600;
-	font-size: 23px;
+	font-size: 18px;
 	font-variant-numeric: tabular-nums;
 	color: var(--emc-accent-deep);
 }
