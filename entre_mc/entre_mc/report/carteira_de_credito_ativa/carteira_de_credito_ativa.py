@@ -21,7 +21,7 @@ def get_columns():
 		{"label": _("Produto"), "fieldname": "produto", "fieldtype": "Link", "options": "Produto", "width": 130},
 		{"label": _("Capital Solicitado"), "fieldname": "capital_solicitado", "fieldtype": "Currency", "width": 130},
 		{"label": _("Saldo em Dívida"), "fieldname": "saldo_em_divida", "fieldtype": "Currency", "width": 130},
-		{"label": _("Taxa de Juros"), "fieldname": "taxa_de_juros", "fieldtype": "Percent", "width": 100},
+		{"label": _("Taxa de Juros (%)"), "fieldname": "taxa_de_juros", "fieldtype": "Percent", "width": 100},
 		{"label": _("Frequência"), "fieldname": "frequencia", "fieldtype": "Data", "width": 100},
 		{"label": _("Estado"), "fieldname": "status", "fieldtype": "Data", "width": 120},
 	]

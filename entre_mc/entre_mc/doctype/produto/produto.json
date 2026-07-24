@@ -48,7 +48,7 @@
    "fieldname": "taxa_de_juros",
    "fieldtype": "Percent",
    "in_list_view": 1,
-   "label": "Taxa de Juros",
+   "label": "Taxa de Juros (%)",
    "reqd": 1
   },
   {
@@ -102,13 +102,13 @@
    "description": "Multa = Taxa Diária de Multa × dias de atraso × prestação em atraso.",
    "fieldname": "taxa_diaria_de_multa",
    "fieldtype": "Percent",
-   "label": "Taxa Diária de Multa"
+   "label": "Taxa Diária de Multa (%)"
   },
   {
    "description": "Juros de Mora = Juros de Mora (%) × capital em atraso × dias de atraso / 30.",
    "fieldname": "juros_de_mora",
    "fieldtype": "Percent",
-   "label": "Juros de Mora"
+   "label": "Juros de Mora (%)"
   },
   {
    "fieldname": "cb_penalizacoes",
