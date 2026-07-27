@@ -76,7 +76,6 @@
    "reqd": 1
   },
   {
-   "fetch_from": "produto.taxa_de_juros",
    "fieldname": "taxa_de_juros",
    "fieldtype": "Percent",
    "label": "Taxa de Juros (%)",

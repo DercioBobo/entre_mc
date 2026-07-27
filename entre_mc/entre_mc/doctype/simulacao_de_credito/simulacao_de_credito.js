@@ -11,11 +11,6 @@ frappe.ui.form.on("Simulacao De Credito", {
 	},
 
 	refresh(frm) {
-		// "fetch_from" forces the field read-only on the client regardless of the
-		// doctype json - taxa_de_juros is meant to stay editable (unlike multa/mora)
-		// so the produto value is only a convenience default, not a locked value.
-		frm.set_df_property("taxa_de_juros", "read_only", 0);
-
 		render_preview(frm);
 
 		frm.add_custom_button(__("Simulador Rápido"), () => {
@@ -72,6 +67,15 @@ frappe.ui.form.on("Simulacao De Credito", {
 
 	produto(frm) {
 		render_preview(frm);
+		// Only a default - never overwrite a value the user already set.
+		if (!frm.doc.produto || frm.doc.taxa_de_juros) return;
+		// taxa_de_juros stays editable (unlike multa/mora), so it can't use
+		// fetch_from - the framework forces fetch_from fields read-only.
+		frappe.db.get_value("Produto", frm.doc.produto, "taxa_de_juros").then((r) => {
+			if (r.message && r.message.taxa_de_juros != null && !frm.doc.taxa_de_juros) {
+				frm.set_value("taxa_de_juros", r.message.taxa_de_juros);
+			}
+		});
 	},
 	capital_solicitado(frm) {
 		render_preview(frm);
