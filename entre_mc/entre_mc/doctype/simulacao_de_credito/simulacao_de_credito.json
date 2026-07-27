@@ -106,6 +106,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Mensal",
    "fieldname": "frequencia",
    "fieldtype": "Select",
    "label": "Frequência",

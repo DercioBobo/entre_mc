@@ -11,6 +11,11 @@ frappe.ui.form.on("Simulacao De Credito", {
 	},
 
 	refresh(frm) {
+		// "fetch_from" forces the field read-only on the client regardless of the
+		// doctype json - taxa_de_juros is meant to stay editable (unlike multa/mora)
+		// so the produto value is only a convenience default, not a locked value.
+		frm.set_df_property("taxa_de_juros", "read_only", 0);
+
 		render_preview(frm);
 
 		frm.add_custom_button(__("Simulador Rápido"), () => {
