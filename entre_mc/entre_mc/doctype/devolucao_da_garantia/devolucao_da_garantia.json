@@ -31,7 +31,6 @@
    "reqd": 1
   },
   {
-   "description": "O Pedido De Credito tem de estar Liquidado para a garantia poder ser devolvida.",
    "fieldname": "pedido_de_credito",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -59,7 +58,6 @@
    "reqd": 1
   },
   {
-   "description": "Documento externo assinado pelo cliente.",
    "fieldname": "anexo",
    "fieldtype": "Attach",
    "label": "Anexo",

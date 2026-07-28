@@ -85,7 +85,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "description": "Em meses.",
    "fieldname": "prazo",
    "fieldtype": "Int",
    "in_list_view": 1,

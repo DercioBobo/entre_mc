@@ -64,7 +64,6 @@
    "reqd": 1
   },
   {
-   "description": "Preenchido quando o pedido resulta de uma simulação previamente feita pelo proponente que se tornou cliente.",
    "fieldname": "simulacao_de_credito",
    "fieldtype": "Link",
    "label": "Simulacao De Credito",
@@ -88,7 +87,6 @@
    "read_only": 1
   },
   {
-   "description": "Capital Solicitado − Taxa Administrativa. Valor a usar no Desembolso.",
    "fieldname": "valor_a_desembolsar",
    "fieldtype": "Currency",
    "label": "Valor a Desembolsar",
@@ -101,7 +99,6 @@
    "reqd": 1
   },
   {
-   "description": "Herdada do Produto no momento da criação do pedido; alterações posteriores ao Produto não afetam pedidos já criados.",
    "fetch_from": "produto.taxa_diaria_de_multa",
    "fieldname": "taxa_diaria_de_multa",
    "fieldtype": "Percent",
@@ -109,7 +106,6 @@
    "read_only": 1
   },
   {
-   "description": "Herdada do Produto no momento da criação do pedido; alterações posteriores ao Produto não afetam pedidos já criados.",
    "fetch_from": "produto.juros_de_mora",
    "fieldname": "juros_de_mora",
    "fieldtype": "Percent",
@@ -121,7 +117,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "description": "Em meses.",
    "fieldname": "prazo",
    "fieldtype": "Int",
    "label": "Prazo",
@@ -149,7 +144,6 @@
   },
   {
    "default": "Today",
-   "description": "Data a partir da qual o plano de amortização estimado começa a contar. Útil quando o desembolso é esperado para uma data diferente de hoje. O desembolso real volta sempre a ancorar o plano na data efetiva de desembolso.",
    "fieldname": "data_de_inicio_prevista",
    "fieldtype": "Date",
    "label": "Data de Início Prevista",
@@ -184,21 +178,18 @@
    "read_only": 1
   },
   {
-   "description": "Tudo o que ainda falta pagar (capital + juros + multa + mora), vencido ou não. Não é uma dívida - é o saldo normal do crédito em curso.",
    "fieldname": "saldo_em_divida",
    "fieldtype": "Currency",
    "label": "Saldo do Crédito",
    "read_only": 1
   },
   {
-   "description": "Só a parte de prestações já em atraso (fora do prazo de tolerância). O termo \"Dívida\" só se aplica aqui, nunca ao Saldo do Crédito ainda dentro do prazo.",
    "fieldname": "divida",
    "fieldtype": "Currency",
    "label": "Dívida",
    "read_only": 1
   },
   {
-   "description": "Dívida + a próxima prestação ainda não vencida (0 se não houver nenhuma prestação em atraso) - um cliente já atrasado numa prestação tende a atrasar-se também na seguinte.",
    "fieldname": "em_risco",
    "fieldtype": "Currency",
    "label": "Em Risco",
@@ -206,7 +197,6 @@
   },
   {
    "depends_on": "eval:doc.observacoes_liquidacao",
-   "description": "Preenchido automaticamente quando o pedido é liquidado por execução de uma Garantia (dação em pagamento), distinguindo esse caso de uma liquidação normal por reembolso integral.",
    "fieldname": "observacoes_liquidacao",
    "fieldtype": "Small Text",
    "label": "Observações de Liquidação",
@@ -219,7 +209,6 @@
    "label": "Garantias"
   },
   {
-   "description": "Garantias pertencentes ao cliente.",
    "fieldname": "garantias",
    "fieldtype": "Table MultiSelect",
    "options": "Pedido Garantia",
@@ -232,7 +221,6 @@
    "label": "Documentação"
   },
   {
-   "description": "Documentos obrigatórios necessários para este pedido (contrato, comprovativos, entre outros).",
    "fieldname": "documentos",
    "fieldtype": "Table",
    "options": "Documento Do Pedido De Credito"

@@ -44,7 +44,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Taxa de juros mensal (Tj) aplicada nas fórmulas de amortização.",
    "fieldname": "taxa_de_juros",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -78,7 +77,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Em meses.",
    "fieldname": "prazo_minimo",
    "fieldtype": "Int",
    "label": "Prazo Mínimo",
@@ -86,7 +84,6 @@
    "reqd": 1
   },
   {
-   "description": "Em meses.",
    "fieldname": "prazo_maximo",
    "fieldtype": "Int",
    "label": "Prazo Máximo",
@@ -99,13 +96,11 @@
    "label": "Penalizações por Atraso"
   },
   {
-   "description": "Multa = Taxa Diária de Multa × dias de atraso × prestação em atraso.",
    "fieldname": "taxa_diaria_de_multa",
    "fieldtype": "Percent",
    "label": "Taxa Diária de Multa (%)"
   },
   {
-   "description": "Encargo único: Juros de Mora (%) × (capital + juros) em atraso, aplicado uma só vez quando a prestação entra em atraso (não recalculado nos dias seguintes).",
    "fieldname": "juros_de_mora",
    "fieldtype": "Percent",
    "label": "Juros de Mora (%)"
@@ -115,7 +110,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Reservado: comportamento ainda por definir (ver MC Settings).",
    "fieldname": "percentagem_de_capitalizacao",
    "fieldtype": "Percent",
    "label": "Percentagem (%) de Capitalização"

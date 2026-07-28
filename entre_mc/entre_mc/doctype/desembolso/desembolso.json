@@ -64,7 +64,6 @@
    "reqd": 1
   },
   {
-   "description": "Herdada do Pedido De Credito (já descontada do Capital Solicitado).",
    "fetch_from": "pedido_de_credito.taxa_administrativa",
    "fieldname": "taxa_administrativa",
    "fieldtype": "Currency",
@@ -72,7 +71,6 @@
    "read_only": 1
   },
   {
-   "description": "Pré-preenchido com o Valor a Desembolsar do Pedido (Capital Solicitado − Taxa Administrativa), mas pode ser ajustado se necessário.",
    "fieldname": "valor_desembolsado",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -110,7 +108,6 @@
    "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
   },
   {
-   "description": "Comprovativo da transferência/depósito",
    "fieldname": "comprovativo",
    "fieldtype": "Attach",
    "label": "Comprovativo",

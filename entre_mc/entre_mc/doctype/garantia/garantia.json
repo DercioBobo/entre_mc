@@ -55,7 +55,6 @@
   },
   {
    "default": "Cliente",
-   "description": "Onde a garantia fica fisicamente guardada: com o Cliente (ex.: fica registada mas continua na posse dele) ou com a Empresa (Micro Crédito), quando é efetivamente recolhida.",
    "fieldname": "posse",
    "fieldtype": "Select",
    "in_list_view": 1,

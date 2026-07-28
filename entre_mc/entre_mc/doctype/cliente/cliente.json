@@ -94,7 +94,6 @@
    "options": "Masculino\nFeminino"
   },
   {
-   "description": "Ao selecionar um Proponente, os dados partilhados são preenchidos automaticamente.",
    "fieldname": "proponente_de_origem",
    "fieldtype": "Link",
    "label": "Proponente de Origem",
@@ -199,7 +198,6 @@
    "label": "Despesas Mensais Fixas"
   },
   {
-   "description": "Rendimento Mensal Médio − Despesas Mensais Fixas.",
    "fieldname": "valor_disponivel_mensal",
    "fieldtype": "Currency",
    "label": "Valor Disponível Mensal",
@@ -221,7 +219,6 @@
    "label": "Documentação"
   },
   {
-   "description": "Todos os documentos obrigatórios necessários (declaração de residência, entre outros).",
    "fieldname": "documentos",
    "fieldtype": "Table",
    "options": "Documento Do Cliente"

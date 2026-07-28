@@ -81,7 +81,6 @@
    "label": "Alocação do Pagamento"
   },
   {
-   "description": "Ordem de liquidação aplicada automaticamente: Juros de Mora → Multa → Juros → Capital (conforme aplicável).",
    "fieldname": "alocacoes",
    "fieldtype": "Table",
    "options": "Alocacao De Reembolso",
