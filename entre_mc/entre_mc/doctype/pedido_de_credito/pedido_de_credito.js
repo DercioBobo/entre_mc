@@ -40,7 +40,9 @@ frappe.ui.form.on("Pedido De Credito", {
 			frm.add_custom_button(__("Criar Desembolso"), () => {
 				frappe.new_doc("Desembolso", null, (doc) => {
 					doc.pedido_de_credito = frm.doc.name;
-					doc.valor_desembolsado = frm.doc.capital_solicitado;
+					// valor_desembolsado é pré-preenchido pelo próprio Desembolso
+					// (com o Valor a Desembolsar, já líquido da Taxa Administrativa)
+					// quando pedido_de_credito é definido - ver desembolso.js.
 					if (frm.doc.data_de_inicio_prevista) {
 						doc.data_de_desembolso = frm.doc.data_de_inicio_prevista;
 					}
