@@ -17,7 +17,8 @@ def atualizar_atrasos():
 
 	- recalcula Multa/Juros de Mora acumulados e o estado ("Atrasado", etc.) de
 	  cada prestação ainda não paga, sem tocar em valores já pagos;
-	- atualiza o Saldo em Dívida;
+	- atualiza o Saldo do Crédito, a Dívida (só prestações em atraso) e o
+	  valor Em Risco;
 	- marca o Pedido como "Incumprimento" se a prestação mais antiga em dívida
 	  ultrapassar `MC Settings.dias_para_incumprimento`.
 

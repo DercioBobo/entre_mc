@@ -40,10 +40,10 @@ function render_contexto(frm) {
 }
 
 function build_contexto_html(data, currency) {
-	const { saldo_em_divida, proxima_prestacao, total_em_atraso, total_multa, total_juros_mora, plano } = data;
+	const { saldo_em_divida, divida, em_risco, proxima_prestacao, total_multa, total_juros_mora, plano } = data;
 
 	const cards = [
-		{ label: __("Saldo em Dívida"), value: format_currency(saldo_em_divida, currency) },
+		{ label: __("Saldo do Crédito"), value: format_currency(saldo_em_divida, currency) },
 		proxima_prestacao
 			? {
 					label: __("Próxima Prestação (Nº {0})", [proxima_prestacao.numero]),
@@ -53,10 +53,17 @@ function build_contexto_html(data, currency) {
 			: { label: __("Próxima Prestação"), value: __("Nenhuma") },
 	];
 
-	if (flt(total_em_atraso) > 0) {
+	if (flt(divida) > 0) {
 		cards.push({
-			label: __("Total em Atraso"),
-			value: format_currency(total_em_atraso, currency),
+			label: __("Dívida"),
+			value: format_currency(divida, currency),
+			warn: true,
+		});
+	}
+	if (flt(em_risco) > 0) {
+		cards.push({
+			label: __("Em Risco"),
+			value: format_currency(em_risco, currency),
 			warn: true,
 		});
 	}

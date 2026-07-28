@@ -55,7 +55,7 @@ function build_resumo_html(data, currency) {
 		{ label: __("Créditos"), value: totais.total_pedidos },
 		{ label: __("Ativos"), value: totais.ativos },
 		{ label: __("Total Emprestado"), value: format_currency(totais.total_emprestado, currency) },
-		{ label: __("Saldo em Dívida"), value: format_currency(totais.saldo_em_divida, currency) },
+		{ label: __("Saldo do Crédito"), value: format_currency(totais.saldo_em_divida, currency) },
 		{
 			label: __("Incumprimento"),
 			value: totais.incumprimento,

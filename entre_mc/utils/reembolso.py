@@ -99,6 +99,53 @@ def aplicar_alocacao(rows, taxa_diaria_de_multa, juros_de_mora, settings, montan
 	return alocacoes
 
 
+def calcular_saldos(rows, settings, hoje):
+	"""A partir das linhas (não pagas ou não) de um Plano De Amortizacao, devolve
+	`(saldo_do_credito, divida, em_risco)`:
+
+	- `saldo_do_credito`: tudo o que ainda falta pagar (capital + juros + multa +
+	  mora), vencido ou não - é o saldo normal do crédito em curso, não uma dívida.
+	- `divida`: só a parte de prestações já em atraso (data_limite_pagamento + a
+	  tolerância já ultrapassada) - o termo "dívida" só se aplica aqui, nunca ao
+	  saldo do crédito ainda dentro do prazo.
+	- `em_risco`: `divida` + a próxima prestação ainda não vencida (0 se não houver
+	  nenhuma prestação em atraso) - um cliente já atrasado numa prestação tende a
+	  atrasar-se também na seguinte, por isso essa é a soma que compõe a "Carteira
+	  em Risco".
+
+	Usa `data_limite_pagamento`/`dias_de_tolerancia` para decidir o que está em
+	atraso, nunca o `status` gravado na linha - esse só é atualizado pela tarefa
+	diária `atualizar_atrasos` ou por um Reembolso submetido, por isso não pode
+	ser a fonte de verdade aqui (ver Creditos em Atraso, que tinha o mesmo problema).
+	"""
+	hoje = getdate(hoje)
+	saldo_do_credito = 0
+	divida = 0
+	proxima_numero = None
+	proxima_valor = 0
+
+	for row in rows:
+		valor_em_falta = flt(
+			(row.capital_mensal - row.capital_pago)
+			+ (row.juros_mensais - row.juros_pago)
+			+ (row.multa_aplicada - row.multa_paga)
+			+ (row.juros_mora_aplicado - row.juros_mora_pago)
+		)
+		if valor_em_falta <= 0:
+			continue
+		saldo_do_credito += valor_em_falta
+
+		dias_atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
+		if dias_atraso > 0:
+			divida += valor_em_falta
+		elif proxima_numero is None or row.numero < proxima_numero:
+			proxima_numero = row.numero
+			proxima_valor = valor_em_falta
+
+	em_risco = flt(divida + proxima_valor) if divida and proxima_numero is not None else 0
+	return flt(saldo_do_credito), flt(divida), em_risco
+
+
 def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision):
 	dias_atraso = date_diff(data_pagamento, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 	if dias_atraso <= 0:

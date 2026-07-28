@@ -73,7 +73,6 @@
   {
    "collapsible": 1,
    "depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)",
-   "description": "Pré-preenchidos a partir do Cliente ao selecionar o Pedido, mas podem ser alterados se este desembolso usar uma conta diferente.",
    "fieldname": "sb_bancarios",
    "fieldtype": "Section Break",
    "label": "Dados Bancários"
@@ -101,7 +100,7 @@
    "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
   },
   {
-   "description": "Comprovativo da transferência/depósito (recibo, print do homebanking, entre outros).",
+   "description": "Comprovativo da transferência/depósito",
    "fieldname": "comprovativo",
    "fieldtype": "Attach",
    "label": "Comprovativo",

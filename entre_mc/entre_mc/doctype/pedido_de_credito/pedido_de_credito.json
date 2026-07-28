@@ -25,6 +25,8 @@
   "cb_estado",
   "status",
   "saldo_em_divida",
+  "divida",
+  "em_risco",
   "observacoes_liquidacao",
   "sb_garantias",
   "garantias",
@@ -167,9 +169,24 @@
    "read_only": 1
   },
   {
+   "description": "Tudo o que ainda falta pagar (capital + juros + multa + mora), vencido ou não. Não é uma dívida - é o saldo normal do crédito em curso.",
    "fieldname": "saldo_em_divida",
    "fieldtype": "Currency",
-   "label": "Saldo em Dívida",
+   "label": "Saldo do Crédito",
+   "read_only": 1
+  },
+  {
+   "description": "Só a parte de prestações já em atraso (fora do prazo de tolerância). O termo \"Dívida\" só se aplica aqui, nunca ao Saldo do Crédito ainda dentro do prazo.",
+   "fieldname": "divida",
+   "fieldtype": "Currency",
+   "label": "Dívida",
+   "read_only": 1
+  },
+  {
+   "description": "Dívida + a próxima prestação ainda não vencida (0 se não houver nenhuma prestação em atraso) - um cliente já atrasado numa prestação tende a atrasar-se também na seguinte.",
+   "fieldname": "em_risco",
+   "fieldtype": "Currency",
+   "label": "Em Risco",
    "read_only": 1
   },
   {

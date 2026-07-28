@@ -4,14 +4,14 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt, getdate, nowdate
+from frappe.utils import getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito import (
 	calcular_plano,
 	check_limites,
 )
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha, calcular_saldos
 
 APROVADO = "Aprovado"
 
@@ -75,24 +75,20 @@ class PedidoDeCredito(Document):
 			self.append("plano_de_amortizacao", linha)
 
 	def atualizar_saldo_em_divida(self):
-		"""Soma do que ainda falta pagar (capital + juros + multa + mora) em todas as prestações.
-
-		Antes de qualquer reembolso isto coincide com o Saldo previsto na última linha do
-		plano; depois de reembolsos parciais reflecte o valor real ainda em dívida.
-		"""
-		total = 0
-		for row in self.plano_de_amortizacao:
-			total += flt(row.capital_mensal) - flt(row.capital_pago)
-			total += flt(row.juros_mensais) - flt(row.juros_pago)
-			total += flt(row.multa_aplicada) - flt(row.multa_paga)
-			total += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
-		self.saldo_em_divida = total
+		"""Recalcula Saldo do Crédito, Dívida e Em Risco - ver `calcular_saldos` para a
+		definição de cada um; nome do método mantido por compatibilidade com os callers
+		existentes (tasks.py, Reembolso), apesar de já não calcular só o saldo em dívida."""
+		settings = get_settings()
+		saldo, divida, em_risco = calcular_saldos(self.plano_de_amortizacao, settings, nowdate())
+		self.saldo_em_divida = saldo
+		self.divida = divida
+		self.em_risco = em_risco
 
 	def marcar_como_liquidado(self, motivo=None):
-		"""Chamado quando a Garantia associada é executada (dação em pagamento): a
-		dívida é dada como extinta independentemente do valor da garantia face ao
-		saldo em dívida, pelo que todas as prestações pendentes são marcadas como
-		pagas e o saldo em dívida zera. Não há lugar a reembolsos depois disto -
+		"""Chamado quando a Garantia associada é executada (dação em pagamento): o
+		saldo do crédito é dado como extinto independentemente do valor da garantia
+		face a esse saldo, pelo que todas as prestações pendentes são marcadas como
+		pagas e o saldo do crédito zera. Não há lugar a reembolsos depois disto -
 		ver o bloqueio em Reembolso.validate()."""
 		for row in self.plano_de_amortizacao:
 			row.capital_pago = row.capital_mensal

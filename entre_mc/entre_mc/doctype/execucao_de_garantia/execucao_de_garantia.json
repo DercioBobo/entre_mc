@@ -57,10 +57,10 @@
    "reqd": 1
   },
   {
-   "description": "Saldo em dívida do Pedido no momento da execução - o valor que ficou dado como liquidado por esta garantia (dação em pagamento). Calculado automaticamente.",
+   "description": "Saldo do Crédito do Pedido no momento da execução - o valor que ficou dado como liquidado por esta garantia (dação em pagamento). Calculado automaticamente.",
    "fieldname": "valor_liquidado",
    "fieldtype": "Currency",
-   "label": "Valor da Dívida Liquidada",
+   "label": "Saldo do Crédito Liquidado",
    "read_only": 1
   }
  ],

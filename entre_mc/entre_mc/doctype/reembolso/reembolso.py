@@ -105,9 +105,9 @@ class Reembolso(Document):
 
 @frappe.whitelist()
 def obter_contexto(pedido_de_credito):
-	"""Dados para o painel "Situação do Pedido" no Reembolso: saldo em dívida,
-	a próxima prestação em falta e o total em atraso (se houver), mais o plano
-	de amortização completo para a tabela abaixo - para quem regista o
+	"""Dados para o painel "Situação do Pedido" no Reembolso: Saldo do Crédito,
+	Dívida e Em Risco (ver `calcular_saldos`), a próxima prestação em falta, mais
+	o plano de amortização completo para a tabela abaixo - para quem regista o
 	pagamento saber quanto falta pagar sem ter de abrir o Pedido em separado.
 
 	Multa/Juros de Mora e o estado ("Atrasado" etc.) são recalculados aqui (em
@@ -130,15 +130,18 @@ def obter_contexto(pedido_de_credito):
 			)
 			atualizar_estado_da_linha(linha, hoje, settings)
 
+	pedido.atualizar_saldo_em_divida()
+
 	nao_pagas = [linha for linha in linhas if linha.status != "Pago"]
 	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None
 
-	total_em_atraso = sum(_valor_em_falta(linha) for linha in linhas if linha.status == "Atrasado")
 	total_multa = sum(flt(linha.multa_aplicada) - flt(linha.multa_paga) for linha in nao_pagas)
 	total_juros_mora = sum(flt(linha.juros_mora_aplicado) - flt(linha.juros_mora_pago) for linha in nao_pagas)
 
 	return {
 		"saldo_em_divida": pedido.saldo_em_divida,
+		"divida": pedido.divida,
+		"em_risco": pedido.em_risco,
 		"total_multa": total_multa,
 		"total_juros_mora": total_juros_mora,
 		"proxima_prestacao": {
@@ -149,7 +152,6 @@ def obter_contexto(pedido_de_credito):
 		}
 		if proxima
 		else None,
-		"total_em_atraso": total_em_atraso,
 		"plano": [linha.as_dict() for linha in linhas],
 	}
 
