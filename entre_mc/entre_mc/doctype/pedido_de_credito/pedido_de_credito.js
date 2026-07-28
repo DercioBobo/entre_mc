@@ -60,12 +60,6 @@ frappe.ui.form.on("Pedido De Credito", {
 	},
 
 	produto(frm) {
-		// Skipped once right after loading a Simulacao De Credito below, so its
-		// taxa_de_juros isn't immediately overwritten by the produto's current rate.
-		if (frm._skip_produto_taxa_fetch) {
-			frm._skip_produto_taxa_fetch = false;
-			return;
-		}
 		if (!frm.doc.produto) return;
 		// taxa_de_juros stays editable (unlike multa/mora), so it can't use
 		// fetch_from - the framework forces fetch_from fields read-only.
@@ -79,15 +73,23 @@ frappe.ui.form.on("Pedido De Credito", {
 	simulacao_de_credito(frm) {
 		if (!frm.doc.simulacao_de_credito) return;
 		frappe.db.get_doc("Simulacao De Credito", frm.doc.simulacao_de_credito).then((sim) => {
-			frm._skip_produto_taxa_fetch = true;
-			frm.set_value({
+			// Assigned directly on frm.doc (not via frm.set_value) so that setting
+			// `produto` doesn't trigger its own fetch_from/onchange and overwrite
+			// taxa_diaria_de_multa/juros_de_mora with the *current* Produto rates -
+			// every field here must come from the simulation as it was saved, not
+			// be re-derived from produto.
+			Object.assign(frm.doc, {
 				produto: sim.produto,
 				capital_solicitado: sim.capital_solicitado,
 				taxa_de_juros: sim.taxa_de_juros,
+				taxa_diaria_de_multa: sim.taxa_diaria_de_multa,
+				juros_de_mora: sim.juros_de_mora,
 				prazo: sim.prazo,
 				finalidade: sim.finalidade,
 				frequencia: sim.frequencia,
 			});
+			frm.dirty();
+			frm.refresh_fields();
 		});
 	},
 });
