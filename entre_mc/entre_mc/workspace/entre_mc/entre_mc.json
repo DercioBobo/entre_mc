@@ -198,6 +198,18 @@
   },
   {
    "type": "Link",
+   "label": "Carteira em Risco",
+   "link_type": "Report",
+   "link_to": "Carteira em Risco",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 17,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
    "label": "Créditos em Atraso",
    "link_type": "Report",
    "link_to": "Creditos em Atraso",
@@ -205,7 +217,31 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 17,
+   "idx": 18,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Aging da Carteira",
+   "link_type": "Report",
+   "link_to": "Aging da Carteira",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 19,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Incumprimentos",
+   "link_type": "Report",
+   "link_to": "Incumprimentos",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 20,
    "doctype": "Workspace Link"
   },
   {
@@ -217,7 +253,31 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 18,
+   "idx": 21,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Desembolsos no Período",
+   "link_type": "Report",
+   "link_to": "Desembolsos no Periodo",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 22,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Receita de Taxas Administrativas",
+   "link_type": "Report",
+   "link_to": "Receita de Taxas Administrativas",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 23,
    "doctype": "Workspace Link"
   },
   {
@@ -229,7 +289,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 19,
+   "idx": 24,
    "doctype": "Workspace Link"
   },
   {
@@ -241,7 +301,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 20,
+   "idx": 25,
    "doctype": "Workspace Link"
   },
   {
@@ -253,7 +313,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 21,
+   "idx": 26,
    "doctype": "Workspace Link"
   },
   {
@@ -263,7 +323,19 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 22,
+   "idx": 27,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Painel de Crédito",
+   "link_type": "Page",
+   "link_to": "painel-de-credito",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 28,
    "doctype": "Workspace Link"
   },
   {
@@ -275,11 +347,11 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 23,
+   "idx": 29,
    "doctype": "Workspace Link"
   }
  ],
- "modified": "2026-07-10 00:00:00.000000",
+ "modified": "2026-07-28 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Entre MC",

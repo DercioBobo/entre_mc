@@ -18,6 +18,7 @@ def get_columns():
 		{"label": _("Garantia"), "fieldname": "name", "fieldtype": "Link", "options": "Garantia", "width": 130},
 		{"label": _("Cliente"), "fieldname": "cliente", "fieldtype": "Link", "options": "Cliente", "width": 160},
 		{"label": _("Estado"), "fieldname": "status", "fieldtype": "Data", "width": 110},
+		{"label": _("Posse"), "fieldname": "posse", "fieldtype": "Data", "width": 90},
 		{"label": _("Data"), "fieldname": "data", "fieldtype": "Date", "width": 100},
 		{"label": _("Nº de Itens"), "fieldname": "num_itens", "fieldtype": "Int", "width": 90},
 		{"label": _("Valor de Mercado Total"), "fieldname": "valor_total", "fieldtype": "Currency", "width": 150},
@@ -30,9 +31,14 @@ def get_data(filters):
 		query_filters["cliente"] = filters["cliente"]
 	if filters.get("status"):
 		query_filters["status"] = filters["status"]
+	if filters.get("posse"):
+		query_filters["posse"] = filters["posse"]
 
 	garantias = frappe.get_all(
-		"Garantia", filters=query_filters, fields=["name", "cliente", "status", "data"], order_by="data desc"
+		"Garantia",
+		filters=query_filters,
+		fields=["name", "cliente", "status", "posse", "data"],
+		order_by="data desc",
 	)
 	if not garantias:
 		return []

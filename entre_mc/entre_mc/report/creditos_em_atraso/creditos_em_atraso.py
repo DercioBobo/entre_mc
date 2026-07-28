@@ -70,11 +70,13 @@ def get_data(filters):
 		for p in frappe.get_all(
 			"Pedido De Credito",
 			filters={"name": ["in", list({r.parent for r in rows})]},
-			fields=["name", "cliente", "taxa_diaria_de_multa", "juros_de_mora"],
+			fields=["name", "cliente", "produto", "taxa_diaria_de_multa", "juros_de_mora"],
 		)
 	}
 	if filters.get("cliente"):
 		rows = [r for r in rows if pedidos.get(r.parent, {}).get("cliente") == filters["cliente"]]
+	if filters.get("produto"):
+		rows = [r for r in rows if pedidos.get(r.parent, {}).get("produto") == filters["produto"]]
 
 	data = []
 	for r in rows:

@@ -15,5 +15,11 @@ frappe.query_reports["Garantias em Carteira"] = {
 			fieldtype: "Select",
 			options: "\nDisponível\nNão Disponível\nDevolvida",
 		},
+		{
+			fieldname: "posse",
+			label: __("Posse"),
+			fieldtype: "Select",
+			options: "\nCliente\nEmpresa",
+		},
 	],
 };
