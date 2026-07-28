@@ -4,10 +4,10 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import aplicar_alocacao
+from entre_mc.utils.reembolso import aplicar_alocacao, atualizar_encargos_da_linha, atualizar_estado_da_linha
 
 LABEL_TO_CAMPO_PAGO = {
 	"Juros de Mora": "juros_mora_pago",
@@ -108,11 +108,27 @@ def obter_contexto(pedido_de_credito):
 	"""Dados para o painel "Situação do Pedido" no Reembolso: saldo em dívida,
 	a próxima prestação em falta e o total em atraso (se houver), mais o plano
 	de amortização completo para a tabela abaixo - para quem regista o
-	pagamento saber quanto falta pagar sem ter de abrir o Pedido em separado."""
+	pagamento saber quanto falta pagar sem ter de abrir o Pedido em separado.
+
+	Multa/Juros de Mora e o estado ("Atrasado" etc.) são recalculados aqui (em
+	memória, sem gravar) para a data de hoje antes de responder - os valores
+	gravados na base de dados só são atualizados pela tarefa diária
+	`atualizar_atrasos` ou por um Reembolso já submetido, por isso uma
+	prestação que ficou em atraso hoje ainda apareceria como "Pendente" e com
+	encargos a 0 sem este recálculo."""
 	frappe.has_permission("Pedido De Credito", "read", doc=pedido_de_credito, throw=True)
 
 	pedido = frappe.get_doc("Pedido De Credito", pedido_de_credito)
 	linhas = pedido.plano_de_amortizacao
+	settings = get_settings()
+	hoje = getdate(nowdate())
+
+	for linha in linhas:
+		if linha.status != "Pago":
+			atualizar_encargos_da_linha(
+				linha, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
+			)
+			atualizar_estado_da_linha(linha, hoje, settings)
 
 	nao_pagas = [linha for linha in linhas if linha.status != "Pago"]
 	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None

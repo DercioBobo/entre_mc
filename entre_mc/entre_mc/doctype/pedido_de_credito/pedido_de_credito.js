@@ -97,5 +97,20 @@ frappe.ui.form.on("Pedido De Credito", {
 function render_plano(frm) {
 	const wrapper = frm.fields_dict.pre_visualizacao_html?.$wrapper;
 	if (!wrapper) return;
-	wrapper.html(entre_mc.render_plano_html(frm.doc.plano_de_amortizacao, frm.doc.currency));
+
+	if (frm.is_new() || !["Desembolsado", "Em Pagamento"].includes(frm.doc.status)) {
+		wrapper.html(entre_mc.render_plano_html(frm.doc.plano_de_amortizacao, frm.doc.currency));
+		return;
+	}
+
+	// Multa/Juros de Mora gravados só ficam atualizados após a tarefa diária
+	// ou um Reembolso submetido - aqui recalculamos em memória para que uma
+	// prestação que ficou em atraso hoje já apareça correta sem esperar por isso.
+	frappe.call({
+		method: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.plano_com_encargos_atuais",
+		args: { pedido_de_credito: frm.doc.name },
+		callback: (r) => {
+			wrapper.html(entre_mc.render_plano_html(r.message || frm.doc.plano_de_amortizacao, frm.doc.currency));
+		},
+	});
 }

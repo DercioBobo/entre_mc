@@ -4,12 +4,14 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import flt, getdate, nowdate
 
+from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito import (
 	calcular_plano,
 	check_limites,
 )
+from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
 
 APROVADO = "Aprovado"
 
@@ -121,6 +123,30 @@ class PedidoDeCredito(Document):
 		return bool(self.plano_de_amortizacao) and all(
 			row.status == "Pago" for row in self.plano_de_amortizacao
 		)
+
+
+@frappe.whitelist()
+def plano_com_encargos_atuais(pedido_de_credito):
+	"""Plano de amortização com Multa/Juros de Mora e estado ("Atrasado" etc.)
+	recalculados para hoje (em memória, sem gravar) - mesma lógica de
+	Reembolso.obter_contexto e pelo mesmo motivo: os valores gravados no Pedido
+	só são atualizados pela tarefa diária `atualizar_atrasos` ou por um
+	Reembolso já submetido, por isso uma prestação que ficou em atraso hoje
+	apareceria como "Pendente" e com encargos a 0 sem este recálculo."""
+	frappe.has_permission("Pedido De Credito", "read", doc=pedido_de_credito, throw=True)
+
+	pedido = frappe.get_doc("Pedido De Credito", pedido_de_credito)
+	settings = get_settings()
+	hoje = getdate(nowdate())
+
+	for linha in pedido.plano_de_amortizacao:
+		if linha.status != "Pago":
+			atualizar_encargos_da_linha(
+				linha, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
+			)
+			atualizar_estado_da_linha(linha, hoje, settings)
+
+	return [linha.as_dict() for linha in pedido.plano_de_amortizacao]
 
 
 @frappe.whitelist()

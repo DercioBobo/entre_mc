@@ -34,6 +34,11 @@
 	background-color: var(--bg-green, #e9f7ef);
 }
 
+.entre-mc-plano-table td.entre-mc-encargo {
+	color: var(--emc-stamp);
+	font-weight: 600;
+}
+
 .entre-mc-plano-empty {
 	padding: var(--padding-md, 12px) 0;
 }
