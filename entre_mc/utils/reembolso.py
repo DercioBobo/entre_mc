@@ -11,10 +11,15 @@ obrigatoriamente a ordem de liquidação definida na especificação:
 - Multa e juros de mora: Juros de Mora -> Multa -> Juros -> Capital
 - Apenas juros de mora: Juros de Mora -> Juros -> Capital
 
-Multa e Juros de Mora são recalculados com base nos dias de atraso até à data em
-questão - tanto aqui (no momento de um pagamento) como na tarefa diária
+Multa é recalculada com base nos dias de atraso até à data em questão - tanto
+aqui (no momento de um pagamento) como na tarefa diária
 `entre_mc.tasks.atualizar_atrasos`, que mantém o estado "Atrasado" e os
 encargos acumulados visíveis mesmo sem nenhum pagamento ser registado.
+
+Juros de Mora, ao contrário da Multa, é um encargo único: aplicado uma só vez
+quando a prestação entra em atraso (Juros de Mora % × capital+juros em atraso
+nesse momento) e nunca recalculado depois disso, mesmo que o atraso continue
+ou a prestação seja paga parcialmente.
 """
 
 import frappe
@@ -99,7 +104,6 @@ def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settin
 	if dias_atraso <= 0:
 		return
 
-	capital_em_atraso = flt(row.capital_mensal - row.capital_pago, precision)
 	prestacao_em_atraso = flt(
 		(row.capital_mensal - row.capital_pago) + (row.juros_mensais - row.juros_pago), precision
 	)
@@ -108,10 +112,10 @@ def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settin
 		row.multa_aplicada = flt(
 			flt(taxa_diaria_de_multa) / 100 * dias_atraso * prestacao_em_atraso, precision
 		)
-	if juros_de_mora:
-		row.juros_mora_aplicado = flt(
-			flt(juros_de_mora) / 100 * capital_em_atraso * dias_atraso / 30, precision
-		)
+	if juros_de_mora and not row.juros_mora_aplicado:
+		# Encargo único: aplicado uma só vez quando a prestação entra em atraso,
+		# não volta a ser recalculado nos dias seguintes nem escala com dias_atraso.
+		row.juros_mora_aplicado = flt(flt(juros_de_mora) / 100 * prestacao_em_atraso, precision)
 
 
 def _ordem_de_liquidacao(tem_multa, tem_mora):
