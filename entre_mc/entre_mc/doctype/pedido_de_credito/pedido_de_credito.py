@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import getdate, nowdate
+from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito import (
@@ -25,6 +25,7 @@ class PedidoDeCredito(Document):
 		self.validar_garantias_do_mesmo_cliente()
 
 		check_limites(self.produto, self.capital_solicitado, self.prazo)
+		self.calcular_taxa_administrativa()
 
 		if self.workflow_state == APROVADO and not self.plano_de_amortizacao:
 			# Estimativa: gerada logo após aprovação, anteriormente ao desembolso real.
@@ -60,6 +61,19 @@ class PedidoDeCredito(Document):
 						row.garantia, self.cliente
 					)
 				)
+
+	def calcular_taxa_administrativa(self):
+		"""Deduzida do Capital Solicitado no desembolso (Valor a Desembolsar) - não
+		afeta o plano de amortização, que continua a ser calculado sobre o Capital
+		Solicitado total: o cliente recebe menos dinheiro mas continua a dever e a
+		reembolsar o valor pedido por inteiro."""
+		settings = get_settings()
+		if settings.tipo_de_taxa_administrativa == "Valor Fixo":
+			taxa = flt(settings.taxa_administrativa_valor)
+		else:
+			taxa = flt(self.capital_solicitado) * flt(settings.taxa_administrativa_percentual) / 100
+		self.taxa_administrativa = taxa
+		self.valor_a_desembolsar = flt(self.capital_solicitado) - taxa
 
 	def gerar_plano_de_amortizacao(self, data_inicio=None):
 		linhas = calcular_plano(

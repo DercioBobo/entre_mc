@@ -2,6 +2,23 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Desembolso", {
+	onload(frm) {
+		frm.set_query("pedido_de_credito", () => ({
+			filters: { workflow_state: "Aprovado", status: "" },
+		}));
+	},
+
+	pedido_de_credito(frm) {
+		if (!frm.doc.pedido_de_credito) return;
+		// valor_desembolsado fica editável (o tesoureiro pode ter de o ajustar em
+		// casos excecionais) - por isso pré-preenchemos aqui em vez de fetch_from.
+		frappe.db.get_value("Pedido De Credito", frm.doc.pedido_de_credito, "valor_a_desembolsar").then((r) => {
+			if (r.message && r.message.valor_a_desembolsar != null) {
+				frm.set_value("valor_desembolsado", r.message.valor_a_desembolsar);
+			}
+		});
+	},
+
 	cliente(frm) {
 		if (!frm.doc.cliente) return;
 		// Dados Bancários ficam editáveis (ao contrário de taxa_diaria_de_multa/juros_de_mora

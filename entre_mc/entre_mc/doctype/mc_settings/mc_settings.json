@@ -9,7 +9,12 @@
   "frequencia_padrao",
   "dias_de_tolerancia",
   "dias_para_incumprimento",
-  "ativar_capitalizacao"
+  "ativar_capitalizacao",
+  "sb_taxa_administrativa",
+  "tipo_de_taxa_administrativa",
+  "taxa_administrativa_percentual",
+  "cb_taxa_administrativa",
+  "taxa_administrativa_valor"
  ],
  "fields": [
   {
@@ -55,6 +60,40 @@
    "fieldname": "ativar_capitalizacao",
    "fieldtype": "Check",
    "label": "Ativar Capitalização (em definição)"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sb_taxa_administrativa",
+   "fieldtype": "Section Break",
+   "label": "Taxa Administrativa"
+  },
+  {
+   "default": "Percentual",
+   "description": "Taxa cobrada no desembolso, deduzida do Capital Solicitado - não afeta o plano de amortização, que continua a ser calculado sobre o valor total pedido.",
+   "fieldname": "tipo_de_taxa_administrativa",
+   "fieldtype": "Select",
+   "label": "Tipo de Taxa Administrativa",
+   "options": "Percentual\nValor Fixo",
+   "reqd": 1
+  },
+  {
+   "default": "2",
+   "depends_on": "eval:doc.tipo_de_taxa_administrativa == \"Percentual\"",
+   "fieldname": "taxa_administrativa_percentual",
+   "fieldtype": "Percent",
+   "label": "Taxa Administrativa (%)",
+   "mandatory_depends_on": "eval:doc.tipo_de_taxa_administrativa == \"Percentual\""
+  },
+  {
+   "fieldname": "cb_taxa_administrativa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.tipo_de_taxa_administrativa == \"Valor Fixo\"",
+   "fieldname": "taxa_administrativa_valor",
+   "fieldtype": "Currency",
+   "label": "Taxa Administrativa (Valor Fixo)",
+   "mandatory_depends_on": "eval:doc.tipo_de_taxa_administrativa == \"Valor Fixo\""
   }
  ],
  "issingle": 1,

@@ -11,6 +11,8 @@
   "simulacao_de_credito",
   "cb_1",
   "capital_solicitado",
+  "taxa_administrativa",
+  "valor_a_desembolsar",
   "taxa_de_juros",
   "taxa_diaria_de_multa",
   "juros_de_mora",
@@ -78,6 +80,20 @@
    "in_list_view": 1,
    "label": "Capital Solicitado",
    "reqd": 1
+  },
+  {
+   "description": "Calculada a partir de MC Settings (Percentual do Capital Solicitado ou Valor Fixo) - não afeta o plano de amortização, que continua a ser calculado sobre o Capital Solicitado total.",
+   "fieldname": "taxa_administrativa",
+   "fieldtype": "Currency",
+   "label": "Taxa Administrativa",
+   "read_only": 1
+  },
+  {
+   "description": "Capital Solicitado − Taxa Administrativa. Valor a usar no Desembolso.",
+   "fieldname": "valor_a_desembolsar",
+   "fieldtype": "Currency",
+   "label": "Valor a Desembolsar",
+   "read_only": 1
   },
   {
    "fieldname": "taxa_de_juros",
