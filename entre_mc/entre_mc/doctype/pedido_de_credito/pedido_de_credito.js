@@ -60,13 +60,17 @@ frappe.ui.form.on("Pedido De Credito", {
 	},
 
 	produto(frm) {
-		// Only a default - never overwrite a value that's already set (e.g. just
-		// filled in from a Simulacao De Credito via the trigger below).
-		if (!frm.doc.produto || frm.doc.taxa_de_juros) return;
+		// Skipped once right after loading a Simulacao De Credito below, so its
+		// taxa_de_juros isn't immediately overwritten by the produto's current rate.
+		if (frm._skip_produto_taxa_fetch) {
+			frm._skip_produto_taxa_fetch = false;
+			return;
+		}
+		if (!frm.doc.produto) return;
 		// taxa_de_juros stays editable (unlike multa/mora), so it can't use
 		// fetch_from - the framework forces fetch_from fields read-only.
 		frappe.db.get_value("Produto", frm.doc.produto, "taxa_de_juros").then((r) => {
-			if (r.message && r.message.taxa_de_juros != null && !frm.doc.taxa_de_juros) {
+			if (r.message && r.message.taxa_de_juros != null) {
 				frm.set_value("taxa_de_juros", r.message.taxa_de_juros);
 			}
 		});
@@ -75,6 +79,7 @@ frappe.ui.form.on("Pedido De Credito", {
 	simulacao_de_credito(frm) {
 		if (!frm.doc.simulacao_de_credito) return;
 		frappe.db.get_doc("Simulacao De Credito", frm.doc.simulacao_de_credito).then((sim) => {
+			frm._skip_produto_taxa_fetch = true;
 			frm.set_value({
 				produto: sim.produto,
 				capital_solicitado: sim.capital_solicitado,

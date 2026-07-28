@@ -67,12 +67,11 @@ frappe.ui.form.on("Simulacao De Credito", {
 
 	produto(frm) {
 		render_preview(frm);
-		// Only a default - never overwrite a value the user already set.
-		if (!frm.doc.produto || frm.doc.taxa_de_juros) return;
+		if (!frm.doc.produto) return;
 		// taxa_de_juros stays editable (unlike multa/mora), so it can't use
 		// fetch_from - the framework forces fetch_from fields read-only.
 		frappe.db.get_value("Produto", frm.doc.produto, "taxa_de_juros").then((r) => {
-			if (r.message && r.message.taxa_de_juros != null && !frm.doc.taxa_de_juros) {
+			if (r.message && r.message.taxa_de_juros != null) {
 				frm.set_value("taxa_de_juros", r.message.taxa_de_juros);
 			}
 		});
