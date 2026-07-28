@@ -82,7 +82,6 @@
    "reqd": 1
   },
   {
-   "description": "Calculada a partir de MC Settings (Percentual do Capital Solicitado ou Valor Fixo) - não afeta o plano de amortização, que continua a ser calculado sobre o Capital Solicitado total.",
    "fieldname": "taxa_administrativa",
    "fieldtype": "Currency",
    "label": "Taxa Administrativa",
