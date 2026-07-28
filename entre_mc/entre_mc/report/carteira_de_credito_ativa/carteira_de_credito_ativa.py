@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 
-ATIVOS = ("Desembolsado", "Em Pagamento")
+ATIVOS = ("Em Curso",)
 
 
 def execute(filters=None):

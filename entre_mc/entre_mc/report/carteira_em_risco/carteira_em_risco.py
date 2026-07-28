@@ -8,7 +8,7 @@ from frappe.utils import getdate, nowdate
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.utils.reembolso import calcular_saldos
 
-ESTADOS_CONSIDERADOS = ("Desembolsado", "Em Pagamento", "Incumprimento")
+ESTADOS_CONSIDERADOS = ("Em Curso", "Incumprimento")
 
 
 def execute(filters=None):

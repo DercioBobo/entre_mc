@@ -19,7 +19,7 @@ class Cliente(Document):
 			)
 
 
-ATIVOS = ("Desembolsado", "Em Pagamento")
+ATIVOS = ("Em Curso",)
 
 
 @frappe.whitelist()

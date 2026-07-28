@@ -50,7 +50,7 @@ frappe.ui.form.on("Pedido De Credito", {
 			}, __("Criar"));
 		}
 
-		if (["Desembolsado", "Em Pagamento"].includes(frm.doc.status)) {
+		if (frm.doc.status === "Em Curso") {
 			frm.add_custom_button(__("Criar Reembolso"), () => {
 				frappe.new_doc("Reembolso", null, (doc) => {
 					doc.pedido_de_credito = frm.doc.name;
@@ -100,7 +100,7 @@ function render_plano(frm) {
 	const wrapper = frm.fields_dict.pre_visualizacao_html?.$wrapper;
 	if (!wrapper) return;
 
-	if (frm.is_new() || !["Desembolsado", "Em Pagamento"].includes(frm.doc.status)) {
+	if (frm.is_new() || frm.doc.status !== "Em Curso") {
 		wrapper.html(entre_mc.render_plano_html(frm.doc.plano_de_amortizacao, frm.doc.currency));
 		return;
 	}

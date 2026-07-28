@@ -14,8 +14,7 @@ frappe.ui.form.on("Cliente", {
 });
 
 const BADGE_CLASS = {
-	Desembolsado: "",
-	"Em Pagamento": "",
+	"Em Curso": "",
 	Liquidado: "emc-resumo-badge--ink",
 	Incumprimento: "emc-resumo-badge--stamp",
 };

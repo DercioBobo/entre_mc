@@ -75,8 +75,6 @@ class Reembolso(Document):
 		)
 
 		pedido.atualizar_saldo_em_divida()
-		if pedido.status == "Desembolsado":
-			pedido.status = "Em Pagamento"
 		if pedido.todas_as_prestacoes_pagas():
 			pedido.status = "Liquidado"
 		pedido.save(ignore_permissions=True)
@@ -99,7 +97,7 @@ class Reembolso(Document):
 
 		pedido.atualizar_saldo_em_divida()
 		if pedido.status == "Liquidado" and not pedido.todas_as_prestacoes_pagas():
-			pedido.status = "Em Pagamento"
+			pedido.status = "Em Curso"
 		pedido.save(ignore_permissions=True)
 
 

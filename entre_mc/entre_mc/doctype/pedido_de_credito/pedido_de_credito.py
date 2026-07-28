@@ -126,7 +126,7 @@ class PedidoDeCredito(Document):
 		não pode ainda existir nenhum Reembolso contra este pedido.
 		"""
 		self.gerar_plano_de_amortizacao(data_inicio=data_de_desembolso)
-		self.status = "Desembolsado"
+		self.status = "Em Curso"
 		self.save(ignore_permissions=True)
 
 	def todas_as_prestacoes_pagas(self):
