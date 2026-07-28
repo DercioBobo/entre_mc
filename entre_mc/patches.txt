@@ -1,2 +1,4 @@
 # Patches added in this list will be executed before doctypes are migrated
 # Read docs to understand patches: https://docs.frappe.io/framework/user/en/database-migrations
+
+entre_mc.patches.rename_status_em_curso
