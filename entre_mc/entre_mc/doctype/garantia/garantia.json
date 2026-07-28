@@ -10,6 +10,7 @@
   "data",
   "cb_1",
   "status",
+  "posse",
   "sb_itens",
   "itens",
   "sb_galeria",
@@ -51,6 +52,17 @@
    "label": "Estado",
    "options": "Disponível\nNão Disponível\nDevolvida",
    "read_only": 1
+  },
+  {
+   "default": "Cliente",
+   "description": "Onde a garantia fica fisicamente guardada: com o Cliente (ex.: fica registada mas continua na posse dele) ou com a Empresa (Micro Crédito), quando é efetivamente recolhida.",
+   "fieldname": "posse",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Posse",
+   "options": "Cliente\nEmpresa",
+   "reqd": 1
   },
   {
    "fieldname": "sb_itens",

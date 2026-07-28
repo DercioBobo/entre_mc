@@ -28,6 +28,8 @@
   "observacoes_liquidacao",
   "sb_garantias",
   "garantias",
+  "sb_documentacao",
+  "documentos",
   "sb_plano",
   "pre_visualizacao_html",
   "sb_plano_dados",
@@ -113,7 +115,7 @@
    "fieldname": "finalidade",
    "fieldtype": "Select",
    "label": "Finalidade",
-   "options": "Negócio\nConsumo\nHabitação\nAgricultura\nEducação\nOutro",
+   "options": "Comercio\nAgricultura\nPecuaria\nIndústria\nServiços\nConsumo\nOutros",
    "reqd": 1
   },
   {
@@ -188,7 +190,20 @@
    "description": "Garantias pertencentes ao cliente.",
    "fieldname": "garantias",
    "fieldtype": "Table MultiSelect",
-   "options": "Pedido Garantia"
+   "options": "Pedido Garantia",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sb_documentacao",
+   "fieldtype": "Section Break",
+   "label": "Documentação"
+  },
+  {
+   "description": "Documentos obrigatórios necessários para este pedido (contrato, comprovativos, entre outros).",
+   "fieldname": "documentos",
+   "fieldtype": "Table",
+   "options": "Documento Do Pedido De Credito"
   },
   {
    "fieldname": "sb_plano",

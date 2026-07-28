@@ -97,7 +97,7 @@
    "fieldname": "finalidade",
    "fieldtype": "Select",
    "label": "Finalidade",
-   "options": "Negócio\nConsumo\nHabitação\nAgricultura\nEducação\nOutro",
+   "options": "Comercio\nAgricultura\nPecuaria\nIndústria\nServiços\nConsumo\nOutros",
    "reqd": 1
   },
   {

@@ -11,7 +11,13 @@
   "cb_1",
   "data_de_desembolso",
   "forma_de_pagamento",
-  "valor_desembolsado"
+  "valor_desembolsado",
+  "sb_bancarios",
+  "banco",
+  "numero_de_conta",
+  "cb_bancarios",
+  "nib",
+  "comprovativo"
  ],
  "fields": [
   {
@@ -63,6 +69,43 @@
    "label": "Valor Desembolsado",
    "non_negative": 1,
    "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)",
+   "description": "Pré-preenchidos a partir do Cliente ao selecionar o Pedido, mas podem ser alterados se este desembolso usar uma conta diferente.",
+   "fieldname": "sb_bancarios",
+   "fieldtype": "Section Break",
+   "label": "Dados Bancários"
+  },
+  {
+   "fieldname": "banco",
+   "fieldtype": "Data",
+   "label": "Banco",
+   "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
+  },
+  {
+   "fieldname": "numero_de_conta",
+   "fieldtype": "Data",
+   "label": "Número de Conta",
+   "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
+  },
+  {
+   "fieldname": "cb_bancarios",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nib",
+   "fieldtype": "Data",
+   "label": "NIB",
+   "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
+  },
+  {
+   "description": "Comprovativo da transferência/depósito (recibo, print do homebanking, entre outros).",
+   "fieldname": "comprovativo",
+   "fieldtype": "Attach",
+   "label": "Comprovativo",
+   "mandatory_depends_on": "eval:in_list([\"Transferência Bancária\", \"Depósito\"], doc.forma_de_pagamento)"
   }
  ],
  "is_submittable": 1,

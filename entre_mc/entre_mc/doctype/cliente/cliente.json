@@ -13,6 +13,7 @@
   "cb_pessoais",
   "nuit",
   "estado_civil",
+  "genero",
   "proponente_de_origem",
   "sb_localizacao",
   "endereco",
@@ -21,6 +22,11 @@
   "cb_localizacao",
   "contacto_principal",
   "contacto_alternativo",
+  "sb_bancarios",
+  "banco",
+  "numero_de_conta",
+  "cb_bancarios",
+  "nib",
   "sb_profissionais",
   "ocupacao",
   "local_de_trabalho",
@@ -82,6 +88,12 @@
    "options": "Solteiro(a)\nCasado(a)\nUnião de Facto\nDivorciado(a)\nViúvo(a)"
   },
   {
+   "fieldname": "genero",
+   "fieldtype": "Select",
+   "label": "Género",
+   "options": "Masculino\nFeminino"
+  },
+  {
    "description": "Ao selecionar um Proponente, os dados partilhados são preenchidos automaticamente.",
    "fieldname": "proponente_de_origem",
    "fieldtype": "Link",
@@ -123,6 +135,31 @@
    "fieldname": "contacto_alternativo",
    "fieldtype": "Data",
    "label": "Contacto Alternativo"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sb_bancarios",
+   "fieldtype": "Section Break",
+   "label": "Dados Bancários"
+  },
+  {
+   "fieldname": "banco",
+   "fieldtype": "Data",
+   "label": "Banco"
+  },
+  {
+   "fieldname": "numero_de_conta",
+   "fieldtype": "Data",
+   "label": "Número de Conta"
+  },
+  {
+   "fieldname": "cb_bancarios",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nib",
+   "fieldtype": "Data",
+   "label": "NIB"
   },
   {
    "fieldname": "sb_profissionais",
