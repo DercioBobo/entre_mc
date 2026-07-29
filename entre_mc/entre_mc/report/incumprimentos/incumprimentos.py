@@ -20,6 +20,7 @@ def get_columns():
 	return [
 		{"label": _("Pedido"), "fieldname": "name", "fieldtype": "Link", "options": "Pedido De Credito", "width": 140},
 		{"label": _("Cliente"), "fieldname": "cliente", "fieldtype": "Link", "options": "Cliente", "width": 160},
+		{"label": _("Promotor"), "fieldname": "promotor_name", "fieldtype": "Data", "width": 140},
 		{"label": _("Produto"), "fieldname": "produto", "fieldtype": "Link", "options": "Produto", "width": 130},
 		{"label": _("Dias em Atraso"), "fieldname": "dias_atraso", "fieldtype": "Int", "width": 100},
 		{"label": _("Saldo do Crédito"), "fieldname": "saldo_do_credito", "fieldtype": "Currency", "width": 130},
@@ -47,7 +48,9 @@ def get_data(filters):
 	if filters.get("produto"):
 		query_filters["produto"] = filters["produto"]
 
-	pedidos = frappe.get_all("Pedido De Credito", filters=query_filters, fields=["name", "cliente", "produto"])
+	pedidos = frappe.get_all(
+		"Pedido De Credito", filters=query_filters, fields=["name", "cliente", "produto", "promotor_name"]
+	)
 	if not pedidos:
 		return []
 
@@ -111,6 +114,7 @@ def get_data(filters):
 			{
 				"name": pedido.name,
 				"cliente": pedido.cliente,
+				"promotor_name": pedido.promotor_name,
 				"produto": pedido.produto,
 				"dias_atraso": dias_atraso,
 				"saldo_do_credito": saldo,

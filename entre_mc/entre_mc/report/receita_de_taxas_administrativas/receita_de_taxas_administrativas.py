@@ -16,6 +16,7 @@ def get_columns():
 	return [
 		{"label": _("Desembolso"), "fieldname": "name", "fieldtype": "Link", "options": "Desembolso", "width": 140},
 		{"label": _("Cliente"), "fieldname": "cliente", "fieldtype": "Link", "options": "Cliente", "width": 160},
+		{"label": _("Promotor"), "fieldname": "promotor_name", "fieldtype": "Data", "width": 140},
 		{
 			"label": _("Pedido"),
 			"fieldname": "pedido_de_credito",
@@ -66,7 +67,7 @@ def get_data(filters):
 		for p in frappe.get_all(
 			"Pedido De Credito",
 			filters={"name": ["in", list({d.pedido_de_credito for d in desembolsos})]},
-			fields=["name", "produto", "capital_solicitado"],
+			fields=["name", "produto", "capital_solicitado", "promotor_name"],
 		)
 	}
 	if filters.get("produto"):
@@ -82,6 +83,7 @@ def get_data(filters):
 				**d,
 				"produto": pedido.get("produto"),
 				"capital_solicitado": pedido.get("capital_solicitado"),
+				"promotor_name": pedido.get("promotor_name"),
 			}
 		)
 	return data

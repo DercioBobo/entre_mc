@@ -24,6 +24,7 @@ def execute(filters=None):
 
 def get_columns():
 	return [
+		{"label": _("Cliente"), "fieldname": "cliente", "fieldtype": "Link", "options": "Cliente", "width": 160},
 		{"label": _("Faixa de Atraso"), "fieldname": "faixa", "fieldtype": "Data", "width": 130},
 		{"label": _("Nº de Prestações"), "fieldname": "num_prestacoes", "fieldtype": "Int", "width": 120},
 		{"label": _("Capital em Falta"), "fieldname": "capital_em_falta", "fieldtype": "Currency", "width": 130},
@@ -35,10 +36,11 @@ def get_columns():
 
 
 def get_data(filters):
-	"""Agrupa as prestações em atraso em faixas de dias de atraso (1-30/31-60/
-	61-90/91+), a partir das datas - não do `status` gravado - pelo mesmo
-	motivo do relatório Creditos em Atraso: esse campo só é atualizado pela
-	tarefa diária `atualizar_atrasos` ou por um Reembolso submetido."""
+	"""Agrupa as prestações em atraso por Cliente e por faixa de dias de atraso
+	(1-30/31-60/61-90/91+), a partir das datas - não do `status` gravado -
+	pelo mesmo motivo do relatório Creditos em Atraso: esse campo só é
+	atualizado pela tarefa diária `atualizar_atrasos` ou por um Reembolso
+	submetido."""
 	settings = get_settings()
 	hoje = getdate(nowdate())
 
@@ -61,24 +63,29 @@ def get_data(filters):
 	if not rows:
 		return []
 
-	if filters.get("cliente") or filters.get("produto"):
-		pedido_filters = {}
-		if filters.get("cliente"):
-			pedido_filters["cliente"] = filters["cliente"]
-		if filters.get("produto"):
-			pedido_filters["produto"] = filters["produto"]
-		nomes_permitidos = set(frappe.get_all("Pedido De Credito", filters=pedido_filters, pluck="name"))
-		rows = [r for r in rows if r.parent in nomes_permitidos]
-
-	buckets = {
-		label: {"num_prestacoes": 0, "capital": 0, "juros": 0, "multa": 0, "mora": 0} for *_, label in FAIXAS
+	pedidos = {
+		p.name: p
+		for p in frappe.get_all(
+			"Pedido De Credito",
+			filters={"name": ["in", list({r.parent for r in rows})]},
+			fields=["name", "cliente", "produto"],
+		)
 	}
+	if filters.get("cliente"):
+		rows = [r for r in rows if pedidos.get(r.parent, {}).get("cliente") == filters["cliente"]]
+	if filters.get("produto"):
+		rows = [r for r in rows if pedidos.get(r.parent, {}).get("produto") == filters["produto"]]
 
+	buckets = {}
 	for row in rows:
 		dias_atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 		if dias_atraso <= 0:
 			continue
-		bucket = buckets[_faixa(dias_atraso)]
+		cliente = pedidos.get(row.parent, {}).get("cliente")
+		bucket = buckets.setdefault(
+			(cliente, _faixa(dias_atraso)),
+			{"num_prestacoes": 0, "capital": 0, "juros": 0, "multa": 0, "mora": 0},
+		)
 		bucket["num_prestacoes"] += 1
 		bucket["capital"] += flt(row.capital_mensal) - flt(row.capital_pago)
 		bucket["juros"] += flt(row.juros_mensais) - flt(row.juros_pago)
@@ -86,22 +93,25 @@ def get_data(filters):
 		bucket["mora"] += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
 
 	data = []
-	for _ini, _fim, label in FAIXAS:
-		bucket = buckets[label]
-		if not bucket["num_prestacoes"]:
-			continue
-		total = bucket["capital"] + bucket["juros"] + bucket["multa"] + bucket["mora"]
-		data.append(
-			{
-				"faixa": label,
-				"num_prestacoes": bucket["num_prestacoes"],
-				"capital_em_falta": bucket["capital"],
-				"juros_em_falta": bucket["juros"],
-				"multa": bucket["multa"],
-				"juros_mora": bucket["mora"],
-				"total_em_atraso": total,
-			}
-		)
+	clientes = sorted({cliente for cliente, _faixa_label in buckets}, key=lambda c: c or "")
+	for cliente in clientes:
+		for _ini, _fim, label in FAIXAS:
+			bucket = buckets.get((cliente, label))
+			if not bucket:
+				continue
+			total = bucket["capital"] + bucket["juros"] + bucket["multa"] + bucket["mora"]
+			data.append(
+				{
+					"cliente": cliente,
+					"faixa": label,
+					"num_prestacoes": bucket["num_prestacoes"],
+					"capital_em_falta": bucket["capital"],
+					"juros_em_falta": bucket["juros"],
+					"multa": bucket["multa"],
+					"juros_mora": bucket["mora"],
+					"total_em_atraso": total,
+				}
+			)
 	return data
 
 

@@ -185,6 +185,31 @@ def simulacoes_do_cliente(doctype, txt, searchfield, start, page_len, filters):
 
 
 @frappe.whitelist()
+def promotores(doctype, txt, searchfield, start, page_len, filters):
+	"""Query do Link "Promotor": só utilizadores com a Role "Promotor"."""
+	frappe.has_permission("User", "read", throw=True)
+
+	utilizadores = frappe.get_all(
+		"Has Role",
+		filters={"role": "Promotor", "parenttype": "User"},
+		pluck="parent",
+	)
+	if not utilizadores:
+		return []
+	return frappe.get_all(
+		"User",
+		filters=[
+			["name", "in", utilizadores],
+			["name", "like", f"%{txt}%"],
+		],
+		fields=["name", "full_name"],
+		limit_start=start,
+		limit_page_length=page_len,
+		as_list=True,
+	)
+
+
+@frappe.whitelist()
 def garantias_do_cliente(doctype, txt, searchfield, start, page_len, filters):
 	"""Query do campo "Garantias": só garantias disponíveis pertencentes ao
 	Cliente escolhido - nunca garantias de outro cliente."""

@@ -17,6 +17,7 @@ def get_columns():
 	return [
 		{"label": _("Reembolso"), "fieldname": "name", "fieldtype": "Link", "options": "Reembolso", "width": 140},
 		{"label": _("Cliente"), "fieldname": "cliente", "fieldtype": "Link", "options": "Cliente", "width": 160},
+		{"label": _("Promotor"), "fieldname": "promotor_name", "fieldtype": "Data", "width": 140},
 		{
 			"label": _("Pedido"),
 			"fieldname": "pedido_de_credito",
@@ -54,6 +55,15 @@ def get_data(filters):
 	if not reembolsos:
 		return []
 
+	pedidos = {
+		p.name: p
+		for p in frappe.get_all(
+			"Pedido De Credito",
+			filters={"name": ["in", list({r.pedido_de_credito for r in reembolsos})]},
+			fields=["name", "promotor_name"],
+		)
+	}
+
 	alocacoes = frappe.get_all(
 		"Alocacao De Reembolso",
 		filters={"parent": ["in", [r.name for r in reembolsos]]},
@@ -70,6 +80,7 @@ def get_data(filters):
 		data.append(
 			{
 				**r,
+				"promotor_name": pedidos.get(r.pedido_de_credito, {}).get("promotor_name"),
 				"juros_de_mora": comp.get("Juros de Mora", 0),
 				"multa": comp.get("Multa", 0),
 				"juros": comp.get("Juros", 0),

@@ -31,6 +31,7 @@ fixtures = [
 					"Analista de Crédito",
 					"Gestor de Crédito",
 					"Oficial de Crédito",
+					"Promotor",
 					"Tesoureiro",
 				],
 			]

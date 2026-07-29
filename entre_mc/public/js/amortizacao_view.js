@@ -52,6 +52,7 @@ entre_mc.render_plano_html = function (rows, currency) {
 						: ""
 				}
 				<td class="text-right">${format_currency(r.saldo, currency)}</td>
+				<td class="text-right">${format_currency(r.saldo_capital, currency)}</td>
 				${r.status ? `<td>${__(r.status)}</td>` : ""}
 			</tr>`;
 		})
@@ -70,7 +71,8 @@ entre_mc.render_plano_html = function (rows, currency) {
 						<th class="text-right">${__("Juros")}</th>
 						<th class="text-right">${__("Prestação")}</th>
 						${has_encargos ? `<th class="text-right">${__("Multa")}</th><th class="text-right">${__("Juros de Mora")}</th>` : ""}
-						<th class="text-right">${__("Saldo")}</th>
+						<th class="text-right">${__("Saldo Total")}</th>
+						<th class="text-right">${__("Saldo de Capital")}</th>
 						${has_status ? `<th>${__("Estado")}</th>` : ""}
 					</tr>
 				</thead>
@@ -89,6 +91,7 @@ entre_mc.render_plano_html = function (rows, currency) {
 								  )}</th><th class="text-right">${format_currency(total_juros_mora, currency)}</th>`
 								: ""
 						}
+						<th></th>
 						<th></th>
 						${has_status ? "<th></th>" : ""}
 					</tr>

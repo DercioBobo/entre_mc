@@ -80,12 +80,13 @@ class EntreMcSimulador {
 									<th class="emc-num">Capital</th>
 									<th class="emc-num">Juros</th>
 									<th class="emc-num">Prestação</th>
-									<th class="emc-num">Saldo</th>
+									<th class="emc-num">Saldo Total</th>
+									<th class="emc-num">Saldo de Capital</th>
 								</tr>
 							</thead>
 							<tbody id="emc-tape-rows">
 								<tr class="emc-tape-empty">
-									<td colspan="6">Preencha os campos acima para ver o plano de amortização.</td>
+									<td colspan="7">Preencha os campos acima para ver o plano de amortização.</td>
 								</tr>
 							</tbody>
 						</table>
@@ -148,7 +149,7 @@ class EntreMcSimulador {
 		this.$displayValue.text("—");
 		this.$metaValues.text("—");
 		this.$rows.html(
-			`<tr class="emc-tape-empty"><td colspan="6">Preencha os campos acima para ver o plano de amortização.</td></tr>`
+			`<tr class="emc-tape-empty"><td colspan="7">Preencha os campos acima para ver o plano de amortização.</td></tr>`
 		);
 	}
 
@@ -180,6 +181,7 @@ class EntreMcSimulador {
 					<td class="emc-num">${format_currency(l.juros_mensais, "MZN")}</td>
 					<td class="emc-num emc-num--strong">${format_currency(l.prestacao_total, "MZN")}</td>
 					<td class="emc-num">${format_currency(l.saldo, "MZN")}</td>
+					<td class="emc-num">${format_currency(l.saldo_capital, "MZN")}</td>
 				</tr>`
 			)
 			.join("");

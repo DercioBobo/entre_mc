@@ -13,6 +13,7 @@
   "juros_mensais",
   "prestacao_total",
   "saldo",
+  "saldo_capital",
   "sb_pagamentos",
   "capital_pago",
   "juros_pago",
@@ -76,7 +77,14 @@
    "fieldname": "saldo",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Saldo",
+   "label": "Saldo Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "saldo_capital",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Saldo de Capital",
    "read_only": 1
   },
   {

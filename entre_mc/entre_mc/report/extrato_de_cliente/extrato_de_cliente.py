@@ -40,6 +40,7 @@ def get_columns():
 		{"label": _("Data"), "fieldname": "data", "fieldtype": "Date", "width": 95},
 		{"label": _("Tipo"), "fieldname": "tipo", "fieldtype": "Data", "width": 100},
 		{"label": _("Pedido"), "fieldname": "pedido", "fieldtype": "Link", "options": "Pedido De Credito", "width": 130},
+		{"label": _("Promotor"), "fieldname": "promotor_name", "fieldtype": "Data", "width": 140},
 		{"label": _("Descrição"), "fieldname": "descricao", "fieldtype": "Data", "width": 220},
 		{"label": _("Débito"), "fieldname": "debito", "fieldtype": "Currency", "width": 105},
 		{"label": _("Crédito"), "fieldname": "credito", "fieldtype": "Currency", "width": 105},
@@ -59,11 +60,12 @@ def get_data(filters):
 	if filters.get("pedido_de_credito"):
 		pedido_filters["name"] = filters["pedido_de_credito"]
 
-	pedidos = frappe.get_all("Pedido De Credito", filters=pedido_filters, fields=["name", "produto"])
+	pedidos = frappe.get_all("Pedido De Credito", filters=pedido_filters, fields=["name", "produto", "promotor_name"])
 	if not pedidos:
 		return []
 	pedido_names = [p.name for p in pedidos]
 	produto_por_pedido = {p.name: p.produto for p in pedidos}
+	promotor_por_pedido = {p.name: p.promotor_name for p in pedidos}
 
 	eventos = []
 	eventos += get_eventos_desembolso(pedido_names, produto_por_pedido)
@@ -71,6 +73,9 @@ def get_data(filters):
 		eventos += get_eventos_prestacao(pedido_names)
 	eventos += get_eventos_reembolso(pedido_names)
 	eventos += get_eventos_execucao_garantia(pedido_names)
+
+	for e in eventos:
+		e["promotor_name"] = promotor_por_pedido.get(e["pedido"])
 
 	eventos.sort(key=lambda e: (e["data"], e["_ordem"]))
 

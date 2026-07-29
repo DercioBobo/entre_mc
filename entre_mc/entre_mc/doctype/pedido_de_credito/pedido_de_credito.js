@@ -11,6 +11,10 @@ frappe.ui.form.on("Pedido De Credito", {
 			};
 		});
 
+		frm.set_query("promotor", () => ({
+			query: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.promotores",
+		}));
+
 		frm.set_query("garantias", () => {
 			if (!frm.doc.cliente) return {};
 			return {

@@ -14,6 +14,9 @@
   "sb_pagamento",
   "montante_pago",
   "data_de_pagamento",
+  "cb_pagamento",
+  "referencia_da_transacao",
+  "comprovativo",
   "sb_alocacao",
   "alocacoes"
  ],
@@ -74,6 +77,20 @@
    "fieldtype": "Date",
    "label": "Data de Pagamento",
    "reqd": 1
+  },
+  {
+   "fieldname": "cb_pagamento",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "referencia_da_transacao",
+   "fieldtype": "Data",
+   "label": "Referência da Transação"
+  },
+  {
+   "fieldname": "comprovativo",
+   "fieldtype": "Attach",
+   "label": "Comprovativo"
   },
   {
    "fieldname": "sb_alocacao",

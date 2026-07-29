@@ -81,7 +81,7 @@ def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, da
 		)
 
 	_absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision)
-	_preencher_saldo(linhas, precision)
+	_preencher_saldos(linhas, capital, precision)
 	return linhas
 
 
@@ -102,19 +102,29 @@ def _absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision)
 		ultima["prestacao_total"] = flt(ultima["prestacao_total"] + residual, precision)
 
 
-def _preencher_saldo(linhas, precision):
-	"""Saldo remanescente do plano após cada prestação, calculado sobre os
-	valores já arredondados (e já com o resíduo absorvido) - os mesmos valores
-	que são efetivamente cobrados. A última linha fecha sempre em 0.00, nunca
-	em resíduos como 0.01 ou -0.02."""
+def _preencher_saldos(linhas, capital, precision):
+	"""Preenche dois saldos por prestação, ambos sobre os valores já
+	arredondados (e já com o resíduo absorvido) - os mesmos valores que são
+	efetivamente cobrados:
+
+	- `saldo` (Saldo Total): tudo o que falta pagar do plano (capital + juros
+	  das prestações seguintes). A última linha fecha sempre em 0.00, nunca em
+	  resíduos como 0.01 ou -0.02.
+	- `saldo_capital`: capital tomado menos o capital já amortizado até essa
+	  prestação (inclusive) - a dívida de capital em si, sem os juros ainda
+	  por vencer. Também fecha em 0.00 na última linha."""
 	if not linhas:
 		return
 	total = sum(linha["prestacao_total"] for linha in linhas)
 	pago_ate_agora = 0.0
+	capital_amortizado = 0.0
 	for linha in linhas:
 		pago_ate_agora += linha["prestacao_total"]
+		capital_amortizado += linha["capital_mensal"]
 		linha["saldo"] = flt(total - pago_ate_agora, precision)
+		linha["saldo_capital"] = flt(capital - capital_amortizado, precision)
 	linhas[-1]["saldo"] = 0.0
+	linhas[-1]["saldo_capital"] = 0.0
 
 
 def _build_constante(capital, tj, n):
