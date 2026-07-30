@@ -23,6 +23,7 @@ class PedidoDeCredito(Document):
 
 		self.validar_simulacao_do_mesmo_cliente()
 		self.validar_garantias_do_mesmo_cliente()
+		self.validar_garantias_obrigatorias()
 
 		check_limites(self.produto, self.capital_solicitado, self.prazo)
 		self.calcular_taxa_administrativa()
@@ -61,6 +62,14 @@ class PedidoDeCredito(Document):
 						row.garantia, self.cliente
 					)
 				)
+
+	def validar_garantias_obrigatorias(self):
+		"""Pelo menos uma Garantia é obrigatória para sair do Rascunho - não à
+		inserção, para permitir criar o Pedido pré-preenchido a partir de uma
+		Simulacao De Credito (ver criar_pedido_de_credito) antes de o Oficial
+		de Crédito escolher a garantia."""
+		if self.workflow_state and self.workflow_state != "Rascunho" and not self.garantias:
+			frappe.throw(_("É obrigatório associar pelo menos uma Garantia antes de enviar para aprovação."))
 
 	def calcular_taxa_administrativa(self):
 		"""Deduzida do Capital Solicitado no desembolso (Valor a Desembolsar) - não

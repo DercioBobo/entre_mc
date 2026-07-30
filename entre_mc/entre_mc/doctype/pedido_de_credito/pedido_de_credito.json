@@ -227,8 +227,7 @@
   {
    "fieldname": "garantias",
    "fieldtype": "Table MultiSelect",
-   "options": "Pedido Garantia",
-   "reqd": 1
+   "options": "Pedido Garantia"
   },
   {
    "collapsible": 1,
