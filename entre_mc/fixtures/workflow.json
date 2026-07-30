@@ -45,35 +45,40 @@
     "state": "Rascunho",
     "action": "Enviar para Aprovação",
     "next_state": "Pendente Aprovação 1",
-    "allowed": "Oficial de Crédito"
+    "allowed": "Oficial de Crédito",
+    "allow_self_approval": 1
    },
    {
     "doctype": "Workflow Transition",
     "state": "Pendente Aprovação 1",
     "action": "Aprovar",
     "next_state": "Pendente Aprovação 2",
-    "allowed": "Analista de Crédito"
+    "allowed": "Analista de Crédito",
+    "allow_self_approval": 1
    },
    {
     "doctype": "Workflow Transition",
     "state": "Pendente Aprovação 1",
     "action": "Rejeitar",
     "next_state": "Rejeitado",
-    "allowed": "Analista de Crédito"
+    "allowed": "Analista de Crédito",
+    "allow_self_approval": 1
    },
    {
     "doctype": "Workflow Transition",
     "state": "Pendente Aprovação 2",
     "action": "Aprovar",
     "next_state": "Aprovado",
-    "allowed": "Gestor de Crédito"
+    "allowed": "Gestor de Crédito",
+    "allow_self_approval": 1
    },
    {
     "doctype": "Workflow Transition",
     "state": "Pendente Aprovação 2",
     "action": "Rejeitar",
     "next_state": "Rejeitado",
-    "allowed": "Gestor de Crédito"
+    "allowed": "Gestor de Crédito",
+    "allow_self_approval": 1
    }
   ]
  }

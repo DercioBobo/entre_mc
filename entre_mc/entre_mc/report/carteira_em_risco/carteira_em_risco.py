@@ -12,19 +12,22 @@ ESTADOS_CONSIDERADOS = ("Em Curso", "Incumprimento")
 
 # Faixas de PAR (Portfolio at Risk) - classificação por dias de atraso da
 # prestação mais atrasada do pedido, distinta das faixas usadas em Aging da
-# Carteira (1-30/31-60/61-90/91+), que agrupa prestações, não pedidos.
+# Carteira (1-30/31-60/61-90/91+), que agrupa prestações, não pedidos. Cada
+# faixa é uma coluna própria no relatório (em vez de uma única coluna "PAR"),
+# com o valor "Em Risco" do pedido lançado na coluna correspondente à sua
+# faixa e 0 nas restantes.
 FAIXAS_PAR = (
-	(1, 30, "PAR 1-30"),
-	(31, 90, "PAR 31-90"),
-	(91, 365, "PAR 91-365"),
-	(366, None, "PAR 365+"),
+	(1, 30, "par_1_30", "PAR 1-30"),
+	(31, 90, "par_31_90", "PAR 31-90"),
+	(91, 365, "par_91_365", "PAR 91-365"),
+	(366, None, "par_365_mais", "PAR 365+"),
 )
 
 
-def _faixa_par(dias_atraso):
-	for inicio, fim, label in FAIXAS_PAR:
+def _fieldname_par(dias_atraso):
+	for inicio, fim, fieldname, _label in FAIXAS_PAR:
 		if (fim is None or dias_atraso <= fim) and dias_atraso >= inicio:
-			return label
+			return fieldname
 	return FAIXAS_PAR[-1][2]
 
 
@@ -42,7 +45,6 @@ def get_columns():
 		{"label": _("Promotor"), "fieldname": "promotor_name", "fieldtype": "Data", "width": 140},
 		{"label": _("Produto"), "fieldname": "produto", "fieldtype": "Link", "options": "Produto", "width": 130},
 		{"label": _("Estado"), "fieldname": "status", "fieldtype": "Data", "width": 110},
-		{"label": _("PAR"), "fieldname": "faixa_par", "fieldtype": "Data", "width": 100},
 		{
 			"label": _("Capital Desembolsado"),
 			"fieldname": "capital_desembolsado",
@@ -52,7 +54,9 @@ def get_columns():
 		{"label": _("Saldo do Crédito"), "fieldname": "saldo_do_credito", "fieldtype": "Currency", "width": 130},
 		{"label": _("Dívida"), "fieldname": "divida", "fieldtype": "Currency", "width": 120},
 		{"label": _("Juros a Pagar"), "fieldname": "juros_a_pagar", "fieldtype": "Currency", "width": 120},
-		{"label": _("Em Risco"), "fieldname": "em_risco", "fieldtype": "Currency", "width": 120},
+	] + [
+		{"label": _(label), "fieldname": fieldname, "fieldtype": "Currency", "width": 120}
+		for _ini, _fim, fieldname, label in FAIXAS_PAR
 	]
 
 
@@ -63,8 +67,9 @@ def get_data(filters):
 	dos juros ainda não pagos (vencidos ou não) das prestações em aberto;
 	"Capital Desembolsado" vem do(s) Desembolso submetido(s) do pedido, que
 	pode divergir do Capital Solicitado (o tesoureiro pode ajustar o valor
-	desembolsado). "PAR" classifica o pedido pela prestação mais atrasada,
-	nas faixas 1-30/31-90/91-365/365+ dias.
+	desembolsado). O pedido é classificado pela sua prestação mais atrasada
+	nas faixas 1-30/31-90/91-365/365+ dias, e o seu "Em Risco" é lançado na
+	coluna PAR correspondente a essa faixa (0 nas restantes).
 
 	Calculado a partir das datas (não do `status` gravado em Plano De
 	Amortizacao), pelo mesmo motivo do relatório Creditos em Atraso: esse
@@ -136,21 +141,21 @@ def get_data(filters):
 			atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 			dias_atraso = max(dias_atraso, atraso)
 
-		data.append(
-			{
-				"name": pedido.name,
-				"cliente": pedido.cliente,
-				"promotor_name": pedido.promotor_name,
-				"produto": pedido.produto,
-				"status": pedido.status,
-				"faixa_par": _faixa_par(dias_atraso),
-				"capital_desembolsado": desembolsado_por_pedido.get(pedido.name, 0),
-				"saldo_do_credito": saldo,
-				"divida": divida,
-				"juros_a_pagar": flt(juros_a_pagar),
-				"em_risco": em_risco,
-			}
-		)
+		linha = {
+			"name": pedido.name,
+			"cliente": pedido.cliente,
+			"promotor_name": pedido.promotor_name,
+			"produto": pedido.produto,
+			"status": pedido.status,
+			"capital_desembolsado": desembolsado_por_pedido.get(pedido.name, 0),
+			"saldo_do_credito": saldo,
+			"divida": divida,
+			"juros_a_pagar": flt(juros_a_pagar),
+		}
+		for _ini, _fim, fieldname, _label in FAIXAS_PAR:
+			linha[fieldname] = 0
+		linha[_fieldname_par(dias_atraso)] = em_risco
+		data.append(linha)
 
-	data.sort(key=lambda d: d["em_risco"], reverse=True)
+	data.sort(key=lambda d: sum(d[fieldname] for _ini, _fim, fieldname, _label in FAIXAS_PAR), reverse=True)
 	return data
