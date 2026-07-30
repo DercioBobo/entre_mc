@@ -24,6 +24,12 @@ frappe.ui.form.on("Pedido De Credito", {
 		});
 	},
 
+	onload(frm) {
+		if (frm.is_new() && !frm.doc.promotor) {
+			frm.set_value("promotor", frappe.session.user);
+		}
+	},
+
 	refresh(frm) {
 		render_plano(frm);
 

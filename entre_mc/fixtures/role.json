@@ -22,5 +22,11 @@
   "name": "Tesoureiro",
   "role_name": "Tesoureiro",
   "desk_access": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "Promotor",
+  "role_name": "Promotor",
+  "desk_access": 1
  }
 ]
