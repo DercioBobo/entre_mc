@@ -8,6 +8,8 @@
   "naming_series",
   "proponente",
   "produto",
+  "promotor",
+  "promotor_name",
   "cb_1",
   "capital_solicitado",
   "taxa_de_juros",
@@ -48,6 +50,20 @@
    "label": "Produto",
    "options": "Produto",
    "reqd": 1
+  },
+  {
+   "fieldname": "promotor",
+   "fieldtype": "Link",
+   "label": "Promotor",
+   "options": "User"
+  },
+  {
+   "bold": 1,
+   "fetch_from": "promotor.full_name",
+   "fieldname": "promotor_name",
+   "fieldtype": "Data",
+   "label": "Nome do Promotor",
+   "read_only": 1
   },
   {
    "fieldname": "cb_1",

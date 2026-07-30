@@ -105,6 +105,7 @@ def criar_pedido_de_credito(simulacao):
 	pedido.finalidade = sim.finalidade
 	pedido.frequencia = sim.frequencia
 	pedido.simulacao_de_credito = sim.name
+	pedido.promotor = sim.promotor
 	pedido.insert()
 
 	sim.pedido_de_credito = pedido.name

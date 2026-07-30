@@ -93,6 +93,7 @@ frappe.ui.form.on("Pedido De Credito", {
 				prazo: sim.prazo,
 				finalidade: sim.finalidade,
 				frequencia: sim.frequencia,
+				promotor: sim.promotor,
 			});
 			frm.dirty();
 			frm.refresh_fields();

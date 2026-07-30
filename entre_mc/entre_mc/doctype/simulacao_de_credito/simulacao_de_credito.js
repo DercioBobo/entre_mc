@@ -2,11 +2,20 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Simulacao De Credito", {
+	setup(frm) {
+		frm.set_query("promotor", () => ({
+			query: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.promotores",
+		}));
+	},
+
 	onload(frm) {
 		if (frm.is_new() && !frm.doc.frequencia) {
 			frappe.db.get_single_value("MC Settings", "frequencia_padrao").then((value) => {
 				if (value) frm.set_value("frequencia", value);
 			});
+		}
+		if (frm.is_new() && !frm.doc.promotor) {
+			frm.set_value("promotor", frappe.session.user);
 		}
 	},
 
