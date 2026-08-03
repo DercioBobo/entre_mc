@@ -145,6 +145,19 @@ class PedidoDeCredito(Document):
 
 
 @frappe.whitelist()
+def preview_plano(produto, capital_solicitado, taxa_de_juros, prazo, frequencia):
+	"""Called by the client script to render the live amortization preview before
+	Aprovado (quando ainda não existe plano gravado, ou os campos foram alterados
+	sem gravar) - mesmo princípio de Simulacao De Credito.preview_plano, mas com
+	permissão verificada sobre Pedido De Credito, não Simulacao De Credito, já
+	que é chamado a partir do formulário de Pedido De Credito."""
+	frappe.has_permission("Pedido De Credito", "write", throw=True)
+
+	check_limites(produto, capital_solicitado, prazo)
+	return calcular_plano(produto, capital_solicitado, taxa_de_juros, prazo, frequencia)
+
+
+@frappe.whitelist()
 def plano_com_encargos_atuais(pedido_de_credito):
 	"""Plano de amortização com Multa/Juros de Mora e estado ("Atrasado" etc.)
 	recalculados para hoje (em memória, sem gravar) - mesma lógica de

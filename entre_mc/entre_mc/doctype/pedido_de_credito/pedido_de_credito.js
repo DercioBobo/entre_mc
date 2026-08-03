@@ -72,6 +72,7 @@ frappe.ui.form.on("Pedido De Credito", {
 	},
 
 	produto(frm) {
+		render_plano(frm);
 		if (!frm.doc.produto) return;
 		// taxa_de_juros stays editable (unlike multa/mora), so it can't use
 		// fetch_from - the framework forces fetch_from fields read-only.
@@ -80,6 +81,18 @@ frappe.ui.form.on("Pedido De Credito", {
 				frm.set_value("taxa_de_juros", r.message.taxa_de_juros);
 			}
 		});
+	},
+	capital_solicitado(frm) {
+		render_plano(frm);
+	},
+	taxa_de_juros(frm) {
+		render_plano(frm);
+	},
+	prazo(frm) {
+		render_plano(frm);
+	},
+	frequencia(frm) {
+		render_plano(frm);
 	},
 
 	simulacao_de_credito(frm) {
@@ -103,27 +116,60 @@ frappe.ui.form.on("Pedido De Credito", {
 			});
 			frm.dirty();
 			frm.refresh_fields();
+			render_plano(frm);
 		});
 	},
 });
+
+let preview_timeout = null;
 
 function render_plano(frm) {
 	const wrapper = frm.fields_dict.pre_visualizacao_html?.$wrapper;
 	if (!wrapper) return;
 
-	if (frm.is_new() || frm.doc.status !== "Em Curso") {
+	if (!frm.is_new() && frm.doc.status === "Em Curso") {
+		// Multa/Juros de Mora gravados só ficam atualizados após a tarefa diária
+		// ou um Reembolso submetido - aqui recalculamos em memória para que uma
+		// prestação que ficou em atraso hoje já apareça correta sem esperar por isso.
+		frappe.call({
+			method: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.plano_com_encargos_atuais",
+			args: { pedido_de_credito: frm.doc.name },
+			callback: (r) => {
+				wrapper.html(entre_mc.render_plano_html(r.message || frm.doc.plano_de_amortizacao, frm.doc.currency));
+			},
+		});
+		return;
+	}
+
+	// Antes da Aprovação (ou antes do Desembolso, sem alterações por gravar) o
+	// plano gravado já reflete os dados atuais - mostra-o diretamente. Caso
+	// contrário (Rascunho ainda sem plano, ou campos alterados por gravar),
+	// recalcula em memória para o utilizador ver o efeito antes de gravar,
+	// tal como a pré-visualização de Simulacao De Credito.
+	if (!frm.is_dirty() && frm.doc.plano_de_amortizacao?.length) {
 		wrapper.html(entre_mc.render_plano_html(frm.doc.plano_de_amortizacao, frm.doc.currency));
 		return;
 	}
 
-	// Multa/Juros de Mora gravados só ficam atualizados após a tarefa diária
-	// ou um Reembolso submetido - aqui recalculamos em memória para que uma
-	// prestação que ficou em atraso hoje já apareça correta sem esperar por isso.
-	frappe.call({
-		method: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.plano_com_encargos_atuais",
-		args: { pedido_de_credito: frm.doc.name },
-		callback: (r) => {
-			wrapper.html(entre_mc.render_plano_html(r.message || frm.doc.plano_de_amortizacao, frm.doc.currency));
-		},
-	});
+	const { produto, capital_solicitado, taxa_de_juros, prazo, frequencia } = frm.doc;
+	if (!produto || !capital_solicitado || !taxa_de_juros || !prazo || !frequencia) {
+		wrapper.html(entre_mc.render_plano_html([]));
+		return;
+	}
+
+	clearTimeout(preview_timeout);
+	preview_timeout = setTimeout(() => {
+		frappe.call({
+			method: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.preview_plano",
+			args: { produto, capital_solicitado, taxa_de_juros, prazo, frequencia },
+			callback: (r) => {
+				wrapper.html(entre_mc.render_plano_html(r.message, frm.doc.currency));
+			},
+			error: () => {
+				wrapper.html(
+					`<div class="text-danger">${__("Não foi possível calcular o plano - verifique os limites do produto.")}</div>`
+				);
+			},
+		});
+	}, 400);
 }

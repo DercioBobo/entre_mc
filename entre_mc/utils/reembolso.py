@@ -59,10 +59,10 @@ def aplicar_alocacao(rows, taxa_diaria_de_multa, juros_de_mora, settings, montan
 		atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision)
 
 		devido = {
-			"juros_mora": flt(row.juros_mora_aplicado - row.juros_mora_pago, precision),
-			"multa": flt(row.multa_aplicada - row.multa_paga, precision),
-			"juros": flt(row.juros_mensais - row.juros_pago, precision),
-			"capital": flt(row.capital_mensal - row.capital_pago, precision),
+			"juros_mora": flt(flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago), precision),
+			"multa": flt(flt(row.multa_aplicada) - flt(row.multa_paga), precision),
+			"juros": flt(flt(row.juros_mensais) - flt(row.juros_pago), precision),
+			"capital": flt(flt(row.capital_mensal) - flt(row.capital_pago), precision),
 		}
 		ordem = _ordem_de_liquidacao(devido["multa"] > 0, devido["juros_mora"] > 0)
 
@@ -126,10 +126,10 @@ def calcular_saldos(rows, settings, hoje):
 
 	for row in rows:
 		valor_em_falta = flt(
-			(row.capital_mensal - row.capital_pago)
-			+ (row.juros_mensais - row.juros_pago)
-			+ (row.multa_aplicada - row.multa_paga)
-			+ (row.juros_mora_aplicado - row.juros_mora_pago)
+			(flt(row.capital_mensal) - flt(row.capital_pago))
+			+ (flt(row.juros_mensais) - flt(row.juros_pago))
+			+ (flt(row.multa_aplicada) - flt(row.multa_paga))
+			+ (flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago))
 		)
 		if valor_em_falta <= 0:
 			continue
@@ -152,7 +152,8 @@ def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settin
 		return
 
 	prestacao_em_atraso = flt(
-		(row.capital_mensal - row.capital_pago) + (row.juros_mensais - row.juros_pago), precision
+		(flt(row.capital_mensal) - flt(row.capital_pago)) + (flt(row.juros_mensais) - flt(row.juros_pago)),
+		precision,
 	)
 
 	if taxa_diaria_de_multa:
