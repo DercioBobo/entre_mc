@@ -9,9 +9,27 @@ frappe.ui.form.on("Cliente", {
 			});
 		}
 
+		toggle_documentos(frm);
 		render_resumo(frm);
 	},
 });
+
+function toggle_documentos(frm) {
+	const is_new = frm.is_new();
+
+	frm.set_df_property("documentos", "read_only", is_new ? 1 : 0);
+	frm.set_df_property(
+		"documentos",
+		"description",
+		is_new ? __("Grave o Cliente antes de anexar documentos.") : ""
+	);
+
+	const grid = frm.fields_dict.documentos?.grid;
+	if (grid) {
+		grid.cannot_add_rows = is_new;
+		grid.refresh();
+	}
+}
 
 const BADGE_CLASS = {
 	"Em Curso": "",
