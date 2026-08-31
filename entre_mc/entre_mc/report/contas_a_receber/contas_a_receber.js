@@ -1,0 +1,30 @@
+// Copyright (c) 2026, Dércio Bobo and contributors
+// For license information, please see license.txt
+
+frappe.query_reports["Contas a Receber"] = {
+	filters: [
+		{
+			fieldname: "cliente",
+			label: __("Cliente"),
+			fieldtype: "Link",
+			options: "Cliente",
+		},
+		{
+			fieldname: "produto",
+			label: __("Produto"),
+			fieldtype: "Link",
+			options: "Produto",
+		},
+		{
+			fieldname: "promotor",
+			label: __("Promotor"),
+			fieldtype: "Link",
+			options: "User",
+		},
+		{
+			fieldname: "apenas_em_atraso",
+			label: __("Apenas com valores vencidos"),
+			fieldtype: "Check",
+		},
+	],
+};

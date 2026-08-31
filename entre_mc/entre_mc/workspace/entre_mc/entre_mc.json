@@ -317,13 +317,25 @@
    "doctype": "Workspace Link"
   },
   {
+   "type": "Link",
+   "label": "Contas a Receber",
+   "link_type": "Report",
+   "link_to": "Contas a Receber",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 27,
+   "doctype": "Workspace Link"
+  },
+  {
    "type": "Card Break",
    "label": "Ferramentas",
    "hidden": 0,
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 27,
+   "idx": 28,
    "doctype": "Workspace Link"
   },
   {
@@ -335,7 +347,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 28,
+   "idx": 29,
    "doctype": "Workspace Link"
   },
   {
@@ -347,7 +359,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 29,
+   "idx": 30,
    "doctype": "Workspace Link"
   }
  ],
