@@ -341,13 +341,25 @@
    "doctype": "Workspace Link"
   },
   {
+   "type": "Link",
+   "label": "Previsão de Recebimentos",
+   "link_type": "Report",
+   "link_to": "Previsao de Recebimentos",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 29,
+   "doctype": "Workspace Link"
+  },
+  {
    "type": "Card Break",
    "label": "Ferramentas",
    "hidden": 0,
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 29,
+   "idx": 30,
    "doctype": "Workspace Link"
   },
   {
@@ -359,7 +371,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 30,
+   "idx": 31,
    "doctype": "Workspace Link"
   },
   {
@@ -371,7 +383,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 31,
+   "idx": 32,
    "doctype": "Workspace Link"
   }
  ],
