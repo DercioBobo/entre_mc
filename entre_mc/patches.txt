@@ -2,3 +2,4 @@
 # Read docs to understand patches: https://docs.frappe.io/framework/user/en/database-migrations
 
 entre_mc.patches.rename_status_em_curso
+entre_mc.patches.realinhar_vencimentos_mensais
