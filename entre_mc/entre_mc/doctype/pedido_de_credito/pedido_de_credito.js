@@ -36,6 +36,8 @@ frappe.ui.form.on("Pedido De Credito", {
 
 		if (frm.is_new()) return;
 
+		adicionar_botoes_ver(frm);
+
 		frm.add_custom_button(__("Criar Garantia"), () => {
 			frappe.new_doc("Garantia", null, (doc) => {
 				doc.cliente = frm.doc.cliente;
@@ -121,6 +123,34 @@ frappe.ui.form.on("Pedido De Credito", {
 		});
 	},
 });
+
+function adicionar_botoes_ver(frm) {
+	const ver = __("Ver");
+	const ativo = ["Em Curso", "Incumprimento"].includes(frm.doc.status);
+
+	if (ativo) {
+		frm.add_custom_button(__("Prestações a Receber"), () => {
+			frappe.set_route("query-report", "Prestacoes a Receber", {
+				pedido_de_credito: frm.doc.name,
+			});
+		}, ver);
+	}
+
+	if (frm.doc.status) {
+		frm.add_custom_button(__("Reembolsos"), () => {
+			frappe.set_route("List", "Reembolso", { pedido_de_credito: frm.doc.name });
+		}, ver);
+	}
+
+	if (frm.doc.cliente) {
+		frm.add_custom_button(__("Extrato do Cliente"), () => {
+			frappe.set_route("query-report", "Extrato de Cliente", { cliente: frm.doc.cliente });
+		}, ver);
+		frm.add_custom_button(__("Ver Cliente"), () => {
+			frappe.set_route("Form", "Cliente", frm.doc.cliente);
+		}, ver);
+	}
+}
 
 function toggle_documentos(frm) {
 	const is_new = frm.is_new();

@@ -3,16 +3,47 @@
 
 frappe.ui.form.on("Cliente", {
 	refresh(frm) {
-		if (frm.doc.proponente_de_origem) {
-			frm.add_custom_button(__("Ver Proponente"), () => {
-				frappe.set_route("Form", "Proponente", frm.doc.proponente_de_origem);
-			});
-		}
+		if (!frm.is_new()) adicionar_botoes_ver(frm);
 
 		toggle_documentos(frm);
 		render_resumo(frm);
 	},
 });
+
+function adicionar_botoes_ver(frm) {
+	const ver = __("Ver");
+	const cliente = frm.doc.name;
+
+	frm.add_custom_button(__("Pedidos de Crédito"), () => {
+		frappe.set_route("List", "Pedido De Credito", { cliente });
+	}, ver);
+
+	frm.add_custom_button(__("Contas a Receber"), () => {
+		frappe.set_route("query-report", "Contas a Receber", { cliente });
+	}, ver);
+
+	frm.add_custom_button(__("Prestações a Receber"), () => {
+		frappe.set_route("query-report", "Prestacoes a Receber", { cliente });
+	}, ver);
+
+	frm.add_custom_button(__("Extrato do Cliente"), () => {
+		frappe.set_route("query-report", "Extrato de Cliente", { cliente });
+	}, ver);
+
+	frm.add_custom_button(__("Reembolsos"), () => {
+		frappe.set_route("List", "Reembolso", { cliente });
+	}, ver);
+
+	frm.add_custom_button(__("Garantias"), () => {
+		frappe.set_route("List", "Garantia", { cliente });
+	}, ver);
+
+	if (frm.doc.proponente_de_origem) {
+		frm.add_custom_button(__("Proponente de Origem"), () => {
+			frappe.set_route("Form", "Proponente", frm.doc.proponente_de_origem);
+		}, ver);
+	}
+}
 
 function toggle_documentos(frm) {
 	const is_new = frm.is_new();
