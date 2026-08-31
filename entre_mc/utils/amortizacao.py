@@ -16,7 +16,7 @@ pretendida for outra.
 """
 
 import frappe
-from frappe.utils import add_days, flt, getdate
+from frappe.utils import add_days, add_months, flt, getdate
 
 PERIOD_DAYS = {
 	"Diário": 1,
@@ -48,7 +48,33 @@ def get_taxa_por_periodo(taxa_juros_percent, frequencia):
 	return flt(taxa_juros_percent) / 100 * (period_days / 30)
 
 
-def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, data_inicio, precision=2):
+def usar_vencimento_calendario(frequencia, vencimento_calendario=None):
+	"""Decide se as datas limite de pagamento seguem meses de calendário (mesmo
+	dia do mês da data de início) em vez de blocos fixos de 30 dias. Só se aplica
+	à frequência Mensal; nas restantes o bloco fixo é o comportamento esperado.
+
+	`vencimento_calendario` a None lê o campo `vencimento_no_dia_do_desembolso`
+	de MC Settings; passar True/False força o comportamento (usado nos pré-visuais
+	e testes)."""
+	if frequencia != "Mensal":
+		return False
+	if vencimento_calendario is None:
+		vencimento_calendario = frappe.db.get_single_value(
+			"MC Settings", "vencimento_no_dia_do_desembolso"
+		)
+	return bool(vencimento_calendario)
+
+
+def build_plano(
+	capital,
+	taxa_juros_percent,
+	prazo_meses,
+	frequencia,
+	modelo,
+	data_inicio,
+	precision=2,
+	vencimento_calendario=None,
+):
 	"""Devolve a lista de linhas do plano de amortização (dicts prontos para um child table)."""
 	if modelo not in MODELOS:
 		frappe.throw(f"Modelo de cálculo de juros inválido: {modelo}")
@@ -58,6 +84,7 @@ def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, da
 	n = get_num_periodos(prazo_meses, frequencia)
 	tj = get_taxa_por_periodo(taxa_juros_percent, frequencia)
 	data_inicio = getdate(data_inicio)
+	calendario = usar_vencimento_calendario(frequencia, vencimento_calendario)
 
 	if modelo == "Constante":
 		prestacoes = _build_constante(capital, tj, n)
@@ -76,7 +103,11 @@ def build_plano(capital, taxa_juros_percent, prazo_meses, frequencia, modelo, da
 				"capital_mensal": flt(p["capital_mensal"], precision),
 				"juros_mensais": flt(p["juros_mensais"], precision),
 				"prestacao_total": flt(p["prestacao_total"], precision),
-				"data_limite_pagamento": add_days(data_inicio, period_days * idx),
+				"data_limite_pagamento": (
+					add_months(data_inicio, idx)
+					if calendario
+					else add_days(data_inicio, period_days * idx)
+				),
 			}
 		)
 

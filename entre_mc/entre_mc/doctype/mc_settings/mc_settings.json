@@ -7,6 +7,7 @@
   "company",
   "cb_1",
   "frequencia_padrao",
+  "vencimento_no_dia_do_desembolso",
   "dias_de_tolerancia",
   "dias_para_incumprimento",
   "ativar_capitalizacao",
@@ -37,6 +38,13 @@
    "label": "Frequência Padrão",
    "options": "Diário\nSemanal\nQuinzenal\nMensal",
    "reqd": 1
+  },
+  {
+   "default": "1",
+   "description": "Nas prestações mensais, a data limite de pagamento cai todos os meses no mesmo dia da data de início do crédito (dia do desembolso), usando meses de calendário. Ex.: desembolso a 25 -> vencimentos a 25 de cada mês. Desligado, cada prestação vence 30 dias após a anterior, o que faz o dia deslizar ao longo do ano.",
+   "fieldname": "vencimento_no_dia_do_desembolso",
+   "fieldtype": "Check",
+   "label": "Vencimento no Dia do Desembolso"
   },
   {
    "default": "0",
