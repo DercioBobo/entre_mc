@@ -8,6 +8,7 @@
   "numero",
   "data_limite_pagamento",
   "status",
+  "isento_de_multa",
   "cb_1",
   "capital_mensal",
   "juros_mensais",
@@ -20,9 +21,11 @@
   "cb_pagamentos",
   "multa_aplicada",
   "multa_paga",
+  "multa_perdoada",
   "cb_pagamentos_2",
   "juros_mora_aplicado",
-  "juros_mora_pago"
+  "juros_mora_pago",
+  "juros_mora_perdoado"
  ],
  "fields": [
   {
@@ -46,6 +49,13 @@
    "in_list_view": 1,
    "label": "Estado",
    "options": "Pendente\nPago Parcial\nPago\nAtrasado",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "isento_de_multa",
+   "fieldtype": "Check",
+   "label": "Isenta de Multa Futura",
    "read_only": 1
   },
   {
@@ -125,6 +135,13 @@
    "read_only": 1
   },
   {
+   "default": "0",
+   "fieldname": "multa_perdoada",
+   "fieldtype": "Currency",
+   "label": "Multa Perdoada",
+   "read_only": 1
+  },
+  {
    "fieldname": "cb_pagamentos_2",
    "fieldtype": "Column Break"
   },
@@ -140,6 +157,13 @@
    "fieldname": "juros_mora_pago",
    "fieldtype": "Currency",
    "label": "Juros de Mora Pago",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "juros_mora_perdoado",
+   "fieldtype": "Currency",
+   "label": "Juros de Mora Perdoado",
    "read_only": 1
   }
  ],

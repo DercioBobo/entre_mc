@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "creation": "2026-09-14 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "numero",
+  "data_limite_pagamento",
+  "cb_multa",
+  "multa_em_aberto",
+  "dias_no_periodo",
+  "valor_perdoado_multa",
+  "cb_mora",
+  "mora_em_aberto",
+  "valor_perdoado_mora"
+ ],
+ "fields": [
+  {
+   "fieldname": "numero",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Prestação Nº",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_limite_pagamento",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Data Limite de Pagamento",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_multa",
+   "fieldtype": "Column Break",
+   "label": "Multa"
+  },
+  {
+   "fieldname": "multa_em_aberto",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Multa em Aberto",
+   "read_only": 1
+  },
+  {
+   "description": "Nº de dias de atraso, dentro do Período a Perdoar do cabeçalho, atribuídos a esta prestação. Vazio quando \"Perdoar Tudo\" está ligado.",
+   "fieldname": "dias_no_periodo",
+   "fieldtype": "Int",
+   "label": "Dias no Período",
+   "read_only": 1
+  },
+  {
+   "description": "Editável até ao limite da Multa em Aberto.",
+   "fieldname": "valor_perdoado_multa",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Multa a Perdoar",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "cb_mora",
+   "fieldtype": "Column Break",
+   "label": "Juros de Mora"
+  },
+  {
+   "fieldname": "mora_em_aberto",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Mora em Aberto",
+   "read_only": 1
+  },
+  {
+   "description": "Editável até ao limite da Mora em Aberto. Juros de Mora é um encargo único (não tem \"dias\" a fatiar) - por isso só é sugerido quando \"Perdoar Tudo\" está ligado.",
+   "fieldname": "valor_perdoado_mora",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Mora a Perdoar",
+   "non_negative": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Prestacao Perdoada",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

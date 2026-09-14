@@ -133,8 +133,13 @@ def obter_contexto(pedido_de_credito):
 	nao_pagas = [linha for linha in linhas if linha.status != "Pago"]
 	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None
 
-	total_multa = sum(flt(linha.multa_aplicada) - flt(linha.multa_paga) for linha in nao_pagas)
-	total_juros_mora = sum(flt(linha.juros_mora_aplicado) - flt(linha.juros_mora_pago) for linha in nao_pagas)
+	total_multa = sum(
+		flt(linha.multa_aplicada) - flt(linha.multa_paga) - flt(linha.multa_perdoada) for linha in nao_pagas
+	)
+	total_juros_mora = sum(
+		flt(linha.juros_mora_aplicado) - flt(linha.juros_mora_pago) - flt(linha.juros_mora_perdoado)
+		for linha in nao_pagas
+	)
 
 	return {
 		"saldo_em_divida": pedido.saldo_em_divida,
@@ -158,6 +163,6 @@ def _valor_em_falta(linha):
 	return flt(
 		(linha.capital_mensal - linha.capital_pago)
 		+ (linha.juros_mensais - linha.juros_pago)
-		+ (linha.multa_aplicada - linha.multa_paga)
-		+ (linha.juros_mora_aplicado - linha.juros_mora_pago)
+		+ (linha.multa_aplicada - linha.multa_paga - linha.multa_perdoada)
+		+ (linha.juros_mora_aplicado - linha.juros_mora_pago - linha.juros_mora_perdoado)
 	)

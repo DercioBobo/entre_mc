@@ -274,6 +274,11 @@
    "group": "Ciclo de Vida",
    "link_doctype": "Reembolso",
    "link_fieldname": "pedido_de_credito"
+  },
+  {
+   "group": "Ciclo de Vida",
+   "link_doctype": "Perdao De Multa",
+   "link_fieldname": "pedido_de_credito"
   }
  ],
  "modified": "2026-07-09 00:00:00.000000",

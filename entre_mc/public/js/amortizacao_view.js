@@ -26,8 +26,8 @@ entre_mc.render_plano_html = function (rows, currency) {
 			total_capital += flt(r.capital_mensal);
 			total_juros += flt(r.juros_mensais);
 			total_prestacao += flt(r.prestacao_total);
-			const multa_em_falta = flt(r.multa_aplicada) - flt(r.multa_paga);
-			const juros_mora_em_falta = flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago);
+			const multa_em_falta = flt(r.multa_aplicada) - flt(r.multa_paga) - flt(r.multa_perdoada);
+			const juros_mora_em_falta = flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago) - flt(r.juros_mora_perdoado);
 			total_multa += multa_em_falta;
 			total_juros_mora += juros_mora_em_falta;
 			const atrasado = r.status === "Atrasado";
