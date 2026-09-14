@@ -2,8 +2,8 @@
 # For license information, please see license.txt
 
 """Um crédito ativo por linha, projetando quanto ficaria a dever numa
-"Data de Referência" futura escolhida pelo utilizador - Capital, Juros, Multa
-e Juros de Mora, tal como em Contas a Receber, mas assumindo que o cliente não
+"Data de Referência" escolhida pelo utilizador - Capital, Juros, Multa e
+Juros de Mora, tal como em Contas a Receber, mas assumindo que o cliente não
 faz nenhum pagamento entre hoje e essa data.
 
 Útil para responder, numa conversa com o cliente, "quanto vou dever se só
@@ -15,13 +15,19 @@ Juros de Mora dependem da Data de Referência: são recalculados em memória
 (nunca gravados) com essa data em vez de hoje, usando a mesma
 `atualizar_encargos_da_linha` da tarefa diária `atualizar_atrasos` - a fórmula
 da Multa (taxa × dias de atraso × valor em atraso) e o disparo único do Juros
-de Mora funcionam para qualquer data de referência, não só para hoje.
+de Mora funcionam para qualquer data de referência, passada ou futura.
 
-Só aceita datas de hoje em diante: para uma data passada, o valor persistido
-em `multa_aplicada`/`juros_mora_aplicado` pode já ter sido recalculado para
-hoje pela tarefa diária, e `atualizar_encargos_da_linha` não retrocede um
-encargo já lançado - o resultado seria incorreto. Para a situação real de
-hoje, usar Contas a Receber."""
+Também aceita uma Data de Referência passada, para pré-visualizar exatamente
+o que um Reembolso com `data_de_pagamento` retroativa vai calcular antes de o
+submeter (ver a nota sobre Reembolsos retroativos em
+`entre_mc.utils.reembolso`, que corrige `multa_aplicada`/`juros_mora_aplicado`
+para trás quando a prestação não estava em atraso nessa data). Isto não é uma
+reconstituição histórica exata: usa `capital_pago`/`juros_pago` tal como estão
+gravados agora (todos os pagamentos já registados até hoje, sejam de que data
+forem), não o que estava pago exatamente nessa data passada - é a mesma
+pergunta que um Reembolso retroativo faria ao ser submetido hoje, o que é
+precisamente o que se quer verificar antes de o submeter. Para a situação
+real de hoje, sem hipóteses, usar Contas a Receber."""
 
 import frappe
 from frappe import _
@@ -59,13 +65,6 @@ def get_data(filters):
 	settings = get_settings()
 	hoje = getdate(nowdate())
 	data_referencia = getdate(filters.get("data_referencia")) if filters.get("data_referencia") else hoje
-	if data_referencia < hoje:
-		frappe.throw(
-			_(
-				"A Data de Referência tem de ser hoje ou uma data futura - para a situação real de hoje, "
-				"use o relatório Contas a Receber."
-			)
-		)
 
 	query_filters = {"status": ["in", ESTADOS_CONSIDERADOS]}
 	if filters.get("cliente"):

@@ -9,7 +9,10 @@ frappe.query_reports["Simulacao de Encargos Futuros"] = {
 			fieldtype: "Date",
 			reqd: 1,
 			default: frappe.datetime.add_days(frappe.datetime.get_today(), 30),
-			description: __("Assume que nada é pago entre hoje e esta data."),
+			description: __(
+				"Assume que nada é pago entre hoje e esta data. Também aceita uma data passada - útil para " +
+					"conferir o que um Reembolso com data de pagamento retroativa vai calcular, antes de o submeter."
+			),
 		},
 		{
 			fieldname: "pedido_de_credito",
