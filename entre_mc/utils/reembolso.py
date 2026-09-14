@@ -29,6 +29,18 @@ em aberto de uma linha: os valores perdoados ficam em `multa_perdoada` e
 cobrado vs. perdoado. Se a linha ficar marcada `isento_de_multa`, este módulo
 para de recalcular a multa dela (Juros de Mora não tem equivalente - é um
 encargo único, uma vez perdoado não volta a ser reaplicado).
+
+Um Reembolso pode ser submetido com `data_de_pagamento` retroativa (o cliente
+pagou num dia, mas só foi lançado no sistema mais tarde). Nesse caso, a data
+de referência usada aqui recua para antes do que a tarefa diária já tinha
+calculado com "hoje" - se a prestação não estava em atraso nessa data
+retroativa, `multa_aplicada`/`juros_mora_aplicado` gravados (calculados para
+"hoje") ficam stale e têm de ser corrigidos para trás, não só ignorados: ver
+o ramo `dias_atraso <= 0` de `atualizar_encargos_da_linha`, que os repõe ao
+que já foi pago/perdoado contra eles (nunca abaixo disso, para nunca deixar
+"pago" maior que "aplicado"). Assim, submeter o Reembolso retroativo já
+corrige sozinho os encargos indevidos, sem precisar de um Perdao De Multa à
+parte - continua a existir para perdão por política, não só para este caso.
 """
 
 import frappe
@@ -162,6 +174,17 @@ def calcular_saldos(rows, settings, hoje):
 def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision):
 	dias_atraso = date_diff(data_pagamento, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 	if dias_atraso <= 0:
+		# A prestação não está em atraso nesta data de referência. Normalmente isto
+		# já vem assim (nunca foi tocado); mas se `data_pagamento` for retroativa a
+		# um momento anterior ao que gerou o valor gravado (Reembolso com data de
+		# pagamento no passado, depois de a tarefa diária já ter avançado o encargo
+		# para "hoje"), esse valor está stale e tem de recuar - nunca abaixo do que
+		# já foi pago/perdoado contra ele, para não deixar "pago" maior que
+		# "aplicado" nem `_ordem_de_liquidacao` a ver uma Multa/Mora fantasma.
+		if taxa_diaria_de_multa and not row.isento_de_multa:
+			row.multa_aplicada = flt(max(flt(row.multa_paga) + flt(row.multa_perdoada), 0), precision)
+		if juros_de_mora:
+			row.juros_mora_aplicado = flt(max(flt(row.juros_mora_pago) + flt(row.juros_mora_perdoado), 0), precision)
 		return
 
 	prestacao_em_atraso = flt(
