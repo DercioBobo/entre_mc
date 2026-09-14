@@ -96,8 +96,11 @@ def get_data(filters):
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
+			"isento_de_multa",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	):
 		linhas_por_pedido.setdefault(linha.parent, []).append(linha)
@@ -119,8 +122,8 @@ def get_data(filters):
 		for row in rows:
 			capital += flt(row.capital_mensal) - flt(row.capital_pago)
 			juros += flt(row.juros_mensais) - flt(row.juros_pago)
-			multa += flt(row.multa_aplicada) - flt(row.multa_paga)
-			mora += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
+			multa += flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada)
+			mora += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago) - flt(row.juros_mora_perdoado)
 
 			if proximo_vencimento is None or getdate(row.data_limite_pagamento) < proximo_vencimento:
 				proximo_vencimento = getdate(row.data_limite_pagamento)

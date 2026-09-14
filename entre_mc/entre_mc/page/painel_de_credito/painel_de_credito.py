@@ -58,8 +58,10 @@ def obter_painel(cliente=None, produto=None, finalidade=None, data_inicio=None, 
 				"juros_pago",
 				"multa_aplicada",
 				"multa_paga",
+				"multa_perdoada",
 				"juros_mora_aplicado",
 				"juros_mora_pago",
+				"juros_mora_perdoado",
 			],
 		)
 		for linha in linhas:
@@ -136,8 +138,8 @@ def _creditos_em_atraso(pedidos, linhas_por_pedido, settings, hoje):
 			total_em_atraso = flt(
 				(linha.capital_mensal - linha.capital_pago)
 				+ (linha.juros_mensais - linha.juros_pago)
-				+ (linha.multa_aplicada - linha.multa_paga)
-				+ (linha.juros_mora_aplicado - linha.juros_mora_pago)
+				+ (linha.multa_aplicada - linha.multa_paga - flt(linha.multa_perdoada))
+				+ (linha.juros_mora_aplicado - linha.juros_mora_pago - flt(linha.juros_mora_perdoado))
 			)
 			rows.append(
 				{

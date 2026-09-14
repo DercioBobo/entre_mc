@@ -67,8 +67,11 @@ def get_data(filters):
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
+			"isento_de_multa",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	)
 	if not rows:
@@ -109,8 +112,8 @@ def get_data(filters):
 		pedido = pedidos.get(r.parent) or {}
 		capital_em_falta = flt(r.capital_mensal) - flt(r.capital_pago)
 		juros_em_falta = flt(r.juros_mensais) - flt(r.juros_pago)
-		multa = flt(r.multa_aplicada) - flt(r.multa_paga)
-		mora = flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago)
+		multa = flt(r.multa_aplicada) - flt(r.multa_paga) - flt(r.multa_perdoada)
+		mora = flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago) - flt(r.juros_mora_perdoado)
 		total_em_atraso = capital_em_falta + juros_em_falta + multa + mora
 		saldo_do_credito = flt(saldo_por_pedido.get(r.parent, 0))
 		data.append(

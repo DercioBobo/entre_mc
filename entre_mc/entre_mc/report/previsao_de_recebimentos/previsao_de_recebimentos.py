@@ -143,8 +143,11 @@ def _previsto_por_pedido(pedidos_por_nome, data_inicio, data_fim, data_ref_encar
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
+			"isento_de_multa",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	)
 
@@ -157,8 +160,8 @@ def _previsto_por_pedido(pedidos_por_nome, data_inicio, data_fim, data_ref_encar
 		bucket = previsto.setdefault(row.parent, {"capital": 0, "juros": 0, "multa": 0, "mora": 0})
 		bucket["capital"] += flt(row.capital_mensal) - flt(row.capital_pago)
 		bucket["juros"] += flt(row.juros_mensais) - flt(row.juros_pago)
-		bucket["multa"] += flt(row.multa_aplicada) - flt(row.multa_paga)
-		bucket["mora"] += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
+		bucket["multa"] += flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada)
+		bucket["mora"] += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago) - flt(row.juros_mora_perdoado)
 
 	return previsto
 

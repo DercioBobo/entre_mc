@@ -56,8 +56,10 @@ def get_data(filters):
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	)
 	if not rows:
@@ -89,8 +91,8 @@ def get_data(filters):
 		bucket["num_prestacoes"] += 1
 		bucket["capital"] += flt(row.capital_mensal) - flt(row.capital_pago)
 		bucket["juros"] += flt(row.juros_mensais) - flt(row.juros_pago)
-		bucket["multa"] += flt(row.multa_aplicada) - flt(row.multa_paga)
-		bucket["mora"] += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
+		bucket["multa"] += flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada)
+		bucket["mora"] += flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago) - flt(row.juros_mora_perdoado)
 
 	data = []
 	clientes = sorted({cliente for cliente, _faixa_label in buckets}, key=lambda c: c or "")

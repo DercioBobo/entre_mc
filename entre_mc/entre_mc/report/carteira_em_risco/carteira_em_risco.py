@@ -109,8 +109,10 @@ def get_data(filters):
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	)
 	linhas_por_pedido = {}

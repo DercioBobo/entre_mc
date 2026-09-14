@@ -96,8 +96,11 @@ def get_data(filters):
 			"juros_pago",
 			"multa_aplicada",
 			"multa_paga",
+			"multa_perdoada",
+			"isento_de_multa",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
+			"juros_mora_perdoado",
 		],
 	)
 	if not linhas:
@@ -114,8 +117,8 @@ def get_data(filters):
 
 		capital = flt(row.capital_mensal) - flt(row.capital_pago)
 		juros = flt(row.juros_mensais) - flt(row.juros_pago)
-		multa = flt(row.multa_aplicada) - flt(row.multa_paga)
-		mora = flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago)
+		multa = flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada)
+		mora = flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago) - flt(row.juros_mora_perdoado)
 		total = flt(capital + juros + multa + mora)
 
 		dias_atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
