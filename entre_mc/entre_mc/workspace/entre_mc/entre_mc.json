@@ -353,13 +353,25 @@
    "doctype": "Workspace Link"
   },
   {
+   "type": "Link",
+   "label": "Instante T",
+   "link_type": "Report",
+   "link_to": "Instante T",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 30,
+   "doctype": "Workspace Link"
+  },
+  {
    "type": "Card Break",
    "label": "Ferramentas",
    "hidden": 0,
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 30,
+   "idx": 31,
    "doctype": "Workspace Link"
   },
   {
@@ -371,7 +383,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 31,
+   "idx": 32,
    "doctype": "Workspace Link"
   },
   {
@@ -383,7 +395,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 32,
+   "idx": 33,
    "doctype": "Workspace Link"
   }
  ],
