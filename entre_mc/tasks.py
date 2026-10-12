@@ -9,11 +9,13 @@ from frappe.utils import date_diff, flt, getdate, nowdate
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
 
-ESTADO_EM_ABERTO = "Em Curso"
+ESTADOS_EM_ABERTO = ("Em Curso", "Incumprimento")
 
 
 def atualizar_atrasos():
-	"""Corre diariamente. Para cada Pedido De Credito em aberto:
+	"""Corre diariamente. Para cada Pedido De Credito em aberto ("Em Curso" ou
+	"Incumprimento" - um crédito em incumprimento continua a acumular encargos
+	e o seu saldo tem de se manter atualizado):
 
 	- recalcula Multa/Juros de Mora acumulados e o estado ("Atrasado", etc.) de
 	  cada prestação ainda não paga, sem tocar em valores já pagos;
@@ -30,7 +32,7 @@ def atualizar_atrasos():
 	hoje = getdate(nowdate())
 
 	for nome_pedido in frappe.get_all(
-		"Pedido De Credito", filters={"status": ESTADO_EM_ABERTO}, pluck="name"
+		"Pedido De Credito", filters={"status": ["in", ESTADOS_EM_ABERTO]}, pluck="name"
 	):
 		try:
 			_atualizar_pedido(nome_pedido, settings, hoje)

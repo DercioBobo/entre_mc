@@ -136,6 +136,7 @@ def _previsto_por_pedido(pedidos_por_nome, data_inicio, data_fim, data_ref_encar
 		},
 		fields=[
 			"parent",
+			"numero",
 			"data_limite_pagamento",
 			"capital_mensal",
 			"capital_pago",

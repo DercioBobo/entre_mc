@@ -14,7 +14,10 @@ obrigatoriamente a ordem de liquidação definida na especificação:
 Multa é recalculada com base nos dias de atraso até à data em questão - tanto
 aqui (no momento de um pagamento) como na tarefa diária
 `entre_mc.tasks.atualizar_atrasos`, que mantém o estado "Atrasado" e os
-encargos acumulados visíveis mesmo sem nenhum pagamento ser registado.
+encargos acumulados visíveis mesmo sem nenhum pagamento ser registado. Cada
+dia de atraso acumula sobre o valor que estava por pagar nesse dia (ver
+`calcular_multa_acumulada`), por isso um pagamento parcial só reduz a multa
+dos dias seguintes, nunca a já acumulada.
 
 Juros de Mora, ao contrário da Multa, é um encargo único: aplicado uma só vez
 quando a prestação entra em atraso (Juros de Mora % × capital+juros em atraso
@@ -193,13 +196,82 @@ def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settin
 	)
 
 	if taxa_diaria_de_multa and not row.isento_de_multa:
-		row.multa_aplicada = flt(
-			flt(taxa_diaria_de_multa) / 100 * dias_atraso * prestacao_em_atraso, precision
-		)
+		# Nunca abaixo do que já foi pago/perdoado - um Reembolso retroativo
+		# lançado depois pode baixar a multa acumulada para menos do que isso.
+		_dias, multa = calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, data_pagamento, precision=precision)
+		row.multa_aplicada = flt(max(multa, flt(row.multa_paga) + flt(row.multa_perdoada)), precision)
 	if juros_de_mora and not row.juros_mora_aplicado:
 		# Encargo único: aplicado uma só vez quando a prestação entra em atraso,
 		# não volta a ser recalculado nos dias seguintes nem escala com dias_atraso.
 		row.juros_mora_aplicado = flt(flt(juros_de_mora) / 100 * prestacao_em_atraso, precision)
+
+
+def calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, ate, desde=None, pagamentos=None, precision=2):
+	"""Devolve `(dias, valor)`: a Multa acumulada por `row` nos dias de atraso até
+	`ate` (inclusive) - só a partir de `desde`, se indicado.
+
+	Cada dia de atraso cobra taxa × capital+juros ainda por pagar no início desse
+	dia; um pagamento feito no dia D só reduz a base a partir de D+1 (a multa do
+	próprio dia D é calculada antes de alocar o pagamento, ver
+	`aplicar_alocacao`). Assim a multa de dias já decorridos nunca encolhe
+	porque o cliente pagou parte da prestação depois - recalcular tudo com
+	taxa × dias × valor em atraso *atual* fazia `multa_aplicada` cair abaixo de
+	`multa_paga` após um pagamento parcial, e a multa em falta ficar negativa.
+	Sem pagamentos, dá o mesmo que taxa × dias × valor da prestação.
+
+	`pagamentos`: [(data, valor), ...] de capital+juros desta prestação; por
+	omissão lidos dos Reembolsos submetidos (ver `pagamentos_de_capital_e_juros`).
+	"""
+	inicio = getdate(add_days(row.data_limite_pagamento, int(flt(settings.dias_de_tolerancia)) + 1))
+	if desde:
+		inicio = max(inicio, getdate(desde))
+	fim = getdate(ate)
+	if fim < inicio or not flt(taxa_diaria_de_multa):
+		return 0, 0
+
+	if pagamentos is None:
+		pagamentos = pagamentos_de_capital_e_juros(row)
+	pagamentos = sorted((getdate(d), flt(v)) for d, v in pagamentos)
+
+	em_falta = flt(row.capital_mensal) + flt(row.juros_mensais) - sum(v for d, v in pagamentos if d < inicio)
+	base = 0
+	dia = inicio
+	for data_pagamento, valor in pagamentos:
+		if data_pagamento < inicio:
+			continue
+		if data_pagamento > fim:
+			break
+		dias_ate_pagamento = date_diff(data_pagamento, dia) + 1
+		if dias_ate_pagamento > 0:
+			base += max(em_falta, 0) * dias_ate_pagamento
+			dia = getdate(add_days(data_pagamento, 1))
+		em_falta -= valor
+	dias_restantes = date_diff(fim, dia) + 1
+	if dias_restantes > 0:
+		base += max(em_falta, 0) * dias_restantes
+
+	return date_diff(fim, inicio) + 1, flt(flt(taxa_diaria_de_multa) / 100 * base, precision)
+
+
+def pagamentos_de_capital_e_juros(row):
+	"""[(data_de_pagamento, valor), ...] de Capital e Juros alocados a `row` pelos
+	Reembolsos submetidos do seu Pedido De Credito.
+
+	Uma linha sem `parent`/`numero` (ex.: lida por um relatório sem esses campos)
+	não tem histórico a consultar: trata o que já está pago como pago antes do
+	atraso, ou seja, a multa sobre o valor em atraso atual."""
+	if not row.get("parent") or not row.get("numero"):
+		return [("1900-01-01", flt(row.capital_pago) + flt(row.juros_pago))]
+	return frappe.db.sql(
+		"""
+		select r.data_de_pagamento, a.valor
+		from `tabAlocacao De Reembolso` a
+		inner join `tabReembolso` r on r.name = a.parent and a.parenttype = 'Reembolso'
+		where r.docstatus = 1 and r.pedido_de_credito = %s and a.prestacao = %s
+			and a.componente in ('Capital', 'Juros')
+		""",
+		(row.parent, row.numero),
+	)
 
 
 def calcular_multa_no_periodo(row, taxa_diaria_de_multa, settings, hoje, periodo_de=None, periodo_ate=None, precision=2):
@@ -209,32 +281,20 @@ def calcular_multa_no_periodo(row, taxa_diaria_de_multa, settings, hoje, periodo
 	De Multa para permitir perdoar só uma janela de dias (ex.: "só dia 10 a 14"),
 	não a Multa toda desde o início do atraso.
 
-	A fórmula da Multa é linear nos dias de atraso (taxa × dias × valor em atraso),
-	por isso o valor de cada dia individual é constante e a fatia de um intervalo é
-	sempre (nº de dias desse intervalo que caem dentro da janela de atraso real) ×
-	(valor diário) - não depende de quando o perdão é pedido nem de quantos dias
-	de atraso já lá vão no total.
+	Cada dia tem a sua própria multa (ver `calcular_multa_acumulada`), por isso a
+	fatia de um intervalo é a soma dos dias desse intervalo que caem dentro da
+	janela de atraso real - não depende de quando o perdão é pedido nem de
+	quantos dias de atraso já lá vão no total.
 
 	Sem `periodo_de`/`periodo_ate`, devolve a Multa toda ainda em aberto (igual a
 	perdoar desde o primeiro dia de atraso até `hoje`).
 	"""
-	inicio_atraso = getdate(add_days(row.data_limite_pagamento, int(flt(settings.dias_de_tolerancia)) + 1))
-	fim_atraso = getdate(hoje)
-	if fim_atraso < inicio_atraso:
-		return 0, 0
-
-	janela_inicio = max(inicio_atraso, getdate(periodo_de)) if periodo_de else inicio_atraso
-	janela_fim = min(fim_atraso, getdate(periodo_ate)) if periodo_ate else fim_atraso
-	dias_no_periodo = date_diff(janela_fim, janela_inicio) + 1
+	fim = min(getdate(hoje), getdate(periodo_ate)) if periodo_ate else getdate(hoje)
+	dias_no_periodo, valor_no_periodo = calcular_multa_acumulada(
+		row, taxa_diaria_de_multa, settings, fim, desde=periodo_de, precision=precision
+	)
 	if dias_no_periodo <= 0:
 		return 0, 0
-
-	prestacao_em_atraso = flt(
-		(flt(row.capital_mensal) - flt(row.capital_pago)) + (flt(row.juros_mensais) - flt(row.juros_pago)),
-		precision,
-	)
-	valor_diario = flt(taxa_diaria_de_multa) / 100 * prestacao_em_atraso
-	valor_no_periodo = flt(valor_diario * dias_no_periodo, precision)
 
 	disponivel = flt(flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada), precision)
 	return dias_no_periodo, flt(min(valor_no_periodo, disponivel), precision)

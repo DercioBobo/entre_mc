@@ -16,12 +16,11 @@ histórico datado, ignorando tudo o que aconteceu depois da data:
   `data_perdao` até à data; `isento_de_multa` só a partir do primeiro perdão
   com `isentar_multa_futura`.
 - Multa e Juros de Mora: recalculados para a data com as mesmas fórmulas de
-  `atualizar_encargos_da_linha` - a Multa sobre o capital+juros em atraso
-  antes dos pagamentos do próprio dia (é o que o motor faz: recalcula os
-  encargos antes de alocar o pagamento), congelada na data do perdão se a
-  prestação ficou isenta; o Juros de Mora (encargo único) sobre o
-  capital+juros em atraso no primeiro dia de atraso. Nunca abaixo do que já
-  foi pago/perdoado contra eles.
+  `atualizar_encargos_da_linha` - a Multa com `calcular_multa_acumulada`
+  (cada dia sobre o capital+juros por pagar nesse dia, só com os pagamentos
+  até à data), congelada na data do perdão se a prestação ficou isenta; o
+  Juros de Mora (encargo único) sobre o capital+juros em atraso no primeiro
+  dia de atraso. Nunca abaixo do que já foi pago/perdoado contra eles.
 - Execucao De Garantia submetida com `data` até à data: o pedido conta como
   liquidado nessa data, tal como `marcar_como_liquidado`.
 
@@ -39,7 +38,7 @@ from frappe import _
 from frappe.utils import add_days, cint, date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import atualizar_estado_da_linha, calcular_saldos
+from entre_mc.utils.reembolso import atualizar_estado_da_linha, calcular_multa_acumulada, calcular_saldos
 
 CAMPO_PAGO_POR_COMPONENTE = {
 	"Juros de Mora": "juros_mora_pago",
@@ -90,7 +89,11 @@ def get_columns_por_credito():
 		},
 		{"label": _("Saldo do Crédito"), "fieldname": "saldo_do_credito", "fieldtype": "Currency", "width": 130},
 		{"label": _("Dívida"), "fieldname": "divida", "fieldtype": "Currency", "width": 120},
+		{"label": _("Capital em Dívida"), "fieldname": "capital_em_divida", "fieldtype": "Currency", "width": 130},
+		{"label": _("Juros em Dívida"), "fieldname": "juros_em_divida", "fieldtype": "Currency", "width": 120},
 		{"label": _("Em Risco"), "fieldname": "em_risco", "fieldtype": "Currency", "width": 120},
+		{"label": _("Capital em Risco"), "fieldname": "capital_em_risco", "fieldtype": "Currency", "width": 130},
+		{"label": _("Juros em Risco"), "fieldname": "juros_em_risco", "fieldtype": "Currency", "width": 120},
 		{"label": _("Dias de Atraso"), "fieldname": "dias_atraso", "fieldtype": "Int", "width": 100},
 		{"label": _("Prestações em Atraso"), "fieldname": "prestacoes_em_atraso", "fieldtype": "Int", "width": 120},
 		{"label": _("Total Reembolsado"), "fieldname": "total_reembolsado", "fieldtype": "Currency", "width": 130},
@@ -288,11 +291,14 @@ def _reconstruir_pedido(pedido, linhas, alocacoes, perdoes, data_execucao, desem
 		base_mora = flt(row.juros_mora_pago) + flt(row.juros_mora_perdoado)
 		multa = mora = 0
 
-		if dias_atraso > 0 and flt(pedido.taxa_diaria_de_multa):
-			dia_multa = min(data_referencia, isento_desde.get(linha.numero) or data_referencia)
-			dias_multa = date_diff(dia_multa, linha.data_limite_pagamento) - tolerancia
-			if dias_multa > 0:
-				multa = flt(pedido.taxa_diaria_de_multa) / 100 * dias_multa * cj_em_atraso_antes(linha, dia_multa)
+		if dias_atraso > 0:
+			_dias, multa = calcular_multa_acumulada(
+				linha,
+				pedido.taxa_diaria_de_multa,
+				settings,
+				min(data_referencia, isento_desde.get(linha.numero) or data_referencia),
+				pagamentos=pagamentos_cj.get(linha.numero, []),
+			)
 		if dias_atraso > 0 and flt(pedido.juros_de_mora):
 			inicio_atraso = getdate(add_days(linha.data_limite_pagamento, int(tolerancia) + 1))
 			mora = flt(pedido.juros_de_mora) / 100 * cj_em_atraso_antes(linha, inicio_atraso)
@@ -356,6 +362,18 @@ def _em_falta(row):
 def _linha_por_credito(situacao):
 	pedido = situacao.pedido
 	rows = situacao.rows
+
+	# Capital/Juros de Dívida e Em Risco com a mesma regra de `calcular_saldos`:
+	# Dívida = prestações em atraso; Em Risco = Dívida + a próxima prestação
+	# ainda não vencida (só se houver Dívida e essa prestação existir).
+	em_atraso = [r for r in rows if r.dias_atraso > 0]
+	por_vencer = [r for r in rows if r.em_falta > 0 and r.dias_atraso <= 0]
+	proxima = min(por_vencer, key=lambda r: r.numero) if por_vencer else None
+	capital_em_divida = flt(sum(r.capital_mensal - flt(r.capital_pago) for r in em_atraso))
+	juros_em_divida = flt(sum(r.juros_mensais - flt(r.juros_pago) for r in em_atraso))
+	em_risco = situacao.divida and proxima
+	capital_em_risco = flt(capital_em_divida + proxima.capital_mensal - flt(proxima.capital_pago)) if em_risco else 0
+	juros_em_risco = flt(juros_em_divida + proxima.juros_mensais - flt(proxima.juros_pago)) if em_risco else 0
 	return {
 		"name": pedido.name,
 		"cliente": pedido.cliente,
@@ -372,9 +390,13 @@ def _linha_por_credito(situacao):
 		),
 		"saldo_do_credito": situacao.saldo_do_credito,
 		"divida": situacao.divida,
+		"capital_em_divida": capital_em_divida,
+		"juros_em_divida": juros_em_divida,
 		"em_risco": situacao.em_risco,
+		"capital_em_risco": capital_em_risco,
+		"juros_em_risco": juros_em_risco,
 		"dias_atraso": max((r.dias_atraso for r in rows), default=0),
-		"prestacoes_em_atraso": len([r for r in rows if r.dias_atraso > 0]),
+		"prestacoes_em_atraso": len(em_atraso),
 		"total_reembolsado": situacao.total_reembolsado,
 		"data_ultimo_reembolso": situacao.data_ultimo_reembolso,
 	}
