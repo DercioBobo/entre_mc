@@ -1,6 +1,7 @@
 # Patches added in this list will be executed before doctypes are migrated
 # Read docs to understand patches: https://docs.frappe.io/framework/user/en/database-migrations
 
+[pre_model_sync]
 entre_mc.patches.rename_status_em_curso
 entre_mc.patches.realinhar_vencimentos_mensais
 entre_mc.patches.corrigir_multa_negativa
