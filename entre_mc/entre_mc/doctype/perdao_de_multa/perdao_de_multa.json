@@ -60,20 +60,20 @@
   },
   {
    "default": "0",
-   "description": "Limpeza total: perdoa de uma vez toda a Multa E todo o Juros de Mora ainda em aberto nas prestações carregadas abaixo, ignorando o Período a Perdoar. Pensado para quando o atraso só existe por um Reembolso que devia ter sido lançado e não foi (o cliente pagou, só faltou registar) - não para perdão parcial por política.",
+   "description": "Perdoa toda a Multa e Juros de Mora em aberto das prestações abaixo, ignorando o Período a Perdoar.",
    "fieldname": "perdoar_tudo",
    "fieldtype": "Check",
    "label": "Perdoar Tudo (Multa + Juros de Mora integrais)"
   },
   {
    "default": "0",
-   "description": "Ligado: as prestações abaixo deixam de gerar Multa daqui em diante, mesmo que continuem por pagar. Desligado: só a multa já em aberto até hoje é perdoada - se a prestação continuar em atraso, volta a acumular multa normalmente a partir de amanhã.",
+   "description": "Ligado: estas prestações deixam de gerar Multa. Desligado: só a multa em aberto até hoje é perdoada.",
    "fieldname": "isentar_multa_futura",
    "fieldtype": "Check",
    "label": "Isentar estas prestações de Multa futura"
   },
   {
-   "description": "Janela de dias de atraso da Multa a perdoar (ex.: multa começou dia 1, hoje é dia 14, mas só se quer perdoar do dia 10 ao 14). Em branco = perdoa a Multa toda em aberto. Ignorado quando \"Perdoar Tudo\" está ligado. Clique \"Carregar Prestações em Atraso\" depois de definir para ver o valor exato de cada prestação.",
+   "description": "Dias de atraso cuja Multa se quer perdoar. Em branco = toda a Multa em aberto. Depois clique em \"Carregar Prestações em Atraso\".",
    "fieldname": "sb_periodo",
    "fieldtype": "Section Break",
    "label": "Período a Perdoar"

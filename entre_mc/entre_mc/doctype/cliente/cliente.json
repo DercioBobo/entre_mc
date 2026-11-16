@@ -16,9 +16,12 @@
   "genero",
   "proponente_de_origem",
   "sb_localizacao",
-  "endereco",
+  "provincia",
+  "distrito",
   "bairro",
+  "endereco",
   "numero_da_casa",
+  "quarteirao",
   "cb_localizacao",
   "contacto_principal",
   "contacto_alternativo",
@@ -105,9 +108,15 @@
    "label": "Localização e Contactos"
   },
   {
-   "fieldname": "endereco",
-   "fieldtype": "Small Text",
-   "label": "Endereço"
+   "fieldname": "provincia",
+   "fieldtype": "Select",
+   "label": "Província",
+   "options": "\nMaputo Cidade\nMaputo Província\nGaza\nInhambane\nSofala\nManica\nTete\nZambézia\nNampula\nCabo Delgado\nNiassa"
+  },
+  {
+   "fieldname": "distrito",
+   "fieldtype": "Data",
+   "label": "Distrito"
   },
   {
    "fieldname": "bairro",
@@ -115,9 +124,19 @@
    "label": "Bairro"
   },
   {
+   "fieldname": "endereco",
+   "fieldtype": "Small Text",
+   "label": "Rua/Avenida"
+  },
+  {
    "fieldname": "numero_da_casa",
    "fieldtype": "Data",
    "label": "Número da Casa"
+  },
+  {
+   "fieldname": "quarteirao",
+   "fieldtype": "Data",
+   "label": "Quarteirão"
   },
   {
    "fieldname": "cb_localizacao",

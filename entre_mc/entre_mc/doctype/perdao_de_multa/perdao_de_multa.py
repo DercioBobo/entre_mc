@@ -44,6 +44,7 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
+from entre_mc.utils.reestruturacao import impedir_cancelamento_apos_reestruturacao
 from entre_mc.utils.reembolso import (
 	atualizar_encargos_da_linha,
 	atualizar_estado_da_linha,
@@ -149,6 +150,11 @@ class PerdaoDeMulta(Document):
 
 		pedido.atualizar_saldo_em_divida()
 		pedido.save(ignore_permissions=True)
+
+	def before_cancel(self):
+		impedir_cancelamento_apos_reestruturacao(
+			self.pedido_de_credito, [item.numero for item in self.prestacoes]
+		)
 
 	def on_cancel(self):
 		pedido = frappe.get_doc("Pedido De Credito", self.pedido_de_credito, for_update=True)

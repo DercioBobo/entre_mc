@@ -31,6 +31,9 @@
   "saldo_em_divida",
   "divida",
   "em_risco",
+  "congelado",
+  "data_de_congelamento",
+  "reestruturado",
   "observacoes_liquidacao",
   "sb_garantias",
   "garantias",
@@ -209,6 +212,32 @@
    "fieldname": "em_risco",
    "fieldtype": "Currency",
    "label": "Em Risco",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "congelado",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Dívida Congelada",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.congelado",
+   "fieldname": "data_de_congelamento",
+   "fieldtype": "Date",
+   "label": "Congelada desde",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "reestruturado",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Reestruturado",
+   "no_copy": 1,
    "read_only": 1
   },
   {

@@ -1,0 +1,296 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-16 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "nome_completo",
+  "contacto",
+  "contacto_alternativo",
+  "ocupacao",
+  "cb_1",
+  "data_da_prospeccao",
+  "promotor",
+  "origem",
+  "produto",
+  "valor_pretendido",
+  "sb_estado",
+  "estado",
+  "motivo_da_perda",
+  "cb_estado",
+  "proxima_accao",
+  "data_da_proxima_accao",
+  "sb_morada",
+  "provincia",
+  "distrito",
+  "bairro",
+  "cb_morada",
+  "endereco",
+  "numero_da_casa",
+  "quarteirao",
+  "sb_acompanhamento",
+  "acompanhamentos",
+  "observacoes",
+  "sb_conversao",
+  "proponente",
+  "cb_conversao",
+  "cliente"
+ ],
+ "fields": [
+  {
+   "default": "PROSP-.YY.-.###",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "PROSP-.YY.-.###"
+  },
+  {
+   "fieldname": "nome_completo",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nome Completo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contacto",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contacto",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "contacto_alternativo",
+   "fieldtype": "Data",
+   "label": "Contacto Alternativo",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "ocupacao",
+   "fieldtype": "Data",
+   "label": "Ocupação / Negócio"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "data_da_prospeccao",
+   "fieldtype": "Date",
+   "label": "Data da Prospecção",
+   "reqd": 1
+  },
+  {
+   "default": "__user",
+   "fieldname": "promotor",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Promotor",
+   "options": "User"
+  },
+  {
+   "default": "Terreno",
+   "fieldname": "origem",
+   "fieldtype": "Select",
+   "label": "Origem",
+   "options": "Terreno\nIndicação\nBalcão\nOutro"
+  },
+  {
+   "fieldname": "produto",
+   "fieldtype": "Link",
+   "label": "Produto de Interesse",
+   "options": "Produto"
+  },
+  {
+   "fieldname": "valor_pretendido",
+   "fieldtype": "Currency",
+   "label": "Valor Pretendido"
+  },
+  {
+   "fieldname": "sb_estado",
+   "fieldtype": "Section Break",
+   "label": "Estado e Próxima Acção"
+  },
+  {
+   "default": "Novo",
+   "fieldname": "estado",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Estado",
+   "options": "Novo\nContactado\nInteressado\nEm Negociação\nProponente\nCliente\nPerdido",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.estado=='Perdido'",
+   "fieldname": "motivo_da_perda",
+   "fieldtype": "Small Text",
+   "label": "Motivo da Perda",
+   "mandatory_depends_on": "eval:doc.estado=='Perdido'"
+  },
+  {
+   "fieldname": "cb_estado",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "proxima_accao",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Próxima Acção"
+  },
+  {
+   "fieldname": "data_da_proxima_accao",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Data da Próxima Acção"
+  },
+  {
+   "fieldname": "sb_morada",
+   "fieldtype": "Section Break",
+   "label": "Morada"
+  },
+  {
+   "fieldname": "provincia",
+   "fieldtype": "Select",
+   "label": "Província",
+   "options": "\nMaputo Cidade\nMaputo Província\nGaza\nInhambane\nSofala\nManica\nTete\nZambézia\nNampula\nCabo Delgado\nNiassa"
+  },
+  {
+   "fieldname": "distrito",
+   "fieldtype": "Data",
+   "label": "Distrito"
+  },
+  {
+   "fieldname": "bairro",
+   "fieldtype": "Data",
+   "label": "Bairro"
+  },
+  {
+   "fieldname": "cb_morada",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "endereco",
+   "fieldtype": "Data",
+   "label": "Rua/Avenida"
+  },
+  {
+   "fieldname": "numero_da_casa",
+   "fieldtype": "Data",
+   "label": "Número da Casa"
+  },
+  {
+   "fieldname": "quarteirao",
+   "fieldtype": "Data",
+   "label": "Quarteirão"
+  },
+  {
+   "fieldname": "sb_acompanhamento",
+   "fieldtype": "Section Break",
+   "label": "Acompanhamento"
+  },
+  {
+   "fieldname": "acompanhamentos",
+   "fieldtype": "Table",
+   "options": "Acompanhamento De Prospecto"
+  },
+  {
+   "fieldname": "observacoes",
+   "fieldtype": "Small Text",
+   "label": "Observações"
+  },
+  {
+   "fieldname": "sb_conversao",
+   "fieldtype": "Section Break",
+   "label": "Conversão"
+  },
+  {
+   "fieldname": "proponente",
+   "fieldtype": "Link",
+   "label": "Proponente",
+   "no_copy": 1,
+   "options": "Proponente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_conversao",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "label": "Cliente",
+   "no_copy": 1,
+   "options": "Cliente",
+   "read_only": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Prospecto",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Promotor",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "nome_completo,contacto",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "nome_completo",
+ "track_changes": 1
+}

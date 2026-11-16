@@ -19,7 +19,7 @@
  ],
  "fields": [
   {
-   "description": "Empresa ERPNext usada como contexto por defeito (dados da instituição, moeda, etc. vêm daqui).",
+   "description": "Empresa ERPNext usada por defeito (dados da instituição, moeda, etc.).",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Empresa",
@@ -32,7 +32,7 @@
   },
   {
    "default": "Mensal",
-   "description": "Frequência pré-selecionada em novas Simulações e Pedidos de Crédito.",
+   "description": "Frequência pré-selecionada em novas Simulações e Pedidos.",
    "fieldname": "frequencia_padrao",
    "fieldtype": "Select",
    "label": "Frequência Padrão",
@@ -41,14 +41,14 @@
   },
   {
    "default": "1",
-   "description": "Nas prestações mensais, a data limite de pagamento cai todos os meses no mesmo dia da data de início do crédito (dia do desembolso), usando meses de calendário. Ex.: desembolso a 25 -> vencimentos a 25 de cada mês. Desligado, cada prestação vence 30 dias após a anterior, o que faz o dia deslizar ao longo do ano.",
+   "description": "Prestações mensais vencem sempre no dia do desembolso (ex.: dia 25 de cada mês). Desligado: vencem de 30 em 30 dias.",
    "fieldname": "vencimento_no_dia_do_desembolso",
    "fieldtype": "Check",
    "label": "Vencimento no Dia do Desembolso"
   },
   {
    "default": "0",
-   "description": "Número de dias após a data limite de pagamento antes de começar a aplicar Multa e Juros de Mora.",
+   "description": "Dias após o vencimento antes de aplicar Multa e Juros de Mora.",
    "fieldname": "dias_de_tolerancia",
    "fieldtype": "Int",
    "label": "Dias de Tolerância",
@@ -56,7 +56,7 @@
   },
   {
    "default": "90",
-   "description": "Nº de dias de atraso (da prestação mais antiga em dívida) a partir do qual a tarefa diária marca automaticamente o Pedido De Credito como Incumprimento.",
+   "description": "Dias de atraso a partir dos quais o crédito passa automaticamente a Incumprimento.",
    "fieldname": "dias_para_incumprimento",
    "fieldtype": "Int",
    "label": "Dias para Incumprimento",
@@ -64,7 +64,7 @@
   },
   {
    "default": "0",
-   "description": "Reservado: comportamento de capitalização de juros ainda por definir. Não tem efeito enquanto desligado.",
+   "description": "Reservado: ainda sem efeito.",
    "fieldname": "ativar_capitalizacao",
    "fieldtype": "Check",
    "label": "Ativar Capitalização (em definição)"
@@ -77,7 +77,7 @@
   },
   {
    "default": "Percentual",
-   "description": "Taxa cobrada no desembolso, deduzida do Capital Solicitado - não afeta o plano de amortização, que continua a ser calculado sobre o valor total pedido.",
+   "description": "Cobrada no desembolso, deduzida do Capital Solicitado. Não afeta o plano de amortização.",
    "fieldname": "tipo_de_taxa_administrativa",
    "fieldtype": "Select",
    "label": "Tipo de Taxa Administrativa",

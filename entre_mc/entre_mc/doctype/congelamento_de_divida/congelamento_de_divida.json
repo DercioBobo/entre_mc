@@ -1,0 +1,183 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-16 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "pedido_de_credito",
+  "cliente",
+  "cb_1",
+  "data_do_congelamento",
+  "anexo",
+  "sb_motivo",
+  "motivo",
+  "sb_valores",
+  "capital_congelado",
+  "juros_congelados",
+  "cb_valores",
+  "multa_congelada",
+  "mora_congelada",
+  "cb_valores_2",
+  "valor_congelado",
+  "divida_congelada"
+ ],
+ "fields": [
+  {
+   "default": "CONG-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "CONG-.YY.-.##"
+  },
+  {
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "pedido_de_credito.cliente",
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cliente",
+   "options": "Cliente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "data_do_congelamento",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Data do Congelamento",
+   "reqd": 1
+  },
+  {
+   "fieldname": "anexo",
+   "fieldtype": "Attach",
+   "label": "Acordo (anexo)"
+  },
+  {
+   "fieldname": "sb_motivo",
+   "fieldtype": "Section Break",
+   "label": "Motivo"
+  },
+  {
+   "fieldname": "motivo",
+   "fieldtype": "Small Text",
+   "label": "Motivo / Acordo com o Cliente",
+   "reqd": 1
+  },
+  {
+   "description": "Calculado ao gravar, para a Data do Congelamento. A partir daí o crédito deixa de gerar Multa e Juros de Mora.",
+   "fieldname": "sb_valores",
+   "fieldtype": "Section Break",
+   "label": "Valor Congelado"
+  },
+  {
+   "fieldname": "capital_congelado",
+   "fieldtype": "Currency",
+   "label": "Capital",
+   "read_only": 1
+  },
+  {
+   "fieldname": "juros_congelados",
+   "fieldtype": "Currency",
+   "label": "Juros",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_valores",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "multa_congelada",
+   "fieldtype": "Currency",
+   "label": "Multa",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mora_congelada",
+   "fieldtype": "Currency",
+   "label": "Juros de Mora",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_valores_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "valor_congelado",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Valor Congelado (Total)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "divida_congelada",
+   "fieldtype": "Currency",
+   "label": "Do qual em atraso (Dívida)",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Congelamento De Divida",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito"
+  }
+ ],
+ "search_fields": "cliente",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "cliente",
+ "track_changes": 1
+}

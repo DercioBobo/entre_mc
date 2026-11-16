@@ -43,7 +43,7 @@
    "read_only": 1
   },
   {
-   "description": "Nº de dias de atraso, dentro do Período a Perdoar do cabeçalho, atribuídos a esta prestação. Vazio quando \"Perdoar Tudo\" está ligado.",
+   "description": "Dias de atraso desta prestação dentro do Período a Perdoar.",
    "fieldname": "dias_no_periodo",
    "fieldtype": "Int",
    "label": "Dias no Período",
@@ -70,7 +70,7 @@
    "read_only": 1
   },
   {
-   "description": "Editável até ao limite da Mora em Aberto. Juros de Mora é um encargo único (não tem \"dias\" a fatiar) - por isso só é sugerido quando \"Perdoar Tudo\" está ligado.",
+   "description": "Editável até ao limite da Mora em Aberto. Só sugerido com \"Perdoar Tudo\".",
    "fieldname": "valor_perdoado_mora",
    "fieldtype": "Currency",
    "in_list_view": 1,

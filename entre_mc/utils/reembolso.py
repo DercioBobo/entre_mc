@@ -33,6 +33,11 @@ cobrado vs. perdoado. Se a linha ficar marcada `isento_de_multa`, este módulo
 para de recalcular a multa dela (Juros de Mora não tem equivalente - é um
 encargo único, uma vez perdoado não volta a ser reaplicado).
 
+Congelamento De Divida marca todas as linhas de um Pedido com
+`encargos_congelados`: `atualizar_encargos_da_linha` deixa de lhes mexer, por
+isso nem a tarefa diária, nem um Reembolso, nem os relatórios voltam a
+acrescentar Multa ou Juros de Mora a esse crédito.
+
 Um Reembolso pode ser submetido com `data_de_pagamento` retroativa (o cliente
 pagou num dia, mas só foi lançado no sistema mais tarde). Nesse caso, a data
 de referência usada aqui recua para antes do que a tarefa diária já tinha
@@ -174,7 +179,44 @@ def calcular_saldos(rows, settings, hoje):
 	return flt(saldo_do_credito), flt(divida), em_risco
 
 
+COMPONENTES_DO_SALDO = ("capital", "juros", "multa", "mora")
+
+
+def decompor_saldos(rows, settings, hoje):
+	"""Decompõe o Saldo do Crédito e a Dívida de `calcular_saldos` em Capital,
+	Juros, Multa e Juros de Mora. Devolve `(saldo, divida)`, dois dicionários
+	com as chaves de `COMPONENTES_DO_SALDO`; a soma de cada um é igual ao total
+	correspondente de `calcular_saldos`, porque segue exatamente as mesmas
+	regras (mesmas linhas ignoradas, mesmo critério de atraso)."""
+	hoje = getdate(hoje)
+	saldo = dict.fromkeys(COMPONENTES_DO_SALDO, 0)
+	divida = dict.fromkeys(COMPONENTES_DO_SALDO, 0)
+
+	for row in rows:
+		partes = {
+			"capital": flt(row.capital_mensal) - flt(row.capital_pago),
+			"juros": flt(row.juros_mensais) - flt(row.juros_pago),
+			"multa": flt(row.multa_aplicada) - flt(row.multa_paga) - flt(row.multa_perdoada),
+			"mora": flt(row.juros_mora_aplicado) - flt(row.juros_mora_pago) - flt(row.juros_mora_perdoado),
+		}
+		if flt(sum(partes.values())) <= 0:
+			continue
+
+		em_atraso = date_diff(hoje, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia) > 0
+		for chave, valor in partes.items():
+			saldo[chave] += valor
+			if em_atraso:
+				divida[chave] += valor
+
+	return {k: flt(v) for k, v in saldo.items()}, {k: flt(v) for k, v in divida.items()}
+
+
 def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision):
+	if row.get("encargos_congelados"):
+		# Dívida congelada (ver Congelamento De Divida): a Multa e o Juros de Mora
+		# ficam como estavam na data do congelamento, em qualquer data de referência.
+		return
+
 	dias_atraso = date_diff(data_pagamento, row.data_limite_pagamento) - flt(settings.dias_de_tolerancia)
 	if dias_atraso <= 0:
 		# A prestação não está em atraso nesta data de referência. Normalmente isto

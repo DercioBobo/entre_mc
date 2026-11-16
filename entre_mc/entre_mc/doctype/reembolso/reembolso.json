@@ -41,6 +41,7 @@
    "fieldname": "cliente",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Cliente",
    "options": "Cliente",
    "read_only": 1
@@ -145,5 +146,6 @@
  "search_fields": "cliente",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "cliente",
  "track_changes": 1
 }

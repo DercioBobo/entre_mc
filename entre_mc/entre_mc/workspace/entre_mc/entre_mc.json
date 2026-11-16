@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"header-1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Entre MC</b></span>\", \"col\": 12}}, {\"id\": \"para-1\", \"type\": \"paragraph\", \"data\": {\"text\": \"Gestão de microcrédito ponta a ponta — do proponente ao reembolso.\", \"col\": 12}}, {\"id\": \"card-ciclo\", \"type\": \"card\", \"data\": {\"card_name\": \"Ciclo de Crédito\", \"col\": 4}}, {\"id\": \"card-garantias\", \"type\": \"card\", \"data\": {\"card_name\": \"Garantias\", \"col\": 4}}, {\"id\": \"card-config\", \"type\": \"card\", \"data\": {\"card_name\": \"Configuração\", \"col\": 4}}, {\"id\": \"card-relatorios\", \"type\": \"card\", \"data\": {\"card_name\": \"Relatórios\", \"col\": 4}}, {\"id\": \"card-ferramentas\", \"type\": \"card\", \"data\": {\"card_name\": \"Ferramentas\", \"col\": 4}}]",
+ "content": "[{\"id\": \"header-1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Entre MC</b></span>\", \"col\": 12}}, {\"id\": \"para-1\", \"type\": \"paragraph\", \"data\": {\"text\": \"Gestão de microcrédito ponta a ponta — do prospecto ao reembolso.\", \"col\": 12}}, {\"id\": \"card-ciclo\", \"type\": \"card\", \"data\": {\"card_name\": \"Ciclo de Crédito\", \"col\": 4}}, {\"id\": \"card-recuperacao\", \"type\": \"card\", \"data\": {\"card_name\": \"Recuperação de Crédito\", \"col\": 4}}, {\"id\": \"card-garantias\", \"type\": \"card\", \"data\": {\"card_name\": \"Garantias\", \"col\": 4}}, {\"id\": \"card-config\", \"type\": \"card\", \"data\": {\"card_name\": \"Configuração\", \"col\": 4}}, {\"id\": \"card-relatorios\", \"type\": \"card\", \"data\": {\"card_name\": \"Relatórios\", \"col\": 4}}, {\"id\": \"card-ferramentas\", \"type\": \"card\", \"data\": {\"card_name\": \"Ferramentas\", \"col\": 4}}]",
  "creation": "2026-07-10 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -24,6 +24,18 @@
   },
   {
    "type": "Link",
+   "label": "Prospecto",
+   "link_type": "DocType",
+   "link_to": "Prospecto",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 2,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
    "label": "Proponente",
    "link_type": "DocType",
    "link_to": "Proponente",
@@ -31,7 +43,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 2,
+   "idx": 3,
    "doctype": "Workspace Link"
   },
   {
@@ -43,7 +55,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 3,
+   "idx": 4,
    "doctype": "Workspace Link"
   },
   {
@@ -55,7 +67,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 4,
+   "idx": 5,
    "doctype": "Workspace Link"
   },
   {
@@ -67,7 +79,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 5,
+   "idx": 6,
    "doctype": "Workspace Link"
   },
   {
@@ -79,7 +91,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 6,
+   "idx": 7,
    "doctype": "Workspace Link"
   },
   {
@@ -91,7 +103,53 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 7,
+   "idx": 8,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Card Break",
+   "label": "Recuperação de Crédito",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 9,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Perdão de Multa",
+   "link_type": "DocType",
+   "link_to": "Perdao De Multa",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 10,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Congelamento de Dívida",
+   "link_type": "DocType",
+   "link_to": "Congelamento De Divida",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 11,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Reestruturação de Crédito",
+   "link_type": "DocType",
+   "link_to": "Reestruturacao De Credito",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 12,
    "doctype": "Workspace Link"
   },
   {
@@ -101,7 +159,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 8,
+   "idx": 13,
    "doctype": "Workspace Link"
   },
   {
@@ -113,7 +171,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 9,
+   "idx": 14,
    "doctype": "Workspace Link"
   },
   {
@@ -125,7 +183,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 10,
+   "idx": 15,
    "doctype": "Workspace Link"
   },
   {
@@ -137,7 +195,19 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 11,
+   "idx": 16,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Substituição de Garantia",
+   "link_type": "DocType",
+   "link_to": "Substituicao De Garantia",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 17,
    "doctype": "Workspace Link"
   },
   {
@@ -147,7 +217,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 12,
+   "idx": 18,
    "doctype": "Workspace Link"
   },
   {
@@ -159,7 +229,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 13,
+   "idx": 19,
    "doctype": "Workspace Link"
   },
   {
@@ -171,7 +241,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 14,
+   "idx": 20,
    "doctype": "Workspace Link"
   },
   {
@@ -181,7 +251,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 15,
+   "idx": 21,
    "doctype": "Workspace Link"
   },
   {
@@ -193,7 +263,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 16,
+   "idx": 22,
    "doctype": "Workspace Link"
   },
   {
@@ -205,7 +275,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 17,
+   "idx": 23,
    "doctype": "Workspace Link"
   },
   {
@@ -217,7 +287,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 18,
+   "idx": 24,
    "doctype": "Workspace Link"
   },
   {
@@ -229,7 +299,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 19,
+   "idx": 25,
    "doctype": "Workspace Link"
   },
   {
@@ -241,7 +311,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 20,
+   "idx": 26,
    "doctype": "Workspace Link"
   },
   {
@@ -253,7 +323,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 21,
+   "idx": 27,
    "doctype": "Workspace Link"
   },
   {
@@ -265,7 +335,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 22,
+   "idx": 28,
    "doctype": "Workspace Link"
   },
   {
@@ -277,7 +347,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 23,
+   "idx": 29,
    "doctype": "Workspace Link"
   },
   {
@@ -289,7 +359,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 24,
+   "idx": 30,
    "doctype": "Workspace Link"
   },
   {
@@ -301,7 +371,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 25,
+   "idx": 31,
    "doctype": "Workspace Link"
   },
   {
@@ -313,7 +383,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 26,
+   "idx": 32,
    "doctype": "Workspace Link"
   },
   {
@@ -325,7 +395,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 27,
+   "idx": 33,
    "doctype": "Workspace Link"
   },
   {
@@ -337,7 +407,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 28,
+   "idx": 34,
    "doctype": "Workspace Link"
   },
   {
@@ -349,7 +419,19 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 29,
+   "idx": 35,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Simulação de Encargos Futuros",
+   "link_type": "Report",
+   "link_to": "Simulacao de Encargos Futuros",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 36,
    "doctype": "Workspace Link"
   },
   {
@@ -361,7 +443,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 30,
+   "idx": 37,
    "doctype": "Workspace Link"
   },
   {
@@ -371,7 +453,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 31,
+   "idx": 38,
    "doctype": "Workspace Link"
   },
   {
@@ -383,7 +465,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 32,
+   "idx": 39,
    "doctype": "Workspace Link"
   },
   {
@@ -395,11 +477,11 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 33,
+   "idx": 40,
    "doctype": "Workspace Link"
   }
  ],
- "modified": "2026-07-28 00:00:00.000000",
+ "modified": "2026-11-16 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Entre MC",

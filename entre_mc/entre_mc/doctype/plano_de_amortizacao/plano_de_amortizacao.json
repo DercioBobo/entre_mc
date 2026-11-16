@@ -9,6 +9,7 @@
   "data_limite_pagamento",
   "status",
   "isento_de_multa",
+  "encargos_congelados",
   "cb_1",
   "capital_mensal",
   "juros_mensais",
@@ -56,6 +57,13 @@
    "fieldname": "isento_de_multa",
    "fieldtype": "Check",
    "label": "Isenta de Multa Futura",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "encargos_congelados",
+   "fieldtype": "Check",
+   "label": "Encargos Congelados",
    "read_only": 1
   },
   {

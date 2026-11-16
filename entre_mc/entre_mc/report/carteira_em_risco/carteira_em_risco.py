@@ -6,7 +6,7 @@ from frappe import _
 from frappe.utils import date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import calcular_saldos
+from entre_mc.utils.reembolso import calcular_saldos, decompor_saldos
 
 ESTADOS_CONSIDERADOS = ("Em Curso", "Incumprimento")
 
@@ -52,7 +52,15 @@ def get_columns():
 			"width": 150,
 		},
 		{"label": _("Saldo do Crédito"), "fieldname": "saldo_do_credito", "fieldtype": "Currency", "width": 130},
+		{"label": _("Saldo - Capital"), "fieldname": "saldo_capital", "fieldtype": "Currency", "width": 130},
+		{"label": _("Saldo - Juros"), "fieldname": "saldo_juros", "fieldtype": "Currency", "width": 120},
+		{"label": _("Saldo - Multa"), "fieldname": "saldo_multa", "fieldtype": "Currency", "width": 120},
+		{"label": _("Saldo - Juros de Mora"), "fieldname": "saldo_mora", "fieldtype": "Currency", "width": 150},
 		{"label": _("Dívida"), "fieldname": "divida", "fieldtype": "Currency", "width": 120},
+		{"label": _("Dívida - Capital"), "fieldname": "divida_capital", "fieldtype": "Currency", "width": 130},
+		{"label": _("Dívida - Juros"), "fieldname": "divida_juros", "fieldtype": "Currency", "width": 120},
+		{"label": _("Dívida - Multa"), "fieldname": "divida_multa", "fieldtype": "Currency", "width": 120},
+		{"label": _("Dívida - Juros de Mora"), "fieldname": "divida_mora", "fieldtype": "Currency", "width": 150},
 		{"label": _("Juros a Pagar"), "fieldname": "juros_a_pagar", "fieldtype": "Currency", "width": 120},
 	] + [
 		{"label": _(label), "fieldname": fieldname, "fieldtype": "Currency", "width": 120}
@@ -154,6 +162,11 @@ def get_data(filters):
 			"divida": divida,
 			"juros_a_pagar": flt(juros_a_pagar),
 		}
+		saldo_partes, divida_partes = decompor_saldos(rows, settings, hoje)
+		for chave, valor in saldo_partes.items():
+			linha[f"saldo_{chave}"] = valor
+		for chave, valor in divida_partes.items():
+			linha[f"divida_{chave}"] = valor
 		for _ini, _fim, fieldname, _label in FAIXAS_PAR:
 			linha[fieldname] = 0
 		linha[_fieldname_par(dias_atraso)] = em_risco

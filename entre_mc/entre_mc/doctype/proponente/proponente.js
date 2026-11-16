@@ -15,6 +15,12 @@ entre_mc.abrir_cliente_a_partir_do_proponente = function (proponente) {
 		doc.ocupacao = proponente.ocupacao;
 		doc.local_de_trabalho = proponente.local_de_trabalho;
 		doc.rendimento_mensal = proponente.rendimento_mensal;
+		doc.provincia = proponente.provincia;
+		doc.distrito = proponente.distrito;
+		doc.bairro = proponente.bairro;
+		doc.endereco = proponente.endereco;
+		doc.numero_da_casa = proponente.numero_da_casa;
+		doc.quarteirao = proponente.quarteirao;
 	});
 };
 

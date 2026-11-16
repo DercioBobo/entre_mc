@@ -8,6 +8,7 @@ from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.utils.reembolso import aplicar_alocacao, atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reestruturacao import impedir_cancelamento_apos_reestruturacao
 
 LABEL_TO_CAMPO_PAGO = {
 	"Juros de Mora": "juros_mora_pago",
@@ -78,6 +79,11 @@ class Reembolso(Document):
 		if pedido.todas_as_prestacoes_pagas():
 			pedido.status = "Liquidado"
 		pedido.save(ignore_permissions=True)
+
+	def before_cancel(self):
+		impedir_cancelamento_apos_reestruturacao(
+			self.pedido_de_credito, [alocacao.prestacao for alocacao in self.alocacoes]
+		)
 
 	def on_cancel(self):
 		"""Reverte exatamente os valores registados por este Reembolso."""

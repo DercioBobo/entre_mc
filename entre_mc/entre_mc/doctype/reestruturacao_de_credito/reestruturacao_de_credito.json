@@ -1,0 +1,270 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-16 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "pedido_de_credito",
+  "cliente",
+  "cb_1",
+  "data_da_reestruturacao",
+  "anexo",
+  "sb_motivo",
+  "motivo",
+  "sb_saldo",
+  "capital_em_aberto",
+  "juros_em_aberto",
+  "cb_saldo",
+  "multa_em_aberto",
+  "mora_em_aberto",
+  "cb_saldo_2",
+  "saldo_total",
+  "sb_condicoes",
+  "valor_a_reestruturar",
+  "nova_taxa_de_juros",
+  "cb_condicoes",
+  "novo_prazo",
+  "nova_frequencia",
+  "cb_condicoes_2",
+  "data_de_inicio",
+  "diferenca",
+  "sb_novo_plano",
+  "novo_plano",
+  "sb_plano_anterior",
+  "plano_anterior",
+  "ultima_prestacao_mantida"
+ ],
+ "fields": [
+  {
+   "default": "REST-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "REST-.YY.-.##"
+  },
+  {
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "pedido_de_credito.cliente",
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cliente",
+   "options": "Cliente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "data_da_reestruturacao",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Data da Reestruturação",
+   "reqd": 1
+  },
+  {
+   "fieldname": "anexo",
+   "fieldtype": "Attach",
+   "label": "Acordo (anexo)"
+  },
+  {
+   "fieldname": "sb_motivo",
+   "fieldtype": "Section Break",
+   "label": "Motivo"
+  },
+  {
+   "fieldname": "motivo",
+   "fieldtype": "Small Text",
+   "label": "Motivo / Acordo com o Cliente",
+   "reqd": 1
+  },
+  {
+   "description": "Calculado ao gravar, para a Data da Reestruturação.",
+   "fieldname": "sb_saldo",
+   "fieldtype": "Section Break",
+   "label": "Saldo em Aberto"
+  },
+  {
+   "fieldname": "capital_em_aberto",
+   "fieldtype": "Currency",
+   "label": "Capital",
+   "read_only": 1
+  },
+  {
+   "fieldname": "juros_em_aberto",
+   "fieldtype": "Currency",
+   "label": "Juros",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_saldo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "multa_em_aberto",
+   "fieldtype": "Currency",
+   "label": "Multa",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mora_em_aberto",
+   "fieldtype": "Currency",
+   "label": "Juros de Mora",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_saldo_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "saldo_total",
+   "fieldtype": "Currency",
+   "label": "Saldo Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_condicoes",
+   "fieldtype": "Section Break",
+   "label": "Novas Condições"
+  },
+  {
+   "description": "Capital do novo plano. Em branco = Saldo Total.",
+   "fieldname": "valor_a_reestruturar",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Valor a Reestruturar"
+  },
+  {
+   "fieldname": "nova_taxa_de_juros",
+   "fieldtype": "Percent",
+   "label": "Taxa de Juros (%)"
+  },
+  {
+   "fieldname": "cb_condicoes",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "novo_prazo",
+   "fieldtype": "Int",
+   "label": "Prazo (meses)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "nova_frequencia",
+   "fieldtype": "Select",
+   "label": "Frequência",
+   "options": "\nDiário\nSemanal\nQuinzenal\nMensal"
+  },
+  {
+   "fieldname": "cb_condicoes_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Em branco = Data da Reestruturação.",
+   "fieldname": "data_de_inicio",
+   "fieldtype": "Date",
+   "label": "Data de Início do Novo Plano"
+  },
+  {
+   "fieldname": "diferenca",
+   "fieldtype": "Currency",
+   "label": "Diferença face ao Saldo Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_novo_plano",
+   "fieldtype": "Section Break",
+   "label": "Novo Plano de Amortização"
+  },
+  {
+   "fieldname": "novo_plano",
+   "fieldtype": "Table",
+   "options": "Plano De Amortizacao",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sb_plano_anterior",
+   "fieldtype": "Section Break",
+   "label": "Plano Anterior (histórico)"
+  },
+  {
+   "fieldname": "plano_anterior",
+   "fieldtype": "Table",
+   "no_copy": 1,
+   "options": "Plano De Amortizacao",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ultima_prestacao_mantida",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Última Prestação Mantida",
+   "no_copy": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Reestruturacao De Credito",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito"
+  }
+ ],
+ "search_fields": "cliente",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "cliente",
+ "track_changes": 1
+}

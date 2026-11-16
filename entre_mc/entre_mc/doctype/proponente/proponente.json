@@ -12,7 +12,16 @@
   "ocupacao",
   "local_de_trabalho",
   "rendimento_mensal",
+  "sb_morada",
+  "provincia",
+  "distrito",
+  "bairro",
+  "cb_morada",
+  "endereco",
+  "numero_da_casa",
+  "quarteirao",
   "sb_conversao",
+  "prospecto_de_origem",
   "convertido_em_cliente",
   "cliente"
  ],
@@ -58,9 +67,58 @@
    "label": "Rendimento Mensal"
   },
   {
+   "fieldname": "sb_morada",
+   "fieldtype": "Section Break",
+   "label": "Morada"
+  },
+  {
+   "fieldname": "provincia",
+   "fieldtype": "Select",
+   "label": "Província",
+   "options": "\nMaputo Cidade\nMaputo Província\nGaza\nInhambane\nSofala\nManica\nTete\nZambézia\nNampula\nCabo Delgado\nNiassa"
+  },
+  {
+   "fieldname": "distrito",
+   "fieldtype": "Data",
+   "label": "Distrito"
+  },
+  {
+   "fieldname": "bairro",
+   "fieldtype": "Data",
+   "label": "Bairro"
+  },
+  {
+   "fieldname": "cb_morada",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "endereco",
+   "fieldtype": "Data",
+   "label": "Rua/Avenida"
+  },
+  {
+   "fieldname": "numero_da_casa",
+   "fieldtype": "Data",
+   "label": "Número da Casa"
+  },
+  {
+   "fieldname": "quarteirao",
+   "fieldtype": "Data",
+   "label": "Quarteirão"
+  },
+  {
    "fieldname": "sb_conversao",
    "fieldtype": "Section Break",
    "label": "Conversão em Cliente"
+  },
+  {
+   "depends_on": "eval:doc.prospecto_de_origem",
+   "fieldname": "prospecto_de_origem",
+   "fieldtype": "Link",
+   "label": "Prospecto de Origem",
+   "no_copy": 1,
+   "options": "Prospecto",
+   "read_only": 1
   },
   {
    "default": "0",

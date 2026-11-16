@@ -71,6 +71,28 @@ frappe.ui.form.on("Pedido De Credito", {
 			}, __("Criar"));
 		}
 
+		if (["Em Curso", "Incumprimento"].includes(frm.doc.status)) {
+			const criar = (doctype) => () => {
+				frappe.new_doc(doctype, null, (doc) => {
+					doc.pedido_de_credito = frm.doc.name;
+					doc.cliente = frm.doc.cliente;
+				});
+			};
+			frm.add_custom_button(__("Perdão de Multa"), criar("Perdao De Multa"), __("Criar"));
+			if (!frm.doc.congelado) {
+				frm.add_custom_button(__("Congelamento de Dívida"), criar("Congelamento De Divida"), __("Criar"));
+			}
+			frm.add_custom_button(__("Reestruturação"), criar("Reestruturacao De Credito"), __("Criar"));
+			frm.add_custom_button(__("Substituição de Garantia"), criar("Substituicao De Garantia"), __("Criar"));
+		}
+
+		if (frm.doc.congelado) {
+			frm.dashboard.add_indicator(__("Dívida Congelada"), "blue");
+		}
+		if (frm.doc.reestruturado) {
+			frm.dashboard.add_indicator(__("Reestruturado"), "orange");
+		}
+
 		frm.page.set_inner_btn_group_as_primary(__("Criar"));
 	},
 
@@ -139,6 +161,14 @@ function adicionar_botoes_ver(frm) {
 	if (frm.doc.status) {
 		frm.add_custom_button(__("Reembolsos"), () => {
 			frappe.set_route("List", "Reembolso", { pedido_de_credito: frm.doc.name });
+		}, ver);
+		if (frm.doc.reestruturado) {
+			frm.add_custom_button(__("Reestruturações (planos anteriores)"), () => {
+				frappe.set_route("List", "Reestruturacao De Credito", { pedido_de_credito: frm.doc.name });
+			}, ver);
+		}
+		frm.add_custom_button(__("Substituições de Garantia"), () => {
+			frappe.set_route("List", "Substituicao De Garantia", { pedido_de_credito: frm.doc.name });
 		}, ver);
 	}
 

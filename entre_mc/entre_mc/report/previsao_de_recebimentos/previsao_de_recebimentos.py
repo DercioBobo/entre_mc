@@ -146,6 +146,7 @@ def _previsto_por_pedido(pedidos_por_nome, data_inicio, data_fim, data_ref_encar
 			"multa_paga",
 			"multa_perdoada",
 			"isento_de_multa",
+			"encargos_congelados",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
 			"juros_mora_perdoado",

@@ -114,6 +114,7 @@ def get_data(filters):
 			"multa_paga",
 			"multa_perdoada",
 			"isento_de_multa",
+			"encargos_congelados",
 			"juros_mora_aplicado",
 			"juros_mora_pago",
 			"juros_mora_perdoado",

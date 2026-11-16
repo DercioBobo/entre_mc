@@ -5,6 +5,8 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 
+from entre_mc.entre_mc.doctype.prospecto.prospecto import marcar_como_cliente
+
 
 class Cliente(Document):
 	def validate(self):
@@ -17,6 +19,7 @@ class Cliente(Document):
 				self.proponente_de_origem,
 				{"convertido_em_cliente": 1, "cliente": self.name},
 			)
+			marcar_como_cliente(self.proponente_de_origem, self.name)
 
 
 ATIVOS = ("Em Curso",)

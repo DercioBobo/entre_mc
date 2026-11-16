@@ -212,6 +212,19 @@ def get_situacoes(filters, data_referencia):
 		atual = execucoes.get(e.pedido_de_credito)
 		execucoes[e.pedido_de_credito] = min(atual, e.data) if atual else e.data
 
+	# Dívida congelada até à data de referência: os encargos param nessa data.
+	congelamentos = {}
+	for c in frappe.get_all(
+		"Congelamento De Divida",
+		filters={
+			"docstatus": 1,
+			"data_do_congelamento": ["<=", data_referencia],
+			"pedido_de_credito": ["in", nomes],
+		},
+		fields=["pedido_de_credito", "data_do_congelamento"],
+	):
+		congelamentos[c.pedido_de_credito] = getdate(c.data_do_congelamento)
+
 	situacoes = []
 	for pedido in pedidos:
 		situacao = _reconstruir_pedido(
@@ -223,6 +236,7 @@ def get_situacoes(filters, data_referencia):
 			desembolsos[pedido.name],
 			settings,
 			data_referencia,
+			congelado_desde=congelamentos.get(pedido.name),
 		)
 		if filters.get("estado"):
 			if situacao.estado != filters["estado"]:
@@ -233,7 +247,9 @@ def get_situacoes(filters, data_referencia):
 	return situacoes
 
 
-def _reconstruir_pedido(pedido, linhas, alocacoes, perdoes, data_execucao, desembolso, settings, data_referencia):
+def _reconstruir_pedido(
+	pedido, linhas, alocacoes, perdoes, data_execucao, desembolso, settings, data_referencia, congelado_desde=None
+):
 	tolerancia = flt(settings.dias_de_tolerancia)
 
 	# Pagamentos de capital+juros datados, por prestação - para saber o que
@@ -296,12 +312,18 @@ def _reconstruir_pedido(pedido, linhas, alocacoes, perdoes, data_execucao, desem
 				linha,
 				pedido.taxa_diaria_de_multa,
 				settings,
-				min(data_referencia, isento_desde.get(linha.numero) or data_referencia),
+				min(
+					data_referencia,
+					isento_desde.get(linha.numero) or data_referencia,
+					congelado_desde or data_referencia,
+				),
 				pagamentos=pagamentos_cj.get(linha.numero, []),
 			)
 		if dias_atraso > 0 and flt(pedido.juros_de_mora):
 			inicio_atraso = getdate(add_days(linha.data_limite_pagamento, int(tolerancia) + 1))
-			mora = flt(pedido.juros_de_mora) / 100 * cj_em_atraso_antes(linha, inicio_atraso)
+			# Uma prestação que só entrou em atraso depois do congelamento não paga Mora.
+			if not congelado_desde or inicio_atraso <= congelado_desde:
+				mora = flt(pedido.juros_de_mora) / 100 * cj_em_atraso_antes(linha, inicio_atraso)
 
 		row.multa_aplicada = flt(max(multa, base_multa), 2)
 		row.juros_mora_aplicado = flt(max(mora, base_mora), 2)

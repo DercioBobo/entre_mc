@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-16 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "pedido_de_credito",
+  "cliente",
+  "garantia_atual",
+  "garantia_nova",
+  "cb_1",
+  "data_da_substituicao",
+  "destino_da_garantia_antiga",
+  "anexo",
+  "sb_motivo",
+  "motivo"
+ ],
+ "fields": [
+  {
+   "default": "SUBG-.YY.-.##",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Série",
+   "options": "SUBG-.YY.-.##"
+  },
+  {
+   "fieldname": "pedido_de_credito",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Pedido De Credito",
+   "options": "Pedido De Credito",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "pedido_de_credito.cliente",
+   "fieldname": "cliente",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Cliente",
+   "options": "Cliente",
+   "read_only": 1
+  },
+  {
+   "fieldname": "garantia_atual",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Garantia a Substituir",
+   "options": "Garantia",
+   "reqd": 1
+  },
+  {
+   "fieldname": "garantia_nova",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Nova Garantia",
+   "options": "Garantia",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "data_da_substituicao",
+   "fieldtype": "Date",
+   "label": "Data da Substituição",
+   "reqd": 1
+  },
+  {
+   "default": "Devolvida ao Cliente",
+   "fieldname": "destino_da_garantia_antiga",
+   "fieldtype": "Select",
+   "label": "Destino da Garantia Substituída",
+   "options": "Devolvida ao Cliente\nMantida em Carteira",
+   "reqd": 1
+  },
+  {
+   "fieldname": "anexo",
+   "fieldtype": "Attach",
+   "label": "Anexo"
+  },
+  {
+   "fieldname": "sb_motivo",
+   "fieldtype": "Section Break",
+   "label": "Motivo"
+  },
+  {
+   "fieldname": "motivo",
+   "fieldtype": "Small Text",
+   "label": "Motivo",
+   "reqd": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Substituicao De Garantia",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito"
+  }
+ ],
+ "search_fields": "cliente",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "cliente",
+ "track_changes": 1
+}
