@@ -73,10 +73,11 @@
   },
   {
    "default": "Devolvida ao Cliente",
+   "description": "Preenchido conforme a Posse da garantia a substituir. Só \"Devolvida ao Cliente\" altera o estado da garantia.",
    "fieldname": "destino_da_garantia_antiga",
    "fieldtype": "Select",
    "label": "Destino da Garantia Substituída",
-   "options": "Devolvida ao Cliente\nMantida em Carteira",
+   "options": "Devolvida ao Cliente\nNão foi tomada (ficou com o Cliente)\nMantida em Carteira",
    "reqd": 1
   },
   {

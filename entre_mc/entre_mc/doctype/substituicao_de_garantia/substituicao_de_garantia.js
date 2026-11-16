@@ -30,6 +30,19 @@ frappe.ui.form.on("Substituicao De Garantia", {
 		}
 	},
 
+	// O destino segue a Posse da garantia: uma garantia só listada (nunca
+	// tomada pela empresa) não tem nada a devolver.
+	garantia_atual(frm) {
+		if (!frm.doc.garantia_atual) return;
+		frappe.db.get_value("Garantia", frm.doc.garantia_atual, "posse").then((r) => {
+			const posse = r.message && r.message.posse;
+			frm.set_value(
+				"destino_da_garantia_antiga",
+				posse === "Cliente" ? "Não foi tomada (ficou com o Cliente)" : "Devolvida ao Cliente"
+			);
+		});
+	},
+
 	pedido_de_credito(frm) {
 		frm.set_value("garantia_atual", null);
 		frm.set_value("garantia_nova", null);

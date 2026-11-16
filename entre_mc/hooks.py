@@ -20,6 +20,8 @@ app_color = "#2c7a4b"
 # Pedido De Credito approval workflow out of the box. All are safely
 # editable afterwards from the UI (Role / Workflow / Workflow State lists).
 
+after_install = "entre_mc.patches.origens_de_prospecto.execute"
+
 fixtures = [
 	{
 		"dt": "Role",

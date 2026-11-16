@@ -5,8 +5,10 @@
 mesmo cliente, com o crédito ainda em curso.
 
 Ao submeter, a Garantia a Substituir é trocada pela Nova Garantia no campo
-Garantias do Pedido; a antiga fica "Devolvida" (ou continua em carteira,
-conforme o Destino escolhido). Estes documentos são o histórico das garantias
+Garantias do Pedido. O Destino da garantia antiga depende da sua Posse: se
+estava com a Empresa, é "Devolvida ao Cliente" (fica "Devolvida") ou
+"Mantida em Carteira"; se só foi listada e nunca foi tomada (Posse =
+Cliente), não há nada a devolver - sai do Pedido e continua "Disponível". Estes documentos são o histórico das garantias
 que o processo já teve. Cancelar repõe a garantia original.
 """
 
@@ -16,6 +18,7 @@ from frappe.model.document import Document
 
 ESTADOS_ATIVOS = ("Em Curso", "Incumprimento")
 DEVOLVIDA = "Devolvida ao Cliente"
+NAO_TOMADA = "Não foi tomada (ficou com o Cliente)"
 
 
 class SubstituicaoDeGarantia(Document):
@@ -40,6 +43,20 @@ class SubstituicaoDeGarantia(Document):
 		if self.garantia_nova in garantias_do_pedido:
 			frappe.throw(
 				_("A Garantia {0} já está associada ao Pedido De Credito {1}.").format(self.garantia_nova, pedido.name)
+			)
+
+		posse = frappe.db.get_value("Garantia", self.garantia_atual, "posse")
+		if self.destino_da_garantia_antiga == DEVOLVIDA and posse == "Cliente":
+			frappe.throw(
+				_(
+					'A Garantia {0} está na posse do Cliente - não há nada a devolver. Escolha o destino "{1}".'
+				).format(self.garantia_atual, NAO_TOMADA)
+			)
+		if self.destino_da_garantia_antiga == NAO_TOMADA and posse == "Empresa":
+			frappe.throw(
+				_(
+					"A Garantia {0} está na posse da Empresa. Escolha se é devolvida ao Cliente ou mantida em carteira."
+				).format(self.garantia_atual)
 			)
 
 		nova = frappe.db.get_value("Garantia", self.garantia_nova, ["cliente", "status"], as_dict=True)

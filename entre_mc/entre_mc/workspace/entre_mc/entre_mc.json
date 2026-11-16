@@ -234,6 +234,18 @@
   },
   {
    "type": "Link",
+   "label": "Origem de Prospecto",
+   "link_type": "DocType",
+   "link_to": "Origem De Prospecto",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 20,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
    "label": "MC Settings",
    "link_type": "DocType",
    "link_to": "MC Settings",
@@ -241,7 +253,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 20,
+   "idx": 21,
    "doctype": "Workspace Link"
   },
   {
@@ -251,7 +263,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 21,
+   "idx": 22,
    "doctype": "Workspace Link"
   },
   {
@@ -263,7 +275,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 22,
+   "idx": 23,
    "doctype": "Workspace Link"
   },
   {
@@ -275,7 +287,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 23,
+   "idx": 24,
    "doctype": "Workspace Link"
   },
   {
@@ -287,7 +299,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 24,
+   "idx": 25,
    "doctype": "Workspace Link"
   },
   {
@@ -299,7 +311,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 25,
+   "idx": 26,
    "doctype": "Workspace Link"
   },
   {
@@ -311,7 +323,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 26,
+   "idx": 27,
    "doctype": "Workspace Link"
   },
   {
@@ -323,7 +335,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 27,
+   "idx": 28,
    "doctype": "Workspace Link"
   },
   {
@@ -335,7 +347,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 28,
+   "idx": 29,
    "doctype": "Workspace Link"
   },
   {
@@ -347,7 +359,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 29,
+   "idx": 30,
    "doctype": "Workspace Link"
   },
   {
@@ -359,7 +371,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 30,
+   "idx": 31,
    "doctype": "Workspace Link"
   },
   {
@@ -371,7 +383,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 31,
+   "idx": 32,
    "doctype": "Workspace Link"
   },
   {
@@ -383,7 +395,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 32,
+   "idx": 33,
    "doctype": "Workspace Link"
   },
   {
@@ -395,7 +407,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 33,
+   "idx": 34,
    "doctype": "Workspace Link"
   },
   {
@@ -407,7 +419,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 34,
+   "idx": 35,
    "doctype": "Workspace Link"
   },
   {
@@ -419,7 +431,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 35,
+   "idx": 36,
    "doctype": "Workspace Link"
   },
   {
@@ -431,7 +443,7 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 36,
+   "idx": 37,
    "doctype": "Workspace Link"
   },
   {
@@ -443,7 +455,19 @@
    "hidden": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 37,
+   "idx": 38,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
+   "label": "Reporte ao Banco de Moçambique",
+   "link_type": "Report",
+   "link_to": "Reporte ao Banco de Mocambique",
+   "is_query_report": 1,
+   "hidden": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 39,
    "doctype": "Workspace Link"
   },
   {
@@ -453,7 +477,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 38,
+   "idx": 40,
    "doctype": "Workspace Link"
   },
   {
@@ -465,7 +489,7 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 39,
+   "idx": 41,
    "doctype": "Workspace Link"
   },
   {
@@ -477,11 +501,11 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 40,
+   "idx": 42,
    "doctype": "Workspace Link"
   }
  ],
- "modified": "2026-11-16 12:00:00.000000",
+ "modified": "2026-11-17 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Entre MC",

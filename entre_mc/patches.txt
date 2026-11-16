@@ -4,3 +4,6 @@
 entre_mc.patches.rename_status_em_curso
 entre_mc.patches.realinhar_vencimentos_mensais
 entre_mc.patches.corrigir_multa_negativa
+
+[post_model_sync]
+entre_mc.patches.origens_de_prospecto

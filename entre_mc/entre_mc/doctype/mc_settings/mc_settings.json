@@ -15,7 +15,20 @@
   "tipo_de_taxa_administrativa",
   "taxa_administrativa_percentual",
   "cb_taxa_administrativa",
-  "taxa_administrativa_valor"
+  "taxa_administrativa_valor",
+  "sb_banco_de_mocambique",
+  "bm_denominacao",
+  "bm_endereco",
+  "bm_provincia",
+  "bm_distrito",
+  "bm_telefone",
+  "cb_banco_de_mocambique",
+  "bm_fax",
+  "bm_email",
+  "bm_numero_de_trabalhadores",
+  "bm_data_de_inicio_das_actividades",
+  "bm_responsavel",
+  "bm_instituicao_representada"
  ],
  "fields": [
   {
@@ -102,6 +115,73 @@
    "fieldtype": "Currency",
    "label": "Taxa Administrativa (Valor Fixo)",
    "mandatory_depends_on": "eval:doc.tipo_de_taxa_administrativa == \"Valor Fixo\""
+  },
+  {
+   "description": "Identificação da instituição no cabeçalho do reporte mensal.",
+   "fieldname": "sb_banco_de_mocambique",
+   "fieldtype": "Section Break",
+   "label": "Reporte ao Banco de Moçambique"
+  },
+  {
+   "description": "Em branco = nome da Empresa.",
+   "fieldname": "bm_denominacao",
+   "fieldtype": "Data",
+   "label": "Denominação"
+  },
+  {
+   "fieldname": "bm_endereco",
+   "fieldtype": "Data",
+   "label": "Endereço"
+  },
+  {
+   "fieldname": "bm_provincia",
+   "fieldtype": "Data",
+   "label": "Província"
+  },
+  {
+   "fieldname": "bm_distrito",
+   "fieldtype": "Data",
+   "label": "Distrito"
+  },
+  {
+   "fieldname": "bm_telefone",
+   "fieldtype": "Data",
+   "label": "Telefone"
+  },
+  {
+   "fieldname": "cb_banco_de_mocambique",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bm_fax",
+   "fieldtype": "Data",
+   "label": "Fax"
+  },
+  {
+   "fieldname": "bm_email",
+   "fieldtype": "Data",
+   "label": "E-mail"
+  },
+  {
+   "fieldname": "bm_numero_de_trabalhadores",
+   "fieldtype": "Int",
+   "label": "Nº de Trabalhadores"
+  },
+  {
+   "fieldname": "bm_data_de_inicio_das_actividades",
+   "fieldtype": "Date",
+   "label": "Data de Início das Actividades"
+  },
+  {
+   "fieldname": "bm_responsavel",
+   "fieldtype": "Data",
+   "label": "Responsável pela Gestão da Instituição"
+  },
+  {
+   "default": "Operador de Microcrédito",
+   "fieldname": "bm_instituicao_representada",
+   "fieldtype": "Data",
+   "label": "Instituição Representada"
   }
  ],
  "issingle": 1,

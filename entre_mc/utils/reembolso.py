@@ -36,7 +36,11 @@ encargo único, uma vez perdoado não volta a ser reaplicado).
 Congelamento De Divida marca todas as linhas de um Pedido com
 `encargos_congelados`: `atualizar_encargos_da_linha` deixa de lhes mexer, por
 isso nem a tarefa diária, nem um Reembolso, nem os relatórios voltam a
-acrescentar Multa ou Juros de Mora a esse crédito.
+acrescentar Multa ou Juros de Mora a esse crédito. Depois de descongelada, a
+Multa volta a contar a partir da data do descongelamento, mas os dias em que
+esteve congelada nunca são cobrados (ver `_intervalos_com_multa`). Uma
+prestação que entrou em atraso durante o congelamento só recebe o Juros de
+Mora quando a dívida é descongelada.
 
 Um Reembolso pode ser submetido com `data_de_pagamento` retroativa (o cliente
 pagou num dia, mas só foi lançado no sistema mais tarde). Nesse caso, a data
@@ -248,7 +252,9 @@ def atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settin
 		row.juros_mora_aplicado = flt(flt(juros_de_mora) / 100 * prestacao_em_atraso, precision)
 
 
-def calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, ate, desde=None, pagamentos=None, precision=2):
+def calcular_multa_acumulada(
+	row, taxa_diaria_de_multa, settings, ate, desde=None, pagamentos=None, precision=2, periodos_congelados=None
+):
 	"""Devolve `(dias, valor)`: a Multa acumulada por `row` nos dias de atraso até
 	`ate` (inclusive) - só a partir de `desde`, se indicado.
 
@@ -263,6 +269,11 @@ def calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, ate, desde=Non
 
 	`pagamentos`: [(data, valor), ...] de capital+juros desta prestação; por
 	omissão lidos dos Reembolsos submetidos (ver `pagamentos_de_capital_e_juros`).
+
+	`periodos_congelados`: [(congelado_em, descongelado_em ou None), ...] - os
+	dias em que a dívida esteve congelada não geram Multa (ver
+	`periodos_congelados_do_pedido`, de onde são lidos por omissão). `dias` só
+	conta os dias que geraram Multa.
 	"""
 	inicio = getdate(add_days(row.data_limite_pagamento, int(flt(settings.dias_de_tolerancia)) + 1))
 	if desde:
@@ -275,7 +286,23 @@ def calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, ate, desde=Non
 		pagamentos = pagamentos_de_capital_e_juros(row)
 	pagamentos = sorted((getdate(d), flt(v)) for d, v in pagamentos)
 
-	em_falta = flt(row.capital_mensal) + flt(row.juros_mensais) - sum(v for d, v in pagamentos if d < inicio)
+	if periodos_congelados is None:
+		periodos_congelados = periodos_congelados_do_pedido(row.get("parent"))
+
+	total = flt(row.capital_mensal) + flt(row.juros_mensais)
+	dias = 0
+	base = 0
+	for de, ate_ao_dia in _intervalos_com_multa(inicio, fim, periodos_congelados):
+		dias += date_diff(ate_ao_dia, de) + 1
+		base += _base_da_multa(total, pagamentos, de, ate_ao_dia)
+
+	return dias, flt(flt(taxa_diaria_de_multa) / 100 * base, precision)
+
+
+def _base_da_multa(total, pagamentos, inicio, fim):
+	"""Soma, para cada dia de `inicio` a `fim`, do capital+juros da prestação
+	ainda por pagar no início desse dia. `pagamentos` ordenados por data."""
+	em_falta = total - sum(v for d, v in pagamentos if d < inicio)
 	base = 0
 	dia = inicio
 	for data_pagamento, valor in pagamentos:
@@ -291,8 +318,56 @@ def calcular_multa_acumulada(row, taxa_diaria_de_multa, settings, ate, desde=Non
 	dias_restantes = date_diff(fim, dia) + 1
 	if dias_restantes > 0:
 		base += max(em_falta, 0) * dias_restantes
+	return base
 
-	return date_diff(fim, inicio) + 1, flt(flt(taxa_diaria_de_multa) / 100 * base, precision)
+
+def _intervalos_com_multa(inicio, fim, periodos_congelados):
+	"""Parte [`inicio`, `fim`] nos intervalos de dias que geram Multa, tirando os
+	dias congelados de cada período: do dia seguinte ao congelamento até à
+	véspera do descongelamento (o dia do congelamento ainda conta, e o do
+	descongelamento já volta a contar). Sem data de descongelamento, o período
+	continua em aberto."""
+	intervalos = [(inicio, fim)]
+	for congelado_em, descongelado_em in periodos_congelados or []:
+		primeiro = getdate(add_days(congelado_em, 1))
+		ultimo = getdate(add_days(descongelado_em, -1)) if descongelado_em else None
+		if ultimo is not None and ultimo < primeiro:
+			continue
+		restantes = []
+		for de, ate in intervalos:
+			if primeiro > ate or (ultimo is not None and ultimo < de):
+				restantes.append((de, ate))
+				continue
+			if de < primeiro:
+				restantes.append((de, getdate(add_days(primeiro, -1))))
+			if ultimo is not None and ultimo < ate:
+				restantes.append((getdate(add_days(ultimo, 1)), ate))
+		intervalos = restantes
+	return intervalos
+
+
+def periodos_congelados_do_pedido(pedido_de_credito):
+	"""[(congelado_em, descongelado_em ou None), ...] dos Congelamento De Divida
+	submetidos de um Pedido De Credito. Guardado em cache durante o pedido
+	HTTP/tarefa (é consultado uma vez por prestação) - quem altera um
+	Congelamento tem de chamar `limpar_cache_de_periodos_congelados`."""
+	if not pedido_de_credito:
+		return []
+	cache = frappe.flags.setdefault("entre_mc_periodos_congelados", {})
+	if pedido_de_credito not in cache:
+		cache[pedido_de_credito] = [
+			(getdate(c.data_do_congelamento), getdate(c.data_do_descongelamento) if c.data_do_descongelamento else None)
+			for c in frappe.get_all(
+				"Congelamento De Divida",
+				filters={"pedido_de_credito": pedido_de_credito, "docstatus": 1},
+				fields=["data_do_congelamento", "data_do_descongelamento"],
+			)
+		]
+	return cache[pedido_de_credito]
+
+
+def limpar_cache_de_periodos_congelados():
+	frappe.flags.pop("entre_mc_periodos_congelados", None)
 
 
 def pagamentos_de_capital_e_juros(row):

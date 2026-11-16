@@ -93,9 +93,10 @@
   {
    "default": "Terreno",
    "fieldname": "origem",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Origem",
-   "options": "Terreno\nIndicação\nBalcão\nOutro"
+   "options": "Origem De Prospecto"
   },
   {
    "fieldname": "produto",

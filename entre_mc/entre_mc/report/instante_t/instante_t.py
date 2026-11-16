@@ -212,7 +212,9 @@ def get_situacoes(filters, data_referencia):
 		atual = execucoes.get(e.pedido_de_credito)
 		execucoes[e.pedido_de_credito] = min(atual, e.data) if atual else e.data
 
-	# Dívida congelada até à data de referência: os encargos param nessa data.
+	# Períodos em que a dívida esteve congelada até à data de referência: esses
+	# dias não geram encargos. Um descongelamento posterior à data de referência
+	# ainda não tinha acontecido - o período conta como em aberto.
 	congelamentos = {}
 	for c in frappe.get_all(
 		"Congelamento De Divida",
@@ -221,9 +223,14 @@ def get_situacoes(filters, data_referencia):
 			"data_do_congelamento": ["<=", data_referencia],
 			"pedido_de_credito": ["in", nomes],
 		},
-		fields=["pedido_de_credito", "data_do_congelamento"],
+		fields=["pedido_de_credito", "data_do_congelamento", "data_do_descongelamento"],
 	):
-		congelamentos[c.pedido_de_credito] = getdate(c.data_do_congelamento)
+		fim_do_periodo = getdate(c.data_do_descongelamento) if c.data_do_descongelamento else None
+		if fim_do_periodo and fim_do_periodo > data_referencia:
+			fim_do_periodo = None
+		congelamentos.setdefault(c.pedido_de_credito, []).append(
+			(getdate(c.data_do_congelamento), fim_do_periodo)
+		)
 
 	situacoes = []
 	for pedido in pedidos:
@@ -236,7 +243,7 @@ def get_situacoes(filters, data_referencia):
 			desembolsos[pedido.name],
 			settings,
 			data_referencia,
-			congelado_desde=congelamentos.get(pedido.name),
+			periodos_congelados=congelamentos.get(pedido.name, []),
 		)
 		if filters.get("estado"):
 			if situacao.estado != filters["estado"]:
@@ -248,7 +255,7 @@ def get_situacoes(filters, data_referencia):
 
 
 def _reconstruir_pedido(
-	pedido, linhas, alocacoes, perdoes, data_execucao, desembolso, settings, data_referencia, congelado_desde=None
+	pedido, linhas, alocacoes, perdoes, data_execucao, desembolso, settings, data_referencia, periodos_congelados=()
 ):
 	tolerancia = flt(settings.dias_de_tolerancia)
 
@@ -312,18 +319,26 @@ def _reconstruir_pedido(
 				linha,
 				pedido.taxa_diaria_de_multa,
 				settings,
-				min(
-					data_referencia,
-					isento_desde.get(linha.numero) or data_referencia,
-					congelado_desde or data_referencia,
-				),
+				min(data_referencia, isento_desde.get(linha.numero) or data_referencia),
 				pagamentos=pagamentos_cj.get(linha.numero, []),
+				periodos_congelados=list(periodos_congelados),
 			)
 		if dias_atraso > 0 and flt(pedido.juros_de_mora):
 			inicio_atraso = getdate(add_days(linha.data_limite_pagamento, int(tolerancia) + 1))
-			# Uma prestação que só entrou em atraso depois do congelamento não paga Mora.
-			if not congelado_desde or inicio_atraso <= congelado_desde:
+			# Uma prestação que entrou em atraso com a dívida congelada só recebe a
+			# Mora quando (e se) a dívida for descongelada.
+			congelado = next(
+				(
+					(de, ate)
+					for de, ate in periodos_congelados
+					if de < inicio_atraso and (ate is None or inicio_atraso < ate)
+				),
+				None,
+			)
+			if not congelado:
 				mora = flt(pedido.juros_de_mora) / 100 * cj_em_atraso_antes(linha, inicio_atraso)
+			elif congelado[1]:
+				mora = flt(pedido.juros_de_mora) / 100 * cj_em_atraso_antes(linha, congelado[1])
 
 		row.multa_aplicada = flt(max(multa, base_multa), 2)
 		row.juros_mora_aplicado = flt(max(mora, base_mora), 2)

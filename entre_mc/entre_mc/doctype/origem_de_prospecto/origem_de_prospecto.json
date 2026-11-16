@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:origem",
+ "creation": "2026-11-17 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "origem"
+ ],
+ "fields": [
+  {
+   "fieldname": "origem",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Origem",
+   "reqd": 1,
+   "unique": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Entre MC",
+ "name": "Origem De Prospecto",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Gestor de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Oficial de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Analista de Crédito",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Promotor",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Tesoureiro",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

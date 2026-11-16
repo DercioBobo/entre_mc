@@ -14,6 +14,7 @@
   "nuit",
   "estado_civil",
   "genero",
+  "pessoa_politicamente_exposta",
   "proponente_de_origem",
   "sb_localizacao",
   "provincia",
@@ -95,6 +96,12 @@
    "fieldtype": "Select",
    "label": "Género",
    "options": "Masculino\nFeminino"
+  },
+  {
+   "default": "0",
+   "fieldname": "pessoa_politicamente_exposta",
+   "fieldtype": "Check",
+   "label": "Pessoa Politicamente Exposta (PPE)"
   },
   {
    "fieldname": "proponente_de_origem",

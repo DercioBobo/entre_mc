@@ -21,7 +21,12 @@
   "mora_congelada",
   "cb_valores_2",
   "valor_congelado",
-  "divida_congelada"
+  "divida_congelada",
+  "sb_descongelamento",
+  "estado",
+  "data_do_descongelamento",
+  "cb_descongelamento",
+  "motivo_do_descongelamento"
  ],
  "fields": [
   {
@@ -128,6 +133,43 @@
    "fieldname": "divida_congelada",
    "fieldtype": "Currency",
    "label": "Do qual em atraso (Dívida)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_descongelamento",
+   "fieldtype": "Section Break",
+   "label": "Descongelamento"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Ativo",
+   "fieldname": "estado",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Estado",
+   "no_copy": 1,
+   "options": "Ativo\nTerminado",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "data_do_descongelamento",
+   "fieldtype": "Date",
+   "label": "Data do Descongelamento",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_descongelamento",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "motivo_do_descongelamento",
+   "fieldtype": "Small Text",
+   "label": "Motivo do Descongelamento",
+   "no_copy": 1,
    "read_only": 1
   }
  ],
