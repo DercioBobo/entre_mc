@@ -25,8 +25,14 @@ class PedidoDeCredito(Document):
 		self.validar_garantias_do_mesmo_cliente()
 		self.validar_garantias_obrigatorias()
 
-		check_limites(self.produto, self.capital_solicitado, self.prazo)
-		self.calcular_taxa_administrativa()
+		if not self.status:
+			# Só enquanto é um pedido (ainda não desembolsado). Depois disso este
+			# documento é o crédito em si e é regravado todos os dias pela tarefa
+			# `atualizar_atrasos` e por cada Reembolso: alterar os limites do
+			# Produto não pode fazer essas gravações falhar, nem alterar a Taxa
+			# Administrativa em MC Settings pode reescrever a taxa já cobrada.
+			check_limites(self.produto, self.capital_solicitado, self.prazo)
+			self.calcular_taxa_administrativa()
 
 		if self.workflow_state == APROVADO and not self.plano_de_amortizacao:
 			# Estimativa: gerada logo após aprovação, anteriormente ao desembolso real.
