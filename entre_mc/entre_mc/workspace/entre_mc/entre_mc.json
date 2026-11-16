@@ -494,6 +494,18 @@
   },
   {
    "type": "Link",
+   "label": "Ficha do Crédito",
+   "link_type": "Page",
+   "link_to": "ficha-do-credito",
+   "hidden": 0,
+   "is_query_report": 0,
+   "onboard": 0,
+   "link_count": 0,
+   "idx": 42,
+   "doctype": "Workspace Link"
+  },
+  {
+   "type": "Link",
    "label": "Simulador de Crédito",
    "link_type": "Page",
    "link_to": "simulador-de-credito",
@@ -501,11 +513,11 @@
    "is_query_report": 0,
    "onboard": 0,
    "link_count": 0,
-   "idx": 42,
+   "idx": 43,
    "doctype": "Workspace Link"
   }
  ],
- "modified": "2026-11-17 12:00:00.000000",
+ "modified": "2026-11-17 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Entre MC",

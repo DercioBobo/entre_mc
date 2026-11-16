@@ -13,10 +13,15 @@ frappe.ui.form.on("Substituicao De Garantia", {
 			filters: { pedido_de_credito: frm.doc.pedido_de_credito },
 		}));
 
-		// Só garantias disponíveis do mesmo cliente.
+		// Só garantias disponíveis do mesmo cliente que ainda não estão neste
+		// Pedido - nunca a própria garantia a substituir.
 		frm.set_query("garantia_nova", () => ({
-			query: "entre_mc.entre_mc.doctype.pedido_de_credito.pedido_de_credito.garantias_do_cliente",
-			filters: { cliente: frm.doc.cliente },
+			query: "entre_mc.entre_mc.doctype.substituicao_de_garantia.substituicao_de_garantia.garantias_para_substituicao",
+			filters: {
+				cliente: frm.doc.cliente,
+				pedido_de_credito: frm.doc.pedido_de_credito,
+				garantia_atual: frm.doc.garantia_atual,
+			},
 		}));
 	},
 
@@ -34,6 +39,9 @@ frappe.ui.form.on("Substituicao De Garantia", {
 	// tomada pela empresa) não tem nada a devolver.
 	garantia_atual(frm) {
 		if (!frm.doc.garantia_atual) return;
+		if (frm.doc.garantia_nova === frm.doc.garantia_atual) {
+			frm.set_value("garantia_nova", null);
+		}
 		frappe.db.get_value("Garantia", frm.doc.garantia_atual, "posse").then((r) => {
 			const posse = r.message && r.message.posse;
 			frm.set_value(
@@ -41,6 +49,13 @@ frappe.ui.form.on("Substituicao De Garantia", {
 				posse === "Cliente" ? "Não foi tomada (ficou com o Cliente)" : "Devolvida ao Cliente"
 			);
 		});
+	},
+
+	garantia_nova(frm) {
+		if (frm.doc.garantia_nova && frm.doc.garantia_nova === frm.doc.garantia_atual) {
+			frm.set_value("garantia_nova", null);
+			frappe.msgprint(__("A Nova Garantia tem de ser diferente da Garantia a Substituir."));
+		}
 	},
 
 	pedido_de_credito(frm) {

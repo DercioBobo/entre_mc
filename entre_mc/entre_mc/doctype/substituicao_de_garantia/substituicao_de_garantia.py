@@ -88,3 +88,35 @@ class SubstituicaoDeGarantia(Document):
 			)
 		linha.garantia = para
 		pedido.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def garantias_para_substituicao(doctype, txt, searchfield, start, page_len, filters):
+	"""Query do Link "Nova Garantia": garantias disponíveis do mesmo Cliente que
+	ainda não estão associadas a este Pedido De Credito - nunca a própria
+	garantia que está a ser substituída."""
+	frappe.has_permission("Garantia", "read", throw=True)
+
+	filters = filters or {}
+	cliente = filters.get("cliente")
+	if not cliente:
+		return []
+
+	excluir = set()
+	if filters.get("pedido_de_credito"):
+		excluir.update(
+			frappe.get_all("Pedido Garantia", filters={"parent": filters["pedido_de_credito"]}, pluck="garantia")
+		)
+	if filters.get("garantia_atual"):
+		excluir.add(filters["garantia_atual"])
+
+	condicoes = [
+		["cliente", "=", cliente],
+		["status", "=", "Disponível"],
+		["name", "like", f"%{txt}%"],
+	]
+	if excluir:
+		condicoes.append(["name", "not in", list(excluir)])
+	return frappe.get_all(
+		"Garantia", filters=condicoes, limit_start=start, limit_page_length=page_len, as_list=True
+	)

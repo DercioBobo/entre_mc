@@ -159,6 +159,9 @@ function adicionar_botoes_ver(frm) {
 	}
 
 	if (frm.doc.status) {
+		frm.add_custom_button(__("Ficha do Crédito"), () => {
+			frappe.set_route("ficha-do-credito", frm.doc.name);
+		}, ver);
 		frm.add_custom_button(__("Reembolsos"), () => {
 			frappe.set_route("List", "Reembolso", { pedido_de_credito: frm.doc.name });
 		}, ver);

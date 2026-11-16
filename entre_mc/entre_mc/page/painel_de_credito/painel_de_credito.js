@@ -13,10 +13,38 @@ frappe.pages["painel-de-credito"].on_page_load = function (wrapper) {
 
 const CURRENCY = "MZN";
 
+// Separadores da lista de créditos: [chave, rótulo, filtro sobre o crédito].
+const SEPARADORES = [
+	["todos", "Todos", () => true],
+	["em_dia", "Em dia", (c) => c.situacao === "Em dia"],
+	["em_atraso", "Em atraso", (c) => c.situacao === "Em atraso"],
+	["incumprimento", "Incumprimento", (c) => c.situacao === "Incumprimento"],
+	["congelados", "Congelados", (c) => c.congelado],
+	["reestruturados", "Reestruturados", (c) => c.reestruturado],
+	["liquidados", "Liquidados", (c) => c.situacao === "Liquidado"],
+];
+
+const COLUNAS = [
+	["cliente", "Cliente", "texto"],
+	["name", "Pedido", "texto"],
+	["situacao", "Situação", "texto"],
+	["data_de_desembolso", "Desembolso", "data"],
+	["capital_solicitado", "Crédito", "moeda"],
+	["saldo_do_credito", "Falta pagar", "moeda"],
+	["divida", "Em atraso", "moeda"],
+	["multa_e_mora", "Multa + Mora", "moeda"],
+	["dias_atraso", "Dias", "numero"],
+	["proximo_vencimento", "Próx. vencimento", "data"],
+];
+
 class EntreMcPainel {
 	constructor(page) {
 		this.page = page;
 		this.controls = {};
+		this.creditos = [];
+		this.separador = "todos";
+		this.pesquisa = "";
+		this.ordem = { campo: "dias_atraso", desc: true };
 		this.render_shell();
 		this.make_filtros();
 		this.carregar();
@@ -33,54 +61,63 @@ class EntreMcPainel {
 
 				<section class="emc-resumo-cards" id="emc-painel-cards"></section>
 
-				<div class="emc-painel-tabelas">
-					<section>
-						<h4>${__("Carteira em Risco")}</h4>
-						<div class="emc-resumo-table-wrap">
-							<table class="emc-resumo-table">
-								<thead>
-									<tr>
-										<th>${__("Pedido")}</th>
-										<th>${__("Cliente")}</th>
-										<th class="emc-num">${__("Saldo do Crédito")}</th>
-										<th class="emc-num">${__("Dívida")}</th>
-										<th class="emc-num">${__("Em Risco")}</th>
-									</tr>
-								</thead>
-								<tbody id="emc-painel-risco-rows"></tbody>
-							</table>
-						</div>
-					</section>
-
-					<section>
-						<h4>${__("Créditos em Atraso")}</h4>
-						<div class="emc-resumo-table-wrap">
-							<table class="emc-resumo-table">
-								<thead>
-									<tr>
-										<th>${__("Pedido")}</th>
-										<th>${__("Cliente")}</th>
-										<th>${__("Nº")}</th>
-										<th>${__("Data Limite")}</th>
-										<th class="emc-num">${__("Dias de Atraso")}</th>
-										<th class="emc-num">${__("Total em Atraso")}</th>
-									</tr>
-								</thead>
-								<tbody id="emc-painel-atraso-rows"></tbody>
-							</table>
-						</div>
-					</section>
-				</div>
+				<section class="emc-painel-lista">
+					<div class="emc-painel-lista-topo">
+						<h4>${__("Créditos")}</h4>
+						<input type="text" class="form-control input-sm emc-painel-pesquisa"
+							placeholder="${__("Procurar cliente, pedido, produto ou promotor…")}">
+					</div>
+					<div class="emc-painel-separadores" id="emc-painel-separadores"></div>
+					<div class="emc-resumo-table-wrap">
+						<table class="emc-resumo-table emc-painel-creditos">
+							<thead><tr id="emc-painel-cabecalho"></tr></thead>
+							<tbody id="emc-painel-creditos-rows"></tbody>
+							<tfoot id="emc-painel-creditos-total"></tfoot>
+						</table>
+					</div>
+					<p class="emc-painel-nota">${__("Clique num crédito para abrir a sua ficha.")}</p>
+				</section>
 			</div>
 		`);
 
 		this.$filtros = this.page.main.find("#emc-painel-filtros");
 		this.$cards = this.page.main.find("#emc-painel-cards");
-		this.$riscoRows = this.page.main.find("#emc-painel-risco-rows");
-		this.$atrasoRows = this.page.main.find("#emc-painel-atraso-rows");
+		this.$separadores = this.page.main.find("#emc-painel-separadores");
+		this.$cabecalho = this.page.main.find("#emc-painel-cabecalho");
+		this.$rows = this.page.main.find("#emc-painel-creditos-rows");
+		this.$total = this.page.main.find("#emc-painel-creditos-total");
 
 		this.$filtros.find(".emc-painel-limpar").on("click", () => {
 			Object.values(this.controls).forEach((control) => control.set_value(""));
+		});
+
+		this.page.main.find(".emc-painel-pesquisa").on("input", (e) => {
+			this.pesquisa = (e.currentTarget.value || "").trim().toLowerCase();
+			this.render_creditos();
+		});
+
+		this.$separadores.on("click", "[data-separador]", (e) => {
+			this.separador = $(e.currentTarget).data("separador");
+			// Os liquidados só são pedidos ao servidor quando alguém os quer ver.
+			if (this.separador === "liquidados" && !this.com_liquidados) {
+				this.com_liquidados = true;
+				this.carregar();
+				return;
+			}
+			this.render_separadores();
+			this.render_creditos();
+		});
+
+		this.$cabecalho.on("click", "[data-campo]", (e) => {
+			const campo = $(e.currentTarget).data("campo");
+			this.ordem = { campo, desc: this.ordem.campo === campo ? !this.ordem.desc : true };
+			this.render_cabecalho();
+			this.render_creditos();
+		});
+
+		this.$rows.on("click", "tr[data-pedido]", (e) => {
+			if ($(e.target).closest("a").length) return;
+			frappe.set_route("ficha-do-credito", $(e.currentTarget).data("pedido"));
 		});
 	}
 
@@ -123,6 +160,7 @@ class EntreMcPainel {
 			const value = control.get_value();
 			if (value) valores[fieldname] = value;
 		});
+		if (this.com_liquidados) valores.incluir_liquidados = 1;
 		return valores;
 	}
 
@@ -135,9 +173,11 @@ class EntreMcPainel {
 	}
 
 	render(data) {
+		this.creditos = data.creditos || [];
 		this.render_cards(data.cards);
-		this.render_tabela_risco(data.carteira_em_risco);
-		this.render_tabela_atraso(data.creditos_em_atraso);
+		this.render_separadores();
+		this.render_cabecalho();
+		this.render_creditos();
 	}
 
 	render_cards(cards) {
@@ -160,10 +200,16 @@ class EntreMcPainel {
 			},
 			{ label: __("Créditos Ativos"), value: cint(cards.num_ativos) },
 			{
+				label: __("Com Atraso"),
+				value: cint(cards.num_em_atraso),
+				warn: cint(cards.num_em_atraso) > 0,
+			},
+			{
 				label: __("Incumprimentos"),
 				value: cint(cards.num_incumprimento),
 				warn: cint(cards.num_incumprimento) > 0,
 			},
+			{ label: __("Congelados"), value: cint(cards.num_congelados) },
 			{ label: __("Desembolsado no Período"), value: format_currency(cards.desembolsado_periodo, CURRENCY) },
 			{ label: __("Taxas Cobradas no Período"), value: format_currency(cards.taxas_periodo, CURRENCY) },
 		];
@@ -181,51 +227,115 @@ class EntreMcPainel {
 		);
 	}
 
-	render_tabela_risco(rows) {
-		if (!rows || !rows.length) {
-			this.$riscoRows.html(
-				`<tr><td colspan="5" class="text-muted">${__("Sem créditos em risco para os filtros selecionados.")}</td></tr>`
-			);
-			return;
-		}
-		this.$riscoRows.html(
-			rows
-				.map(
-					(r) => `
-					<tr>
-						<td><a href="/app/pedido-de-credito/${encodeURIComponent(r.name)}">${frappe.utils.escape_html(r.name)}</a></td>
-						<td>${frappe.utils.escape_html(r.cliente || "")}</td>
-						<td class="emc-num">${format_currency(r.saldo_do_credito, CURRENCY)}</td>
-						<td class="emc-num">${format_currency(r.divida, CURRENCY)}</td>
-						<td class="emc-num">${format_currency(r.em_risco, CURRENCY)}</td>
-					</tr>`
-				)
-				.join("")
+	render_separadores() {
+		this.$separadores.html(
+			SEPARADORES.map(([chave, rotulo, filtro]) => {
+				// Antes de serem pedidos ao servidor, não se sabe quantos liquidados há.
+				const total =
+					chave === "liquidados" && !this.com_liquidados ? "" : ` <span>${this.creditos.filter(filtro).length}</span>`;
+				return `<button class="emc-painel-separador${chave === this.separador ? " is-ativo" : ""}"
+					data-separador="${chave}">${__(rotulo)}${total}</button>`;
+			}).join("")
 		);
 	}
 
-	render_tabela_atraso(rows) {
-		if (!rows || !rows.length) {
-			this.$atrasoRows.html(
-				`<tr><td colspan="6" class="text-muted">${__("Sem prestações em atraso para os filtros selecionados.")}</td></tr>`
+	render_cabecalho() {
+		this.$cabecalho.html(
+			COLUNAS.map(([campo, rotulo, tipo]) => {
+				const seta = this.ordem.campo === campo ? (this.ordem.desc ? " ↓" : " ↑") : "";
+				return `<th class="${tipo === "moeda" || tipo === "numero" ? "emc-num" : ""}" data-campo="${campo}">${__(
+					rotulo
+				)}${seta}</th>`;
+			}).join("")
+		);
+	}
+
+	creditos_visiveis() {
+		const filtro = SEPARADORES.find(([chave]) => chave === this.separador)[2];
+		const termo = this.pesquisa;
+		const { campo, desc } = this.ordem;
+		const tipo = COLUNAS.find(([c]) => c === campo)[2];
+
+		return this.creditos
+			.filter(filtro)
+			.filter(
+				(c) =>
+					!termo ||
+					[c.cliente, c.name, c.produto, c.promotor].some((v) => (v || "").toLowerCase().includes(termo))
+			)
+			.sort((a, b) => {
+				let x = a[campo];
+				let y = b[campo];
+				let r;
+				if (tipo === "moeda" || tipo === "numero") {
+					r = flt(x) - flt(y);
+				} else {
+					r = String(x || "").localeCompare(String(y || ""), "pt");
+				}
+				return desc ? -r : r;
+			});
+	}
+
+	render_creditos() {
+		const esc = frappe.utils.escape_html;
+		const moeda = (v) => (flt(v) ? format_currency(v, CURRENCY) : "—");
+		const data = (v) => (v ? frappe.datetime.str_to_user(v) : "—");
+		const rows = this.creditos_visiveis();
+
+		if (!rows.length) {
+			this.$rows.html(
+				`<tr><td colspan="${COLUNAS.length}" class="text-muted">${__("Sem créditos para os filtros selecionados.")}</td></tr>`
 			);
+			this.$total.html("");
 			return;
 		}
-		this.$atrasoRows.html(
+
+		const classe_situacao = {
+			"Em dia": "",
+			"Em atraso": " emc-resumo-badge--stamp",
+			Incumprimento: " emc-resumo-badge--stamp",
+			Liquidado: " emc-resumo-badge--ink",
+		};
+
+		this.$rows.html(
 			rows
-				.map(
-					(r) => `
-					<tr>
-						<td><a href="/app/pedido-de-credito/${encodeURIComponent(r.parent)}">${frappe.utils.escape_html(r.parent)}</a></td>
-						<td>${frappe.utils.escape_html(r.cliente || "")}</td>
-						<td>${r.numero}</td>
-						<td>${frappe.datetime.str_to_user(r.data_limite_pagamento)}</td>
-						<td class="emc-num">${r.dias_atraso}</td>
-						<td class="emc-num">${format_currency(r.total_em_atraso, CURRENCY)}</td>
-					</tr>`
-				)
+				.map((c) => {
+					const marcas =
+						(c.congelado ? `<span class="emc-resumo-badge emc-painel-badge--gelo">${__("Congelado")}</span>` : "") +
+						(c.reestruturado ? `<span class="emc-resumo-badge emc-resumo-badge--ink">${__("Reestruturado")}</span>` : "");
+					return `
+					<tr data-pedido="${esc(c.name)}" class="${c.dias_atraso > 0 ? "emc-painel-linha--atraso" : ""}">
+						<td>
+							<strong>${esc(c.cliente || "")}</strong>
+							<div class="emc-painel-sub">${esc(c.produto || "")}${c.promotor ? " · " + esc(c.promotor) : ""}</div>
+						</td>
+						<td><a href="/app/pedido-de-credito/${encodeURIComponent(c.name)}">${esc(c.name)}</a></td>
+						<td>
+							<span class="emc-resumo-badge${classe_situacao[c.situacao] || ""}">${__(c.situacao)}</span>
+							${marcas}
+						</td>
+						<td>${data(c.data_de_desembolso)}</td>
+						<td class="emc-num">${moeda(c.capital_solicitado)}</td>
+						<td class="emc-num"><strong>${moeda(c.saldo_do_credito)}</strong></td>
+						<td class="emc-num${flt(c.divida) > 0 ? " emc-painel-alerta" : ""}">${moeda(c.divida)}</td>
+						<td class="emc-num">${moeda(c.multa_e_mora)}</td>
+						<td class="emc-num${c.dias_atraso > 0 ? " emc-painel-alerta" : ""}">${c.dias_atraso || "—"}</td>
+						<td>${data(c.proximo_vencimento)}</td>
+					</tr>`;
+				})
 				.join("")
 		);
+
+		const soma = (campo) => rows.reduce((t, c) => t + flt(c[campo]), 0);
+		this.$total.html(`
+			<tr>
+				<td colspan="4">${__("{0} créditos", [rows.length])}</td>
+				<td class="emc-num">${moeda(soma("capital_solicitado"))}</td>
+				<td class="emc-num">${moeda(soma("saldo_do_credito"))}</td>
+				<td class="emc-num">${moeda(soma("divida"))}</td>
+				<td class="emc-num">${moeda(soma("multa_e_mora"))}</td>
+				<td colspan="2"></td>
+			</tr>`);
 	}
 
 	inject_styles() {
@@ -234,7 +344,7 @@ class EntreMcPainel {
 		style.id = "emc-painel-style";
 		style.textContent = `
 			.emc-painel {
-				max-width: 1100px;
+				max-width: 1240px;
 				margin: 0 auto;
 				padding: 8px 4px 48px;
 				font-family: var(--emc-font-numeric);
@@ -258,21 +368,84 @@ class EntreMcPainel {
 			.emc-painel-limpar {
 				margin-bottom: 2px;
 			}
-			.emc-painel-tabelas {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 18px;
+			.emc-painel-lista {
 				margin-top: 22px;
 			}
-			.emc-painel-tabelas h4 {
+			.emc-painel-lista-topo {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+				flex-wrap: wrap;
+				margin-bottom: 10px;
+			}
+			.emc-painel-lista h4 {
 				font-family: var(--emc-font-display);
-				margin: 0 0 8px;
+				margin: 0;
 				color: var(--emc-accent-deep);
 			}
-			@media (max-width: 900px) {
-				.emc-painel-tabelas {
-					grid-template-columns: 1fr;
-				}
+			.emc-painel-pesquisa {
+				max-width: 340px;
+			}
+			.emc-painel-separadores {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin-bottom: 10px;
+			}
+			.emc-painel-separador {
+				border: 1px solid var(--emc-line);
+				background: var(--emc-paper);
+				color: var(--emc-ink-soft);
+				border-radius: 14px;
+				padding: 3px 12px;
+				font-size: 12px;
+				font-weight: 600;
+			}
+			.emc-painel-separador span {
+				margin-left: 4px;
+				font-variant-numeric: tabular-nums;
+				opacity: 0.75;
+			}
+			.emc-painel-separador.is-ativo {
+				background: var(--emc-accent);
+				border-color: var(--emc-accent);
+				color: #f2fbf5;
+			}
+			.emc-painel-creditos thead th[data-campo] {
+				cursor: pointer;
+				user-select: none;
+			}
+			.emc-painel-creditos tbody tr[data-pedido] {
+				cursor: pointer;
+			}
+			.emc-painel-creditos tbody tr.emc-painel-linha--atraso td {
+				background: #fbeee9;
+			}
+			.emc-painel-creditos tfoot td {
+				padding: 8px 10px;
+				font-weight: 700;
+				border-top: 2px solid var(--emc-accent);
+				background: var(--emc-paper);
+				white-space: nowrap;
+				font-variant-numeric: tabular-nums;
+			}
+			.emc-painel-sub {
+				font-size: 11px;
+				color: var(--emc-ink-soft);
+			}
+			.emc-painel-alerta {
+				color: var(--emc-stamp);
+				font-weight: 700;
+			}
+			.emc-painel-badge--gelo {
+				background: #dcebf7;
+				color: #1d4f7a;
+			}
+			.emc-painel-nota {
+				margin-top: 8px;
+				font-size: 12px;
+				color: var(--emc-ink-soft);
 			}
 		`;
 		document.head.appendChild(style);
