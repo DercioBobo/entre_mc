@@ -399,6 +399,39 @@ def _cronologia(pedido, situacao, data):
 			sentido,
 		)
 
+	# Prestações que uma Reestruturação tirou do plano (sem qualquer pagamento
+	# ou perdão - ver reestruturacao_de_credito._fica_no_plano) já não estão em
+	# `situacao.rows`; vêm do `plano_anterior` dela. As que ficaram (numero <=
+	# ultima_prestacao_mantida) já aparecem acima, por isso não se repetem.
+	for rest in frappe.get_all(
+		"Reestruturacao De Credito",
+		filters={**filtro, "data_da_reestruturacao": ["<=", data]},
+		fields=["name", "data_da_reestruturacao", "ultima_prestacao_mantida"],
+	):
+		limite = int(rest.ultima_prestacao_mantida or 0)
+		for row in frappe.get_all(
+			"Plano De Amortizacao",
+			filters={
+				"parenttype": "Reestruturacao De Credito",
+				"parent": rest.name,
+				"parentfield": "plano_anterior",
+				"numero": [">", limite],
+				"data_limite_pagamento": ["<=", min(data, getdate(rest.data_da_reestruturacao))],
+			},
+			fields=["numero", "data_limite_pagamento", "capital_mensal", "juros_mensais"],
+		):
+			atraso = (getdate(rest.data_da_reestruturacao) - getdate(row.data_limite_pagamento)).days
+			evento(
+				row.data_limite_pagamento,
+				"Vencimento",
+				_("Venceu a prestação {0} (plano anterior)").format(row.numero),
+				_("Não foi paga - {0} dias depois passou para o novo plano na {1}.").format(atraso, rest.name),
+				flt(flt(row.capital_mensal) + flt(row.juros_mensais), 2),
+				"alerta",
+				"Reestruturacao De Credito",
+				rest.name,
+			)
+
 	# Mais recente primeiro; no mesmo dia, o vencimento fica antes (abaixo) do
 	# que aconteceu nesse dia.
 	eventos.sort(key=lambda e: (e["data"], e["tipo"] != "Vencimento"), reverse=True)
