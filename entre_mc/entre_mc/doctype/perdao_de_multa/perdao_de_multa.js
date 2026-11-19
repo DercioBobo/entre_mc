@@ -9,9 +9,14 @@ frappe.ui.form.on("Perdao De Multa", {
 	},
 
 	refresh(frm) {
-		if (frm.doc.docstatus !== 0 || !frm.doc.pedido_de_credito) return;
+		toggle_botao_carregar(frm);
+	},
 
-		frm.add_custom_button(__("Carregar Prestações em Atraso"), () => carregar_prestacoes(frm));
+	// O refresh não corre ao mudar um campo, por isso num documento novo/não
+	// gravado o botão só apareceria depois de gravar.
+	pedido_de_credito(frm) {
+		toggle_botao_carregar(frm);
+		aviso_recarregar(frm);
 	},
 
 	// Reflete a mudança no cabeçalho em vez de recarregar sozinho - o utilizador
@@ -27,6 +32,14 @@ frappe.ui.form.on("Perdao De Multa", {
 		aviso_recarregar(frm);
 	},
 });
+
+function toggle_botao_carregar(frm) {
+	const label = __("Carregar Prestações em Atraso");
+	frm.remove_custom_button(label);
+	if (frm.doc.docstatus !== 0 || !frm.doc.pedido_de_credito) return;
+
+	frm.add_custom_button(label, () => carregar_prestacoes(frm));
+}
 
 function aviso_recarregar(frm) {
 	if (frm.doc.prestacoes && frm.doc.prestacoes.length) {
