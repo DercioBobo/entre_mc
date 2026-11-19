@@ -9,6 +9,7 @@ frappe.ui.form.on("Perdao De Multa", {
 	},
 
 	refresh(frm) {
+		if (frm.doc.docstatus === 0) remover_linhas_vazias(frm);
 		toggle_botao_carregar(frm);
 	},
 
@@ -41,8 +42,20 @@ function toggle_botao_carregar(frm) {
 	frm.add_custom_button(label, () => carregar_prestacoes(frm));
 }
 
+function remover_linhas_vazias(frm) {
+	const linhas = (frm.doc.prestacoes || []).filter((p) => p.numero);
+	if (linhas.length !== (frm.doc.prestacoes || []).length) {
+		frm.doc.prestacoes = linhas;
+		linhas.forEach((p, i) => (p.idx = i + 1));
+		frm.refresh_field("prestacoes");
+	}
+}
+
 function aviso_recarregar(frm) {
-	if (frm.doc.prestacoes && frm.doc.prestacoes.length) {
+	// Só avisa se já houver prestações carregadas (ignora a linha vazia que o
+	// Frappe cria) e limpa antes de mostrar, senão os avisos acumulam-se.
+	frm.dashboard.clear_headline();
+	if ((frm.doc.prestacoes || []).some((p) => p.numero)) {
 		frm.dashboard.set_headline_alert(
 			`<div class="text-muted">${__(
 				"Opções alteradas - clique novamente em \"Carregar Prestações em Atraso\" para recalcular os valores."

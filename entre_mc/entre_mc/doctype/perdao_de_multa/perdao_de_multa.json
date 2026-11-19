@@ -67,7 +67,7 @@
   },
   {
    "default": "0",
-   "description": "Ligado: estas prestações deixam de gerar Multa. Desligado: só a multa em aberto até hoje é perdoada.",
+   "description": "Activo: As multas destas prestações são perdoadas e deixam de ser geradas.",
    "fieldname": "isentar_multa_futura",
    "fieldtype": "Check",
    "label": "Isentar estas prestações de Multa futura"

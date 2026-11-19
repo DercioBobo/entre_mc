@@ -54,6 +54,9 @@ from entre_mc.utils.reembolso import (
 
 class PerdaoDeMulta(Document):
 	def validate(self):
+		# A tabela é obrigatória, por isso o Frappe cria uma linha vazia num
+		# documento novo - descarta-a em vez de falhar com "Nº None".
+		self.set("prestacoes", [item for item in self.prestacoes if item.numero])
 		if not self.prestacoes:
 			frappe.throw(_("Adicione pelo menos uma prestação a perdoar."))
 
