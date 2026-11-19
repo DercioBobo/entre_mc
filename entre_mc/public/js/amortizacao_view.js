@@ -23,11 +23,16 @@ entre_mc.render_plano_html = function (rows, currency) {
 
 	const body = rows
 		.map((r) => {
-			total_capital += flt(r.capital_mensal);
-			total_juros += flt(r.juros_mensais);
-			total_prestacao += flt(r.prestacao_total);
-			const multa_em_falta = flt(r.multa_aplicada) - flt(r.multa_paga) - flt(r.multa_perdoada);
-			const juros_mora_em_falta = flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago) - flt(r.juros_mora_perdoado);
+			// Totais somam os valores já arredondados, tal como aparecem nas
+			// linhas, para baterem sempre certo com a soma do que está à vista.
+			total_capital += flt(r.capital_mensal, 2);
+			total_juros += flt(r.juros_mensais, 2);
+			total_prestacao += flt(r.prestacao_total, 2);
+			const multa_em_falta = flt(flt(r.multa_aplicada) - flt(r.multa_paga) - flt(r.multa_perdoada), 2);
+			const juros_mora_em_falta = flt(
+				flt(r.juros_mora_aplicado) - flt(r.juros_mora_pago) - flt(r.juros_mora_perdoado),
+				2
+			);
 			total_multa += multa_em_falta;
 			total_juros_mora += juros_mora_em_falta;
 			const atrasado = r.status === "Atrasado";

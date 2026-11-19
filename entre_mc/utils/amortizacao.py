@@ -13,6 +13,20 @@ prestação segue o mesmo método de saldo decrescente do modelo Decrescente
 suavizada para um valor fixo (VTP/P), onde VTP é o total que resultaria do
 cálculo decrescente ao longo de todo o prazo. Ajustar aqui se a definição
 pretendida for outra.
+
+Arredondamento: o plano é calculado já em cêntimos, linha a linha, e não
+arredondado no fim. Assim os valores mostrados batem sempre certo entre si:
+
+- juros de cada prestação = saldo de capital anterior (já arredondado) × taxa;
+- capital + juros = prestação, em todas as linhas (exceto no Misto, em que a
+  prestação é suavizada por definição);
+- a soma do capital é exatamente o capital concedido - a última prestação
+  amortiza o que falta, e o saldo fecha em 0,00;
+- a soma das prestações é exatamente capital + juros.
+
+Isto importa para além da apresentação: a Multa é calculada sobre o capital +
+juros de cada prestação, por isso um cêntimo a menos aqui era um cêntimo a
+menos de base da Multa.
 """
 
 import frappe
@@ -86,56 +100,79 @@ def build_plano(
 	data_inicio = getdate(data_inicio)
 	calendario = usar_vencimento_calendario(frequencia, vencimento_calendario)
 
-	if modelo == "Constante":
-		prestacoes = _build_constante(capital, tj, n)
-	elif modelo == "Francês":
-		prestacoes = _build_frances(capital, tj, n)
-	else:
-		prestacoes = _build_decrescente_ou_misto(capital, tj, n, suavizar=(modelo == "Misto"))
-
-	valor_total = sum(p["prestacao_total"] for p in prestacoes)
-
-	linhas = []
-	for idx, p in enumerate(prestacoes, start=1):
-		linhas.append(
-			{
-				"numero": idx,
-				"capital_mensal": flt(p["capital_mensal"], precision),
-				"juros_mensais": flt(p["juros_mensais"], precision),
-				"prestacao_total": flt(p["prestacao_total"], precision),
-				"data_limite_pagamento": (
-					add_months(data_inicio, idx)
-					if calendario
-					else add_days(data_inicio, period_days * idx)
-				),
-			}
+	linhas = _calcular_linhas(capital, tj, n, modelo, precision)
+	for idx, linha in enumerate(linhas, start=1):
+		linha["data_limite_pagamento"] = (
+			add_months(data_inicio, idx) if calendario else add_days(data_inicio, period_days * idx)
 		)
 
-	_absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision)
 	_preencher_saldos(linhas, capital, precision)
 	return linhas
 
 
-def _absorver_arredondamento_na_ultima_prestacao(linhas, valor_total, precision):
-	"""Cada prestação é arredondada individualmente a 2 casas decimais; ao somar
-	todas, o total efetivamente cobrado ao cliente pode ficar a um ou dois
-	cêntimos do total real do plano (`valor_total`, calculado sem arredondamentos
-	intermédios). Em vez de esse resíduo ficar por conta da instituição, é
-	absorvido na última prestação - o cliente paga (ou recebe de volta, se
-	negativo) essa diferença no último pagamento."""
-	if not linhas:
-		return
-	soma_prestacoes = flt(sum(linha["prestacao_total"] for linha in linhas), precision)
-	residual = flt(valor_total - soma_prestacoes, precision)
-	if residual:
-		ultima = linhas[-1]
-		ultima["capital_mensal"] = flt(ultima["capital_mensal"] + residual, precision)
-		ultima["prestacao_total"] = flt(ultima["prestacao_total"] + residual, precision)
+def _calcular_linhas(capital, tj, n, modelo, precision):
+	"""Capital, juros e prestação de cada linha, já arredondados - ver as
+	regras de arredondamento no topo do módulo."""
+	capital = flt(capital, precision)
+
+	# Prestação fixa do Francês (Tabela Price), arredondada uma só vez: todas
+	# as prestações são iguais a este valor, exceto a última, que fecha o
+	# saldo e pode diferir em cêntimos.
+	if tj == 0:
+		prestacao_fixa = flt(capital / n, precision)
+	else:
+		fator = (1 + tj) ** n
+		prestacao_fixa = flt(capital * (tj * fator) / (fator - 1), precision)
+	capital_fixo = flt(capital / n, precision)
+	juros_constantes = flt(capital * tj, precision)
+
+	linhas = []
+	restante = capital
+	for idx in range(1, n + 1):
+		if modelo == "Constante":
+			juros = juros_constantes
+		else:
+			juros = flt(restante * tj, precision)
+
+		if idx == n:
+			amortizacao = restante
+		elif modelo == "Francês":
+			amortizacao = flt(prestacao_fixa - juros, precision)
+		else:
+			amortizacao = capital_fixo
+		amortizacao = min(max(amortizacao, 0), restante)
+		restante = flt(restante - amortizacao, precision)
+
+		linhas.append(
+			{
+				"numero": idx,
+				"capital_mensal": amortizacao,
+				"juros_mensais": juros,
+				"prestacao_total": flt(amortizacao + juros, precision),
+			}
+		)
+
+	if modelo == "Misto":
+		_suavizar_prestacoes(linhas, precision)
+	return linhas
+
+
+def _suavizar_prestacoes(linhas, precision):
+	"""Misto: o cliente paga sempre o mesmo valor (o total do plano a dividir
+	pelo número de prestações); o desdobramento capital/juros de cada linha
+	continua a ser o do Decrescente. Os cêntimos que sobram da divisão vão
+	para a última prestação, para o total pago ser exatamente capital + juros."""
+	n = len(linhas)
+	total = flt(sum(linha["prestacao_total"] for linha in linhas), precision)
+	fixa = flt(total / n, precision)
+	for linha in linhas[:-1]:
+		linha["prestacao_total"] = fixa
+	linhas[-1]["prestacao_total"] = flt(total - fixa * (n - 1), precision)
 
 
 def _preencher_saldos(linhas, capital, precision):
 	"""Preenche dois saldos por prestação, ambos sobre os valores já
-	arredondados (e já com o resíduo absorvido) - os mesmos valores que são
+	arredondados - os mesmos valores que são
 	efetivamente cobrados:
 
 	- `saldo` (Saldo Total): tudo o que falta pagar do plano (capital + juros
@@ -156,50 +193,3 @@ def _preencher_saldos(linhas, capital, precision):
 		linha["saldo_capital"] = flt(capital - capital_amortizado, precision)
 	linhas[-1]["saldo"] = 0.0
 	linhas[-1]["saldo_capital"] = 0.0
-
-
-def _build_constante(capital, tj, n):
-	cm = capital / n
-	jm = capital * tj
-	pt = cm + jm
-	return [{"capital_mensal": cm, "juros_mensais": jm, "prestacao_total": pt} for _ in range(n)]
-
-
-def _build_frances(capital, tj, n):
-	"""Modelo Francês (Tabela Price): prestação total fixa (FCM), calculada
-	pela fórmula da anuidade. Juros = saldo devedor x Tj; capital = FCM - juros.
-	"""
-	if tj == 0:
-		fcm = capital / n
-	else:
-		fator = (1 + tj) ** n
-		fcm = capital * (tj * fator) / (fator - 1)
-
-	saldo_devedor = capital
-	prestacoes = []
-	for _ in range(n):
-		jm = saldo_devedor * tj
-		cm = fcm - jm
-		prestacoes.append({"capital_mensal": cm, "juros_mensais": jm, "prestacao_total": fcm})
-		saldo_devedor -= cm
-	return prestacoes
-
-
-def _build_decrescente_ou_misto(capital, tj, n, suavizar):
-	cm = capital / n
-	capital_amortizado = 0.0
-	prestacoes = []
-	for _ in range(n):
-		scr = capital - capital_amortizado
-		jm = scr * tj
-		pt = cm + jm
-		prestacoes.append({"capital_mensal": cm, "juros_mensais": jm, "prestacao_total": pt})
-		capital_amortizado += cm
-
-	if suavizar:
-		vtp = sum(p["prestacao_total"] for p in prestacoes)
-		pt_fixo = vtp / n
-		for p in prestacoes:
-			p["prestacao_total"] = pt_fixo
-
-	return prestacoes
