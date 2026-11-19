@@ -194,7 +194,12 @@ function render_historico(frm) {
 	if (!frm.doc.status || !$historico) return;
 
 	$historico.html(`<div class="text-muted">${__("A carregar...")}</div>`);
-	frappe.call({
+	// Garante o renderer partilhado mesmo que o hooks.py/assets ainda não
+	// tenham sido recarregados (frappe.require não volta a carregar se já existe).
+	const carregar = entre_mc.render_cronologia_html
+		? Promise.resolve()
+		: new Promise((resolve) => frappe.require("/assets/entre_mc/js/cronologia_view.js", resolve));
+	carregar.then(() => frappe.call({
 		method: "entre_mc.entre_mc.page.ficha_do_credito.ficha_do_credito.obter_historico",
 		args: { pedido_de_credito: frm.doc.name },
 		callback: (r) => {
@@ -238,7 +243,7 @@ function render_historico(frm) {
 					.join("")
 			);
 		},
-	});
+	}));
 }
 
 function toggle_documentos(frm) {
