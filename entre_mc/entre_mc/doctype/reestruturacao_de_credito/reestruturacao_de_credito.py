@@ -8,7 +8,8 @@ Ao submeter:
 
 - o plano em vigor é copiado na íntegra para `plano_anterior` (o histórico);
 - as prestações já pagas ficam como estão; as pagas em parte (ou com perdão)
-  são fechadas pelo que já foi pago/perdoado nelas; as que não têm qualquer
+  são fechadas pelo que já foi pago/perdoado nelas, com o estado
+  "Reestruturado"; as que não têm qualquer
   movimento saem do plano;
 - tudo o que ficou por pagar (Capital, Juros, Multa e Juros de Mora à Data da
   Reestruturação) é substituído pelo `novo_plano`, calculado sobre o Valor a
@@ -35,7 +36,12 @@ from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito import calcular_plano
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha, decompor_saldos
+from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
+	atualizar_encargos_da_linha,
+	atualizar_estado_da_linha,
+	decompor_saldos,
+)
 from entre_mc.utils.reestruturacao import tem_movimentos
 
 ESTADOS_ATIVOS = ("Em Curso", "Incumprimento")
@@ -110,7 +116,7 @@ class ReestruturacaoDeCredito(Document):
 		_encargos_na_data(pedido, self.data_da_reestruturacao)
 
 		for row in list(pedido.plano_de_amortizacao):
-			if row.status == "Pago":
+			if row.status in ESTADOS_FECHADOS:
 				continue
 			if tem_movimentos(row):
 				_fechar_pelo_que_foi_pago(row)
@@ -179,7 +185,7 @@ class ReestruturacaoDeCredito(Document):
 
 
 def _fica_no_plano(row):
-	return row.status == "Pago" or tem_movimentos(row)
+	return row.status in ESTADOS_FECHADOS or tem_movimentos(row)
 
 
 def _fechar_pelo_que_foi_pago(row):
@@ -190,7 +196,7 @@ def _fechar_pelo_que_foi_pago(row):
 	row.prestacao_total = flt(row.capital_mensal + row.juros_mensais, 2)
 	row.multa_aplicada = flt(flt(row.multa_paga) + flt(row.multa_perdoada), 2)
 	row.juros_mora_aplicado = flt(flt(row.juros_mora_pago) + flt(row.juros_mora_perdoado), 2)
-	row.status = "Pago"
+	row.status = "Reestruturado"
 
 
 def _copiar_linha(row):
@@ -208,7 +214,7 @@ def _encargos_na_data(pedido, data):
 	settings = get_settings()
 	data = getdate(data)
 	for row in pedido.plano_de_amortizacao:
-		if row.status == "Pago":
+		if row.status in ESTADOS_FECHADOS:
 			continue
 		atualizar_encargos_da_linha(row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, data, 2)
 		atualizar_estado_da_linha(row, data, settings)

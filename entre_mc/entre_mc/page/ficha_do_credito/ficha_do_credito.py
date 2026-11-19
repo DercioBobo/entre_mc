@@ -17,6 +17,7 @@ from frappe import _
 from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.report.instante_t.instante_t import get_situacoes
+from entre_mc.utils.reembolso import ESTADOS_FECHADOS
 
 COMPONENTES = (
 	("Capital", "capital"),
@@ -54,6 +55,41 @@ def obter_ficha(pedido_de_credito, data=None):
 	ficha["plano"] = [_linha_do_plano(row) for row in situacao.rows]
 	ficha["cronologia"] = _cronologia(pedido, situacao, data)
 	return ficha
+
+
+@frappe.whitelist()
+def obter_historico(pedido_de_credito):
+	"""Para o formulário do Pedido De Credito: a mesma cronologia da Ficha (até
+	hoje) e os planos que cada Reestruturação submetida substituiu, do mais
+	recente para o mais antigo."""
+	frappe.has_permission("Pedido De Credito", "read", doc=pedido_de_credito, throw=True)
+
+	hoje = getdate(nowdate())
+	pedido = frappe.get_doc("Pedido De Credito", pedido_de_credito)
+
+	cronologia = []
+	situacoes = get_situacoes({"pedido_de_credito": pedido.name, "incluir_liquidados": 1}, hoje)
+	if situacoes:
+		cronologia = _cronologia(pedido, situacoes[0], hoje)
+
+	planos_anteriores = []
+	for rest in frappe.get_all(
+		"Reestruturacao De Credito",
+		filters={"pedido_de_credito": pedido.name, "docstatus": 1},
+		fields=["name", "data_da_reestruturacao", "motivo"],
+		order_by="data_da_reestruturacao desc, creation desc",
+	):
+		doc = frappe.get_doc("Reestruturacao De Credito", rest.name)
+		planos_anteriores.append(
+			{
+				"name": rest.name,
+				"data": rest.data_da_reestruturacao,
+				"motivo": rest.motivo,
+				"rows": [row.as_dict() for row in sorted(doc.plano_anterior, key=lambda r: r.numero)],
+			}
+		)
+
+	return {"cronologia": cronologia, "planos_anteriores": planos_anteriores}
 
 
 def _condicoes(pedido):
@@ -117,7 +153,7 @@ def _resumo(situacao, pedido, data, hoje):
 		"data_ultimo_reembolso": situacao.data_ultimo_reembolso,
 		"dias_atraso": max((r.dias_atraso for r in rows), default=0),
 		"prestacoes": len(rows),
-		"prestacoes_pagas": len([r for r in rows if r.status == "Pago"]),
+		"prestacoes_pagas": len([r for r in rows if r.status in ESTADOS_FECHADOS]),
 		"prestacoes_em_atraso": len([r for r in rows if r.dias_atraso > 0]),
 		"proxima": {
 			"numero": proxima.numero,
@@ -347,6 +383,8 @@ def _cronologia(pedido, situacao, data):
 		valor = flt(row.capital_mensal + row.juros_mensais, 2)
 		if row.status == "Pago":
 			detalhe, sentido = _("Paga."), "info"
+		elif row.status == "Reestruturado":
+			detalhe, sentido = _("Fechada pela Reestruturação - o que faltava passou para o novo plano."), "info"
 		elif row.dias_atraso > 0:
 			detalhe = _("Em atraso há {0} dias - faltam {1}.").format(row.dias_atraso, _moeda(row.em_falta))
 			sentido = "alerta"

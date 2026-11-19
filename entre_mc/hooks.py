@@ -91,6 +91,7 @@ app_include_css = "/assets/entre_mc/css/entre_mc.css"
 app_include_js = [
 	"/assets/entre_mc/js/amortizacao_view.js",
 	"/assets/entre_mc/js/garantia_view.js",
+	"/assets/entre_mc/js/cronologia_view.js",
 ]
 
 # Document Events

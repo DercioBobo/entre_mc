@@ -37,6 +37,7 @@ frappe.ui.form.on("Pedido De Credito", {
 		if (frm.is_new()) return;
 
 		adicionar_botoes_ver(frm);
+		render_historico(frm);
 
 		frm.add_custom_button(__("Criar Garantia"), () => {
 			frappe.new_doc("Garantia", null, (doc) => {
@@ -183,6 +184,61 @@ function adicionar_botoes_ver(frm) {
 			frappe.set_route("Form", "Cliente", frm.doc.cliente);
 		}, ver);
 	}
+}
+
+// Histórico do crédito (mesma cronologia da Ficha do Crédito) e, se foi
+// reestruturado, os planos que cada Reestruturação substituiu.
+function render_historico(frm) {
+	const $historico = frm.fields_dict.historico_html?.$wrapper;
+	const $anterior = frm.fields_dict.plano_anterior_html?.$wrapper;
+	if (!frm.doc.status || !$historico) return;
+
+	$historico.html(`<div class="text-muted">${__("A carregar...")}</div>`);
+	frappe.call({
+		method: "entre_mc.entre_mc.page.ficha_do_credito.ficha_do_credito.obter_historico",
+		args: { pedido_de_credito: frm.doc.name },
+		callback: (r) => {
+			const dados = r.message || {};
+			const desenhar = () => {
+				const mostrar = $historico.find(".emc-hist-vencimentos").prop("checked") || false;
+				$historico.find(".emc-hist-lista").html(
+					entre_mc.render_cronologia_html(dados.cronologia, frm.doc.currency, mostrar)
+				);
+			};
+			$historico.html(`
+				<label class="small text-muted" style="font-weight: 500;">
+					<input type="checkbox" class="emc-hist-vencimentos"> ${__("Mostrar vencimentos")}
+				</label>
+				<div class="emc-hist-lista"></div>`);
+			$historico.find(".emc-hist-vencimentos").on("change", desenhar);
+			desenhar();
+
+			if (!$anterior) return;
+			const planos = dados.planos_anteriores || [];
+			if (!planos.length) {
+				$anterior.html("");
+				return;
+			}
+			const esc = frappe.utils.escape_html;
+			$anterior.html(
+				planos
+					.map(
+						(p) => `
+						<div style="margin-bottom: 16px;">
+							<div style="margin-bottom: 6px;">
+								<strong>${__("Plano substituído por")}
+									<a href="/app/reestruturacao-de-credito/${encodeURIComponent(p.name)}">${esc(p.name)}</a>
+								</strong>
+								<span class="text-muted"> - ${frappe.datetime.str_to_user(p.data)}</span>
+								${p.motivo ? `<div class="small text-muted">${esc(p.motivo)}</div>` : ""}
+							</div>
+							${entre_mc.render_plano_html(p.rows, frm.doc.currency)}
+						</div>`
+					)
+					.join("")
+			);
+		},
+	});
 }
 
 function toggle_documentos(frm) {

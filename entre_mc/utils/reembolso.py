@@ -59,6 +59,11 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, date_diff, flt, getdate
 
+# Prestações que já não têm nada a cobrar: "Pago" (liquidada) ou "Reestruturado"
+# (fechada por uma Reestruturação pelo que já tinha sido pago/perdoado - o resto
+# passou para o novo plano). Nenhuma delas gera encargos nem recebe pagamentos.
+ESTADOS_FECHADOS = ("Pago", "Reestruturado")
+
 COMPONENTES = ("juros_mora", "multa", "juros", "capital")
 COMPONENTE_LABEL = {
 	"juros_mora": "Juros de Mora",
@@ -86,7 +91,7 @@ def aplicar_alocacao(rows, taxa_diaria_de_multa, juros_de_mora, settings, montan
 	for row in sorted(rows, key=lambda r: r.numero):
 		if restante <= 0:
 			break
-		if row.status == "Pago":
+		if row.status in ESTADOS_FECHADOS:
 			continue
 
 		atualizar_encargos_da_linha(row, taxa_diaria_de_multa, juros_de_mora, settings, data_pagamento, precision)
@@ -438,6 +443,9 @@ def _registar_pagamento(row, componente, valor):
 
 
 def atualizar_estado_da_linha(row, data_pagamento, settings):
+	if row.status == "Reestruturado":
+		# Fechada pela Reestruturação - só o cancelamento dela a reabre.
+		return
 	capital_quitado = flt(row.capital_pago) >= flt(row.capital_mensal)
 	juros_quitado = flt(row.juros_pago) >= flt(row.juros_mensais)
 	multa_quitada = flt(row.multa_paga) + flt(row.multa_perdoada) >= flt(row.multa_aplicada)

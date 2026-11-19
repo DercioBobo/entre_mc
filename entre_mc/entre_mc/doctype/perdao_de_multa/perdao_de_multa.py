@@ -46,6 +46,7 @@ from frappe.utils import cint, flt, getdate, nowdate
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.utils.reestruturacao import impedir_cancelamento_apos_reestruturacao
 from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
 	atualizar_encargos_da_linha,
 	atualizar_estado_da_linha,
 	calcular_multa_no_periodo,
@@ -231,7 +232,7 @@ def carregar_prestacoes_em_atraso(pedido_de_credito, periodo_de=None, periodo_at
 
 	prestacoes = []
 	for row in pedido.plano_de_amortizacao:
-		if row.status == "Pago":
+		if row.status in ESTADOS_FECHADOS:
 			continue
 
 		atualizar_encargos_da_linha(row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2)

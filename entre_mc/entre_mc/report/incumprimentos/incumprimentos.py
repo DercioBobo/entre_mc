@@ -6,7 +6,7 @@ from frappe import _
 from frappe.utils import date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import calcular_saldos
+from entre_mc.utils.reembolso import ESTADOS_FECHADOS, calcular_saldos
 
 
 def execute(filters=None):
@@ -58,7 +58,7 @@ def get_data(filters):
 
 	linhas = frappe.get_all(
 		"Plano De Amortizacao",
-		filters={"status": ["!=", "Pago"], "parenttype": "Pedido De Credito", "parent": ["in", nomes]},
+		filters={"status": ["not in", ESTADOS_FECHADOS], "parenttype": "Pedido De Credito", "parent": ["in", nomes]},
 		fields=[
 			"parent",
 			"data_limite_pagamento",

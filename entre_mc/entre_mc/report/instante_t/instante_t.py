@@ -38,7 +38,12 @@ from frappe import _
 from frappe.utils import add_days, cint, date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import atualizar_estado_da_linha, calcular_multa_acumulada, calcular_saldos
+from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
+	atualizar_estado_da_linha,
+	calcular_multa_acumulada,
+	calcular_saldos,
+)
 
 CAMPO_PAGO_POR_COMPONENTE = {
 	"Juros de Mora": "juros_mora_pago",
@@ -351,6 +356,9 @@ def _reconstruir_pedido(
 			row.juros_mora_pago = row.juros_mora_aplicado
 
 		atualizar_estado_da_linha(row, data_referencia, settings)
+		if linha.status == "Reestruturado" and row.status == "Pago":
+			# Fechada pela Reestruturação (o resto passou para o novo plano), não paga.
+			row.status = "Reestruturado"
 		row.em_falta = _em_falta(row)
 		row.dias_atraso = max(dias_atraso, 0) if row.em_falta > 0 else 0
 
@@ -366,7 +374,7 @@ def _reconstruir_pedido(
 		rows.append(row)
 
 	saldo, divida, em_risco = calcular_saldos(rows, settings, data_referencia)
-	if data_execucao or (rows and all(row.status == "Pago" for row in rows)):
+	if data_execucao or (rows and all(row.status in ESTADOS_FECHADOS for row in rows)):
 		estado = "Liquidado"
 	elif incumprimento:
 		estado = "Incumprimento"

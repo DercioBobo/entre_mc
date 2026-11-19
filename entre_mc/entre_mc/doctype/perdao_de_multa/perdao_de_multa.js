@@ -94,6 +94,14 @@ function carregar_prestacoes(frm) {
 			});
 			frm.refresh_field("prestacoes");
 			frm.dashboard.clear_headline();
+			if (!frm.doc.perdoar_tudo && !frm.doc.periodo_de && !frm.doc.periodo_ate) {
+				frm.dashboard.set_headline_alert(
+					`<div class="text-muted">${__(
+						"Sem período: carregada toda a Multa em aberto. Ajuste os valores se o perdão for parcial."
+					)}</div>`,
+					"yellow"
+				);
+			}
 		},
 	});
 }

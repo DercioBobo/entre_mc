@@ -21,7 +21,7 @@ from frappe import _
 from frappe.utils import cint, date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reembolso import ESTADOS_FECHADOS, atualizar_encargos_da_linha, atualizar_estado_da_linha
 
 ESTADOS_CONSIDERADOS = ("Em Curso", "Incumprimento")
 
@@ -79,7 +79,7 @@ def get_data(filters):
 		"parent": ["in", list(pedidos_por_nome)],
 	}
 	if not incluir_pagas:
-		plano_filtros["status"] = ["!=", "Pago"]
+		plano_filtros["status"] = ["not in", ESTADOS_FECHADOS]
 
 	linhas = frappe.get_all(
 		"Plano De Amortizacao",
@@ -110,7 +110,7 @@ def get_data(filters):
 	data = []
 	for row in linhas:
 		pedido = pedidos_por_nome[row.parent]
-		if row.status != "Pago":
+		if row.status not in ESTADOS_FECHADOS:
 			atualizar_encargos_da_linha(
 				row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
 			)

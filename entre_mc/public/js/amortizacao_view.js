@@ -36,7 +36,7 @@ entre_mc.render_plano_html = function (rows, currency) {
 			total_multa += multa_em_falta;
 			total_juros_mora += juros_mora_em_falta;
 			const atrasado = r.status === "Atrasado";
-			const pago = r.status === "Pago";
+			const pago = r.status === "Pago" || r.status === "Reestruturado";
 			const row_class = atrasado ? "entre-mc-atrasado" : pago ? "entre-mc-pago" : "";
 			return `<tr class="${row_class}">
 				<td>${r.numero || ""}</td>

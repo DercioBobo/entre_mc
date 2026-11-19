@@ -7,7 +7,12 @@ from frappe.model.document import Document
 from frappe.utils import flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import aplicar_alocacao, atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
+	aplicar_alocacao,
+	atualizar_encargos_da_linha,
+	atualizar_estado_da_linha,
+)
 from entre_mc.utils.reestruturacao import impedir_cancelamento_apos_reestruturacao
 
 LABEL_TO_CAMPO_PAGO = {
@@ -128,7 +133,7 @@ def obter_contexto(pedido_de_credito):
 	hoje = getdate(nowdate())
 
 	for linha in linhas:
-		if linha.status != "Pago":
+		if linha.status not in ESTADOS_FECHADOS:
 			atualizar_encargos_da_linha(
 				linha, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
 			)
@@ -136,7 +141,7 @@ def obter_contexto(pedido_de_credito):
 
 	pedido.atualizar_saldo_em_divida()
 
-	nao_pagas = [linha for linha in linhas if linha.status != "Pago"]
+	nao_pagas = [linha for linha in linhas if linha.status not in ESTADOS_FECHADOS]
 	proxima = min(nao_pagas, key=lambda linha: linha.numero) if nao_pagas else None
 
 	total_multa = sum(

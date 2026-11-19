@@ -60,10 +60,10 @@
   },
   {
    "default": "0",
-   "description": "Perdoa toda a Multa e Juros de Mora em aberto das prestações abaixo, ignorando o Período a Perdoar.",
+   "description": "Ligado: carrega toda a Multa e todo o Juros de Mora em aberto, ignorando o Período. Desligado: carrega só a Multa do Período (em branco = toda a Multa) e o Juros de Mora fica a 0.",
    "fieldname": "perdoar_tudo",
    "fieldtype": "Check",
-   "label": "Perdoar Tudo (Multa + Juros de Mora integrais)"
+   "label": "Incluir Juros de Mora (perdão integral)"
   },
   {
    "default": "0",
@@ -125,7 +125,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-14 00:00:00.000000",
+ "modified": "2026-11-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Perdao De Multa",

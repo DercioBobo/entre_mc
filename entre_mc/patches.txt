@@ -8,3 +8,4 @@ entre_mc.patches.corrigir_multa_negativa
 
 [post_model_sync]
 entre_mc.patches.origens_de_prospecto
+entre_mc.patches.marcar_prestacoes_reestruturadas

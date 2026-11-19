@@ -7,7 +7,7 @@ import frappe
 from frappe.utils import date_diff, flt, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha
+from entre_mc.utils.reembolso import ESTADOS_FECHADOS, atualizar_encargos_da_linha, atualizar_estado_da_linha
 
 ESTADOS_EM_ABERTO = ("Em Curso", "Incumprimento")
 
@@ -53,7 +53,7 @@ def _atualizar_pedido(nome_pedido, settings, hoje):
 
 	maior_atraso = 0
 	for row in pedido.plano_de_amortizacao:
-		if row.status == "Pago":
+		if row.status in ESTADOS_FECHADOS:
 			continue
 		atualizar_encargos_da_linha(
 			row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2

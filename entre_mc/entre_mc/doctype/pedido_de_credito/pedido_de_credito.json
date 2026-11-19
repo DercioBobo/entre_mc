@@ -41,6 +41,10 @@
   "documentos",
   "sb_plano",
   "pre_visualizacao_html",
+  "sb_plano_anterior",
+  "plano_anterior_html",
+  "sb_historico",
+  "historico_html",
   "sb_plano_dados",
   "plano_de_amortizacao"
  ],
@@ -281,6 +285,29 @@
   },
   {
    "collapsible": 1,
+   "depends_on": "eval:doc.reestruturado",
+   "fieldname": "sb_plano_anterior",
+   "fieldtype": "Section Break",
+   "label": "Plano Anterior (Reestruturação)"
+  },
+  {
+   "fieldname": "plano_anterior_html",
+   "fieldtype": "HTML",
+   "label": "Plano Anterior"
+  },
+  {
+   "depends_on": "eval:doc.status",
+   "fieldname": "sb_historico",
+   "fieldtype": "Section Break",
+   "label": "Histórico do Crédito"
+  },
+  {
+   "fieldname": "historico_html",
+   "fieldtype": "HTML",
+   "label": "Histórico"
+  },
+  {
+   "collapsible": 1,
    "fieldname": "sb_plano_dados",
    "fieldtype": "Section Break",
    "label": "Plano De Amortizacao (dados)"
@@ -310,7 +337,7 @@
    "link_fieldname": "pedido_de_credito"
   }
  ],
- "modified": "2026-07-09 00:00:00.000000",
+ "modified": "2026-11-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Entre MC",
  "name": "Pedido De Credito",

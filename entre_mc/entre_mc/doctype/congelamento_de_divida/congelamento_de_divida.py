@@ -34,6 +34,7 @@ from frappe.utils import getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
 from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
 	atualizar_encargos_da_linha,
 	atualizar_estado_da_linha,
 	decompor_saldos,
@@ -164,7 +165,7 @@ def _encargos_na_data(pedido, data):
 	settings = get_settings()
 	data = getdate(data)
 	for row in pedido.plano_de_amortizacao:
-		if row.status == "Pago":
+		if row.status in ESTADOS_FECHADOS:
 			continue
 		atualizar_encargos_da_linha(row, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, data, 2)
 		atualizar_estado_da_linha(row, data, settings)

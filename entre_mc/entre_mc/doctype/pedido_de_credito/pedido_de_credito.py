@@ -11,7 +11,12 @@ from entre_mc.entre_mc.doctype.simulacao_de_credito.simulacao_de_credito import 
 	calcular_plano,
 	check_limites,
 )
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha, atualizar_estado_da_linha, calcular_saldos
+from entre_mc.utils.reembolso import (
+	ESTADOS_FECHADOS,
+	atualizar_encargos_da_linha,
+	atualizar_estado_da_linha,
+	calcular_saldos,
+)
 
 APROVADO = "Aprovado"
 
@@ -120,6 +125,8 @@ class PedidoDeCredito(Document):
 		pagas e o saldo do crédito zera. Não há lugar a reembolsos depois disto -
 		ver o bloqueio em Reembolso.validate()."""
 		for row in self.plano_de_amortizacao:
+			if row.status == "Reestruturado":
+				continue
 			row.capital_pago = row.capital_mensal
 			row.juros_pago = row.juros_mensais
 			row.multa_paga = row.multa_aplicada
@@ -146,7 +153,7 @@ class PedidoDeCredito(Document):
 
 	def todas_as_prestacoes_pagas(self):
 		return bool(self.plano_de_amortizacao) and all(
-			row.status == "Pago" for row in self.plano_de_amortizacao
+			row.status in ESTADOS_FECHADOS for row in self.plano_de_amortizacao
 		)
 
 
@@ -178,7 +185,7 @@ def plano_com_encargos_atuais(pedido_de_credito):
 	hoje = getdate(nowdate())
 
 	for linha in pedido.plano_de_amortizacao:
-		if linha.status != "Pago":
+		if linha.status not in ESTADOS_FECHADOS:
 			atualizar_encargos_da_linha(
 				linha, pedido.taxa_diaria_de_multa, pedido.juros_de_mora, settings, hoje, 2
 			)

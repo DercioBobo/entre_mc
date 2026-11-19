@@ -26,7 +26,7 @@ from frappe import _
 from frappe.utils import flt, get_first_day, get_last_day, getdate, nowdate
 
 from entre_mc.entre_mc.doctype.mc_settings.mc_settings import get_settings
-from entre_mc.utils.reembolso import atualizar_encargos_da_linha
+from entre_mc.utils.reembolso import ESTADOS_FECHADOS, atualizar_encargos_da_linha
 
 ESTADOS_CONSIDERADOS = ("Em Curso", "Incumprimento", "Liquidado")
 
@@ -131,7 +131,7 @@ def _previsto_por_pedido(pedidos_por_nome, data_inicio, data_fim, data_ref_encar
 		filters={
 			"parenttype": "Pedido De Credito",
 			"parent": ["in", list(pedidos_por_nome)],
-			"status": ["!=", "Pago"],
+			"status": ["not in", ESTADOS_FECHADOS],
 			"data_limite_pagamento": ["between", [data_inicio, data_fim]],
 		},
 		fields=[
