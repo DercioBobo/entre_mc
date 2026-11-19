@@ -339,6 +339,11 @@ class EntreMcFicha {
 	render_cronologia() {
 		const $alvo = this.$corpo.find("#emc-ficha-cronologia");
 		if (!$alvo.length || !this.ficha) return;
+		if (!(window.entre_mc && entre_mc.render_cronologia_html)) {
+			// Sem `bench build` o ficheiro partilhado ainda não vem no desk - carrega-o.
+			frappe.require("/assets/entre_mc/js/cronologia_view.js", () => this.render_cronologia());
+			return;
+		}
 		$alvo.html(
 			entre_mc.render_cronologia_html(this.ficha.cronologia, FICHA_CURRENCY, this.mostrar_vencimentos)
 		);

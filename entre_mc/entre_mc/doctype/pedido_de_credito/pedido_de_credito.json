@@ -296,6 +296,7 @@
    "label": "Plano Anterior"
   },
   {
+   "collapsible": 1,
    "depends_on": "eval:doc.status",
    "fieldname": "sb_historico",
    "fieldtype": "Section Break",
